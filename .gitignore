@@ -8,3 +8,4 @@ dist/
 
 # Lokale Claude-instellingen
 .claude/settings.local.json
+.vercel
