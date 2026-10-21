@@ -1,0 +1,251 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import ScanStrip from '../components/ScanStrip.astro';
+import { path, type Lang } from '../i18n';
+import { t } from '../i18n/ui';
+import { site } from '../data/site';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const s = t(lang);
+
+const copy = {
+  nl: {
+    title: 'AI in je werk: training van een dagdeel voor teams | Jesco Trainingen',
+    description: 'Een praktische AI-training op locatie voor 8 tot 16 medewerkers. Prompten met eigen werk, AI leren vertrouwen waar het kan, en samen afspraken maken. Vanaf €1.250 excl. btw.',
+    label: 'de training',
+    h1: 'AI in je werk',
+    lead: 'Een dagdeel waarin je team leert hoe AI tot een antwoord komt, oefent met eigen werk en samen afspraken maakt. Zodat AI geen hobby van een paar mensen blijft.',
+    forH2: 'Voor wie',
+    forP: [
+      'Voor organisaties met zo’n 10 tot 50 kantoormedewerkers, waar AI al gebruikt wordt of juist nog niet echt van de grond komt.',
+      'De groep bestaat uit 8 tot 16 deelnemers. Dat mag een heel team zijn, of een mix van afdelingen. Ervaring met AI is niet nodig: juist een gemengde groep leert veel van elkaar.',
+    ],
+    howH2: 'Hoe het werkt',
+    steps: [
+      ['01', 'Intake', 'Een gesprek met jou van ongeveer drie kwartier. Wat speelt er in je team, waar wil je naartoe, welke tools gebruiken jullie? De kern van de training staat vast, de rest stemmen we hierop af.'],
+      ['02', 'Het dagdeel', 'Twee à drie uur bij jullie op locatie, in drie delen: hoe AI denkt en hoe wij denken, prompten met eigen werk, en afspraken en het gesprek.'],
+      ['03', 'Na vier weken', 'Een korte meting bij de deelnemers: gebruiken ze AI, en hoe zeker voelen ze zich? Zo zie je wat de training heeft opgeleverd.'],
+    ],
+    dayH2: 'Wat er in het dagdeel gebeurt',
+    day: [
+      ['0:00', 'Hoe AI denkt, en hoe wij denken', ['Wat een taalmodel wel en niet kan', 'Waarom AI altijd overtuigend klinkt, ook als het niet klopt', 'Waarom de een te veel vertrouwt en de ander te weinig'], 45],
+      ['0:45', 'Prompten met eigen werk', ['Een vaste opbouw voor goede vragen: rol, context, grenzen, toon, vervolgstap', 'Oefenen met echte taken uit jullie praktijk', 'Groepsgesprek: wat werkt, wat niet, en waarom'], 75],
+      ['2:00', 'Afspraken en het gesprek', ['Wat mag wel en niet in AI-tools, en wie checkt wat', 'Hoe je collega’s meeneemt die twijfelen of weerstand voelen', 'Een eerste versie van jullie eigen AI-afspraken'], 60],
+    ],
+    afterH2: 'Wat je team daarna anders doet',
+    after: [
+      'Ze stellen betere vragen aan AI en hoeven minder te herschrijven.',
+      'Ze weten wanneer ze een antwoord kunnen gebruiken en wanneer ze moeten checken.',
+      'Ze werken volgens dezelfde afspraken, in plaats van ieder op een eigen manier.',
+      'Ze praten erover: wat werkt, wat niet, en wie kan wie helpen.',
+    ],
+    notToolH2: 'Geen toolcursus',
+    notToolP: 'Er zijn goede cursussen die je stap voor stap leren werken met Copilot in Word en Excel. Dit is iets anders. Hier gaat het om hoe mensen met AI omgaan: vertrouwen, gewoontes en samenwerking. Al een toolcursus gehad? Dan is dit de stap die ervoor zorgt dat het ook gebruikt wordt. We werken met de tools die jullie al hebben, of dat nu ChatGPT, Copilot, Gemini of iets anders is.',
+    practicalH2: 'Praktisch',
+    specs: [
+      ['duur', 'dagdeel, 2 à 3 uur'],
+      ['groep', '8 tot 16 deelnemers'],
+      ['waar', 'bij jullie op locatie'],
+      ['taal', 'Nederlands of Engels'],
+      ['inclusief', 'intake en meting na vier weken'],
+    ],
+    priceLabel: 'vanaf',
+    price: '€1.250 excl. btw per groep',
+    faqH2: 'Veelgestelde vragen',
+    faq: [
+      ['Moeten deelnemers al met AI werken?', 'Nee. De training werkt voor beginners en voor mensen die AI al dagelijks gebruiken. In een gemengde groep leren mensen juist veel van elkaar.'],
+      ['Met welke AI-tool werken we?', 'Met wat jullie al gebruiken: ChatGPT, Copilot, Gemini of iets anders. De aanpak werkt in elke tool. Heeft jullie organisatie nog niets, dan bespreken we in de intake waar je mee kunt beginnen.'],
+      ['Is dit een Copilot- of ChatGPT-cursus?', 'Nee. Het is geen uitleg van knoppen en menu’s, maar een training in hoe je team AI goed en verantwoord inzet. Het past goed na een toolcursus.'],
+      ['Wat kost het?', 'De training kost vanaf €1.250 excl. btw per groep, inclusief intake en de meting na vier weken. De precieze prijs hoor je na de intake.'],
+      ['Waar vindt de training plaats?', 'Bij jullie op locatie. Een ruimte met een scherm is genoeg. Deelnemers nemen hun eigen laptop mee.'],
+      ['Kan de training in het Engels?', 'Ja. De training kan volledig in het Engels, bijvoorbeeld voor internationale teams.'],
+      ['Wat gebeurt er met onze bedrijfsgegevens?', 'Tijdens de training oefenen we zonder vertrouwelijke gegevens. Wat wel en niet in AI-tools mag, is juist een van de onderwerpen waar jullie samen afspraken over maken.'],
+      ['Hoe snel kan de training plaatsvinden?', 'Meestal binnen een paar weken na de intake. Neem contact op, dan kijken we samen naar een datum.'],
+    ],
+  },
+  en: {
+    title: 'AI at work: a half-day training for teams | Jesco Trainingen',
+    description: 'A hands-on, in-house AI training for 8 to 16 people. Prompting with your own work, trusting AI where it makes sense, and agreeing on how you use it. From €1,250 excl. VAT.',
+    label: 'the training',
+    h1: 'AI at work',
+    lead: 'A half-day in which your team learns how AI arrives at an answer, practises with real work and agrees on how to use it. So AI stops being a side project for a few enthusiasts.',
+    forH2: 'Who it’s for',
+    forP: [
+      'Organisations with roughly 10 to 50 office staff, where AI is already in use or hasn’t quite taken off yet.',
+      'Groups are 8 to 16 people: a whole team or a mix of departments. No AI experience needed. A mixed group actually learns a lot from each other.',
+    ],
+    howH2: 'How it works',
+    steps: [
+      ['01', 'Intake', 'A conversation with you of about 45 minutes. What’s going on in your team, where do you want to get to, which tools do you use? The core of the training is fixed; the rest is shaped around this.'],
+      ['02', 'The session', 'Two to three hours at your office, in three parts: how AI thinks and how we think, prompting with your own work, and agreements and the conversation.'],
+      ['03', 'Four weeks later', 'A short check-in survey for participants: are they using AI, and how confident do they feel? That way you see what the training actually changed.'],
+    ],
+    dayH2: 'What happens in the session',
+    day: [
+      ['0:00', 'How AI thinks, and how we think', ['What a language model can and can’t do', 'Why AI always sounds convincing, even when it’s wrong', 'Why some people trust it too much and others too little'], 45],
+      ['0:45', 'Prompting with your own work', ['A simple structure for good prompts: role, context, limits, tone, next step', 'Practising on real tasks from your day-to-day', 'Group discussion: what works, what doesn’t, and why'], 75],
+      ['2:00', 'Agreements, and the conversation', ['What can and can’t go into AI tools, and who checks what', 'How to bring along colleagues who hesitate or push back', 'A first draft of your own team agreements on AI'], 60],
+    ],
+    afterH2: 'What your team does differently afterwards',
+    after: [
+      'They ask AI better questions and spend less time rewriting.',
+      'They know when an answer is good to use and when to double-check.',
+      'They work to the same agreements, instead of everyone doing their own thing.',
+      'They talk about it: what works, what doesn’t, and who can help whom.',
+    ],
+    notToolH2: 'Not a tool course',
+    notToolP: 'There are good courses that walk you through Copilot in Word and Excel step by step. This is something else. It’s about how people work with AI: trust, habits and collaboration. Already done a tool course? This is the step that makes sure people actually use it. We work with whatever your team already has, whether that’s ChatGPT, Copilot, Gemini or something else.',
+    practicalH2: 'The practical bits',
+    specs: [
+      ['length', 'half a day, 2–3 hours'],
+      ['group', '8 to 16 people'],
+      ['where', 'at your office'],
+      ['language', 'English or Dutch'],
+      ['includes', 'intake and a four-week check-in'],
+    ],
+    priceLabel: 'from',
+    price: '€1,250 excl. VAT per group',
+    faqH2: 'Frequently asked questions',
+    faq: [
+      ['Do people need to be using AI already?', 'No. The session works for complete beginners and for daily users alike. In a mixed group, people learn a lot from each other.'],
+      ['Which AI tool do we use?', 'Whatever you already have: ChatGPT, Copilot, Gemini or something else. The approach works in any tool. If your organisation hasn’t picked one yet, we’ll talk about where to start during the intake.'],
+      ['Is this a Copilot or ChatGPT course?', 'No. It isn’t a walkthrough of buttons and menus. It’s about how your team uses AI well and responsibly. It works well as a follow-up to a tool course.'],
+      ['What does it cost?', 'From €1,250 excl. VAT per group, including the intake and the four-week check-in. You’ll get the exact price after the intake.'],
+      ['Where does it take place?', 'At your office. A room with a screen is all you need. Participants bring their own laptops.'],
+      ['Can the training be in English?', 'Yes. The whole session can be run in English, which works well for international teams.'],
+      ['What about our company data?', 'We practise without confidential information. What can and can’t go into AI tools is one of the things your team agrees on during the session.'],
+      ['How soon can we schedule it?', 'Usually within a few weeks of the intake. Get in touch and we’ll find a date.'],
+    ],
+  },
+}[lang];
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    name: copy.h1,
+    serviceType: lang === 'nl' ? 'Incompany AI-training' : 'In-house AI training',
+    description: copy.description,
+    provider: { '@id': `${site.url}/#organization` },
+    areaServed: { '@type': 'Country', name: 'NL' },
+    availableLanguage: ['nl', 'en'],
+    offers: {
+      '@type': 'Offer',
+      url: new URL(path('training', lang), site.url).href,
+      priceSpecification: { '@type': 'PriceSpecification', minPrice: site.priceFrom, priceCurrency: site.currency, valueAddedTaxIncluded: false },
+    },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    inLanguage: lang === 'nl' ? 'nl-NL' : 'en',
+    mainEntity: copy.faq.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })),
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: site.name, item: new URL(path('home', lang), site.url).href },
+      { '@type': 'ListItem', position: 2, name: copy.h1, item: new URL(path('training', lang), site.url).href },
+    ],
+  },
+];
+---
+<Base lang={lang} title={copy.title} description={copy.description} schema={schema}>
+  <PageHead label={copy.label} title={copy.h1} lead={copy.lead} />
+
+  <section class="wrap section split">
+    <h2 class="split__h">{copy.forH2}</h2>
+    <div class="stack split__body" style="--gap: 18px">
+      {copy.forP.map((p) => <p class="lead">{p}</p>)}
+    </div>
+  </section>
+
+  <section class="wrap steps">
+    <h2 class="visually-hidden">{copy.howH2}</h2>
+    <ol class="steps__list">
+      {copy.steps.map(([n, title, text]) => (
+        <li>
+          <span class="label">{n}</span>
+          <h3>{title}</h3>
+          <p>{text}</p>
+        </li>
+      ))}
+    </ol>
+  </section>
+
+  <section class="dark">
+    <div class="wrap section stack" style="--gap: 40px">
+      <h2>{copy.dayH2}</h2>
+      <div class="timeline timeline--dark">
+        {copy.day.map(([time, title, items, weight]) => (
+          <div style={`flex: ${weight} 1 260px`}>
+            <span class="label">{time}</span>
+            <h3>{title}</h3>
+            <ul>{(items as string[]).map((i) => <li>{i}</li>)}</ul>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap section split">
+    <h2 class="split__h">{copy.afterH2}</h2>
+    <ol class="after split__body">
+      {copy.after.map((a) => <li>{a}</li>)}
+    </ol>
+  </section>
+
+  <section class="wrap split nottool">
+    <h2 class="split__h">{copy.notToolH2}</h2>
+    <p class="lead split__body">{copy.notToolP}</p>
+  </section>
+
+  <section class="wrap section split">
+    <h2 class="split__h">{copy.practicalH2}</h2>
+    <div class="split__body practical">
+      <dl class="specs">
+        {copy.specs.map(([k, v]) => <div><dt>{k}</dt><dd>{v}</dd></div>)}
+        <div><dt>{copy.priceLabel}</dt><dd><strong>{copy.price}</strong></dd></div>
+      </dl>
+      <a class="btn btn--primary" href={`${path('home', lang)}#teamscan`}>{s.cta.scan}</a>
+    </div>
+  </section>
+
+  <section class="wrap split faq-section">
+    <h2 class="split__h">{copy.faqH2}</h2>
+    <div class="faq split__body">
+      {copy.faq.map(([q, a]) => (
+        <details>
+          <summary>{q}</summary>
+          <p>{a}</p>
+        </details>
+      ))}
+    </div>
+  </section>
+
+  <ScanStrip lang={lang} />
+</Base>
+
+<style>
+  .split { display: flex; flex-wrap: wrap; gap: 24px 64px; align-items: flex-start; }
+  .split__h { flex: 1 1 280px; min-width: 0; font-size: clamp(1.8rem, 3vw, 2.6rem); }
+  .split__body { flex: 2 1 520px; min-width: 0; max-width: 46rem; }
+  .steps { padding-bottom: var(--section); }
+  .steps__list { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; border-top: 2px solid var(--ink); }
+  .steps__list li { flex: 1 1 260px; min-width: 0; padding: 20px 28px 0 0; display: flex; flex-direction: column; gap: 10px; }
+  .steps__list p { color: var(--ink-2); line-height: 1.55; }
+  .timeline--dark { border-top-color: var(--on-dark); }
+  .timeline--dark > div { border-left-color: var(--dark-rule); }
+  .timeline--dark ul { margin: 0; padding-left: 1.1em; color: var(--on-dark-2); display: flex; flex-direction: column; gap: 6px; line-height: 1.5; }
+  @media (max-width: 760px) { .timeline--dark > div { border-bottom-color: var(--dark-rule); } }
+  .after { margin: 0; padding: 0; list-style: none; counter-reset: a; border-top: 1px solid var(--ink); }
+  .after li { counter-increment: a; display: flex; gap: 20px; padding: 18px 0; border-bottom: 1px solid var(--rule); font-size: 1.15rem; line-height: 1.5; }
+  .after li::before { content: counter(a, decimal-leading-zero); font-family: var(--mono); font-size: 0.8125rem; color: var(--green); padding-top: 0.35em; }
+  .nottool { padding-block: clamp(48px, 6vw, 72px); border-block: 1px solid var(--rule); }
+  .practical { display: flex; flex-direction: column; gap: 24px; align-items: flex-start; }
+  .practical .specs { width: 100%; max-width: 34rem; }
+  .faq-section { padding-bottom: var(--section); }
+</style>

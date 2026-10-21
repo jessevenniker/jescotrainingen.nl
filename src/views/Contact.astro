@@ -1,0 +1,85 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import TeamScan from '../components/TeamScan.astro';
+import { path, type Lang } from '../i18n';
+import { site } from '../data/site';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+
+const copy = {
+  nl: {
+    title: 'Contact | Jesco Trainingen',
+    description: 'Benieuwd of de AI-training bij je team past? Doe de teamscan of mail direct naar Jesse Venniker.',
+    label: 'contact',
+    h1: 'Vertel wat er speelt.',
+    lead: 'Doe de teamscan en mail je uitslag, of stuur direct een bericht. Je krijgt persoonlijk antwoord van mij.',
+    mailH: 'Liever direct mailen?',
+    nextH: 'Wat er daarna gebeurt',
+    next: [
+      'Ik lees je bericht en reageer persoonlijk.',
+      'We plannen een intake: een gesprek over je team, je doelen en de tools die jullie gebruiken.',
+      'Je krijgt een voorstel voor een training die past, met datum en prijs.',
+    ],
+    company: 'Jesco Trainingen is onderdeel van Jesco Innovation BV.',
+  },
+  en: {
+    title: 'Contact | Jesco Trainingen',
+    description: 'Wondering whether the AI training fits your team? Take the team scan or email Jesse Venniker directly.',
+    label: 'contact',
+    h1: 'Tell me what’s going on.',
+    lead: 'Take the team scan and email your result, or just send a message. You’ll hear back from me personally.',
+    mailH: 'Rather email directly?',
+    nextH: 'What happens next',
+    next: [
+      'I read your message and reply personally.',
+      'We schedule an intake: a conversation about your team, your goals and the tools you use.',
+      'You get a proposal for a session that fits, with a date and a price.',
+    ],
+    company: 'Jesco Trainingen is part of Jesco Innovation BV.',
+  },
+}[lang];
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'ContactPage',
+    inLanguage: lang === 'nl' ? 'nl-NL' : 'en',
+    url: new URL(path('contact', lang), site.url).href,
+    about: { '@id': `${site.url}/#organization` },
+  },
+];
+---
+<Base lang={lang} title={copy.title} description={copy.description} schema={schema}>
+  <PageHead label={copy.label} title={copy.h1} lead={copy.lead} />
+  <section class="wrap section contact">
+    <div class="contact__scan">
+      <TeamScan lang={lang} id="teamscan-contact" />
+    </div>
+    <div class="contact__side stack" style="--gap: 40px">
+      <div class="stack" style="--gap: 10px">
+        <h2 class="contact__h">{copy.mailH}</h2>
+        <a class="contact__mail" href={`mailto:${site.email}`}>{site.email}</a>
+      </div>
+      <div class="stack" style="--gap: 14px">
+        <h2 class="contact__h">{copy.nextH}</h2>
+        <ol class="contact__next">
+          {copy.next.map((n) => <li>{n}</li>)}
+        </ol>
+      </div>
+      <p class="muted">{copy.company}{site.kvk && <> KVK {site.kvk}.</>}</p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .contact { display: flex; flex-wrap: wrap; gap: 48px 72px; align-items: flex-start; }
+  .contact__scan { flex: 1.3 1 480px; min-width: 0; height: 620px; }
+  .contact__side { flex: 1 1 320px; min-width: 0; }
+  .contact__h { font-size: clamp(1.4rem, 2.2vw, 1.8rem); }
+  .contact__mail { font-size: clamp(1.2rem, 2vw, 1.5rem); font-weight: 600; word-break: break-word; }
+  .contact__next { margin: 0; padding: 0; list-style: none; counter-reset: n; border-top: 1px solid var(--ink); }
+  .contact__next li { counter-increment: n; display: flex; gap: 16px; padding: 14px 0; border-bottom: 1px solid var(--rule); line-height: 1.5; }
+  .contact__next li::before { content: counter(n, decimal-leading-zero); font-family: var(--mono); font-size: 0.8125rem; color: var(--green); padding-top: 0.25em; }
+</style>

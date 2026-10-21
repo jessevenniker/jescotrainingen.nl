@@ -1,0 +1,18 @@
+---
+import { path, type Lang } from '../i18n';
+import { t } from '../i18n/ui';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const s = t(lang);
+---
+<section class="night scan-strip">
+  <div class="wrap scan-strip__inner">
+    <p><span class="prompt" aria-hidden="true">&gt;</span> {s.scanStrip.text}</p>
+    <a class="btn btn--lime" href={`${path('home', lang)}#teamscan`}>{s.scanStrip.button}</a>
+  </div>
+</section>
+<style>
+  .scan-strip__inner { display: flex; flex-wrap: wrap; align-items: center; gap: 20px 32px; padding-block: 40px; }
+  .scan-strip p { flex: 1 1 360px; font-family: var(--mono); font-size: 1rem; }
+  .prompt { color: var(--lime); }
+</style>

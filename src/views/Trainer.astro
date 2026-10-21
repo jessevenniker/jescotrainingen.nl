@@ -1,0 +1,134 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import ScanStrip from '../components/ScanStrip.astro';
+import { path, type Lang } from '../i18n';
+import { site } from '../data/site';
+import portrait from '../assets/images/jesse-portret.jpg';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+
+const copy = {
+  nl: {
+    title: 'Jesse Venniker, trainer AI en gedrag | Jesco Trainingen',
+    description: 'Jesse Venniker is trainer en oprichter van Jesco Trainingen. Met een achtergrond in de toegepaste psychologie helpt hij teams om AI echt te gaan gebruiken.',
+    label: 'over de trainer',
+    h1: 'Jesse Venniker',
+    role: 'Trainer en oprichter van Jesco Trainingen',
+    body: [
+      'Ik kom uit de toegepaste psychologie, en dat merk je aan hoe ik train. Ik kijk niet alleen naar wat een tool kan, maar vooral naar wat mensen ermee doen, en waarom.',
+      'In organisaties zie ik steeds hetzelfde patroon. Een paar mensen gebruiken AI elke dag, de rest kijkt toe of haakt af. Niet omdat ze het niet kunnen, maar omdat niemand heeft laten zien hoe het in hun eigen werk past. En omdat er nooit samen over gepraat is.',
+      'Daar gaat mijn training over. Praktische handvatten en best practices, herkenbare voorbeelden uit jullie eigen werk, en groepsgesprekken in plaats van een presentatie. Het verschil met een tooluitleg: mensen gebruiken het daarna ook echt.',
+    ],
+    howH2: 'Hoe ik werk',
+    how: [
+      ['Praktisch', 'Je team oefent met eigen taken. Wat in de training werkt, werkt de volgende dag ook.'],
+      ['Herkenbaar', 'Geen verzonnen casussen. We beginnen bij wat er in jullie team speelt.'],
+      ['In gesprek', 'Groepsgesprekken zijn geen bijzaak. Daar ontstaan de afspraken die blijven.'],
+      ['Onderbouwd', 'Wat ik vertel over vertrouwen, gedrag en adoptie komt uit onderzoek.'],
+    ],
+    research: 'Bekijk het onderzoek',
+    facts: [
+      ['achtergrond', 'toegepaste psychologie'],
+      ['traint in', 'Nederlands en Engels'],
+      ['eerste trainingen', 'juni 2026, gemiddeld een 9,3'],
+      ['bedrijf', 'Jesco Innovation BV'],
+    ],
+    alt: 'Portret van Jesse Venniker tijdens een training, voor een whiteboard en een scherm',
+    cta: 'Plan een kennismaking',
+  },
+  en: {
+    title: 'Jesse Venniker, trainer in AI and behaviour | Jesco Trainingen',
+    description: 'Jesse Venniker is the trainer and founder of Jesco Trainingen. With a background in applied psychology, he helps teams actually start using AI.',
+    label: 'about the trainer',
+    h1: 'Jesse Venniker',
+    role: 'Trainer and founder of Jesco Trainingen',
+    body: [
+      'My background is in applied psychology, and it shows in how I train. I’m less interested in what a tool can do than in what people actually do with it, and why.',
+      'I keep seeing the same pattern in organisations. A few people use AI every day; everyone else watches from the sidelines or gives up. Not because they can’t, but because nobody showed them how it fits into their own work. And because the team never talked about it together.',
+      'That’s what my training is about. Practical tools and best practices, examples from your own work, and group discussion instead of a slide deck. The difference with a tool walkthrough: people actually use it afterwards.',
+    ],
+    howH2: 'How I work',
+    how: [
+      ['Practical', 'Your team practises on real tasks. What works in the session works the next day too.'],
+      ['Recognisable', 'No made-up case studies. We start from what’s actually going on in your team.'],
+      ['Conversational', 'Group discussion isn’t a side dish. It’s where the agreements that last are made.'],
+      ['Evidence-based', 'What I share about trust, behaviour and adoption comes from research.'],
+    ],
+    research: 'See the research',
+    facts: [
+      ['background', 'applied psychology'],
+      ['trains in', 'English and Dutch'],
+      ['first sessions', 'June 2026, average score 9.3'],
+      ['company', 'Jesco Innovation BV'],
+    ],
+    alt: 'Portrait of Jesse Venniker during a session, in front of a whiteboard and a screen',
+    cta: 'Book an intro call',
+  },
+}[lang];
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'ProfilePage',
+    mainEntity: { '@id': `${site.url}/#jesse` },
+    inLanguage: lang === 'nl' ? 'nl-NL' : 'en',
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: site.name, item: new URL(path('home', lang), site.url).href },
+      { '@type': 'ListItem', position: 2, name: copy.h1, item: new URL(path('trainer', lang), site.url).href },
+    ],
+  },
+];
+---
+<Base lang={lang} title={copy.title} description={copy.description} schema={schema}>
+  <section class="wrap trainer">
+    <div class="trainer__text stack" style="--gap: 24px">
+      <span class="label accent-text">{copy.label}</span>
+      <h1>{copy.h1}</h1>
+      <p class="trainer__role">{copy.role}</p>
+      {copy.body.map((p) => <p class="lead">{p}</p>)}
+      <dl class="specs trainer__facts">
+        {copy.facts.map(([k, v]) => <div><dt>{k}</dt><dd>{v}</dd></div>)}
+      </dl>
+    </div>
+    <Image src={portrait} alt={copy.alt} widths={[480, 800, 1100]} sizes="(max-width: 760px) 100vw, 520px" class="trainer__photo" loading="eager" />
+  </section>
+
+  <section class="dark">
+    <div class="wrap section stack" style="--gap: 40px">
+      <h2>{copy.howH2}</h2>
+      <ol class="how">
+        {copy.how.map(([h, p], i) => (
+          <li>
+            <span class="label">{String(i + 1).padStart(2, '0')}</span>
+            <h3>{h}</h3>
+            <p>{p}</p>
+          </li>
+        ))}
+      </ol>
+      <div class="row" style="--gap: 16px 28px; align-items: center">
+        <a class="btn btn--lime" href={path('contact', lang)}>{copy.cta}</a>
+        <a class="textlink" href={path('research', lang)}>{copy.research}</a>
+      </div>
+    </div>
+  </section>
+
+  <ScanStrip lang={lang} />
+</Base>
+
+<style>
+  .trainer { display: flex; flex-wrap: wrap; gap: 48px 72px; padding-block: clamp(56px, 8vw, 96px); align-items: flex-start; }
+  .trainer__text { flex: 1 1 480px; min-width: 0; max-width: 44rem; }
+  .trainer h1 { font-size: clamp(2.6rem, 6vw, 5.2rem); }
+  .trainer__role { font-family: var(--mono); font-size: 0.875rem; color: var(--muted); }
+  .trainer__facts { max-width: 32rem; margin-top: 12px; }
+  .trainer__photo { flex: 1 1 360px; min-width: 0; width: 100%; aspect-ratio: 4 / 5; object-fit: cover; object-position: 28% 30%; border-radius: 4px; }
+  .how { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; border-top: 1px solid var(--on-dark); }
+  .how li { flex: 1 1 240px; min-width: 0; padding: 20px 28px 0 0; display: flex; flex-direction: column; gap: 10px; }
+  .how p { color: var(--on-dark-2); line-height: 1.55; }
+</style>

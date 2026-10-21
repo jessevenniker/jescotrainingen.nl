@@ -1,0 +1,54 @@
+---
+import Logo from './Logo.astro';
+import { path, type Lang, type RouteKey } from '../i18n';
+import { t } from '../i18n/ui';
+import { site } from '../data/site';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const s = t(lang);
+const pages: { key: RouteKey; label: string }[] = [
+  { key: 'training', label: s.nav.training },
+  { key: 'experiences', label: s.nav.experiences },
+  { key: 'research', label: s.nav.research },
+  { key: 'knowledge', label: s.nav.knowledge },
+  { key: 'trainer', label: s.nav.trainer },
+  { key: 'contact', label: s.nav.contact },
+];
+const year = new Date().getFullYear();
+---
+<footer class="site-footer">
+  <div class="wrap site-footer__grid">
+    <div class="site-footer__brand stack" style="--gap: 16px">
+      <a href={path('home', lang)} class="brand"><Logo size={32} /><span>Jesco Trainingen</span></a>
+      <p class="muted">{s.footer.tagline}</p>
+    </div>
+    <nav aria-label={s.footer.pages} class="site-footer__col">
+      <span class="label">{s.footer.pages}</span>
+      {pages.map((p) => <a href={path(p.key, lang)}>{p.label}</a>)}
+    </nav>
+    <div class="site-footer__col">
+      <span class="label">{s.footer.contact}</span>
+      <a href={`mailto:${site.email}`}>{site.email}</a>
+      <a href={path('privacy', lang)}>{s.footer.privacy}</a>
+      <span class="muted">
+        <a href={path('home', 'nl')} hreflang="nl" lang="nl">Nederlands</a> · <a href={path('home', 'en')} hreflang="en" lang="en">English</a>
+      </span>
+    </div>
+  </div>
+  <div class="wrap site-footer__legal">
+    <span>{s.footer.partOf}{site.kvk && <> · {s.footer.kvk} {site.kvk}</>}</span>
+    <span>© {year}</span>
+  </div>
+</footer>
+
+<style>
+  .site-footer { border-top: 1px solid var(--rule); padding-top: 56px; font-size: 0.95rem; }
+  .site-footer__grid { display: flex; flex-wrap: wrap; gap: 40px 64px; padding-bottom: 48px; }
+  .site-footer__brand { flex: 2 1 280px; max-width: 26rem; }
+  .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; font-weight: 600; }
+  .site-footer__col { flex: 1 1 180px; display: flex; flex-direction: column; gap: 8px; }
+  .site-footer__col a { text-decoration: none; padding-block: 2px; }
+  .site-footer__col a:hover { text-decoration: underline; }
+  .site-footer__legal { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px; padding-block: 20px 32px; border-top: 1px solid var(--rule); font-size: 0.875rem; color: var(--muted); }
+</style>

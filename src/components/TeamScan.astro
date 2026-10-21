@@ -1,0 +1,310 @@
+---
+import type { Lang } from '../i18n';
+import { t } from '../i18n/ui';
+import { site } from '../data/site';
+
+interface Props { lang: Lang; id?: string }
+const { lang, id = 'teamscan' } = Astro.props;
+const s = t(lang).scan;
+const title = lang === 'nl' ? 'Teamscan: waar staat je team met AI?' : 'Team scan: where does your team stand with AI?';
+---
+<section class="scan" id={id} data-teamscan data-email={site.email} aria-label={title}>
+  <script type="application/json" data-scan-copy set:html={JSON.stringify(s)} />
+  <div class="scan__bar">
+    <span class="scan__dot" aria-hidden="true"></span>
+    <span>{s.name}</span>
+    <span class="scan__status" data-status>{s.status.connecting}</span>
+    <span class="scan__progress" data-progress>1/5</span>
+  </div>
+  <div class="scan__segments" aria-hidden="true">
+    {s.questions.map(() => <span data-seg></span>)}
+  </div>
+  <div class="scan__log" data-log role="log" aria-live="polite" aria-relevant="additions">
+    <noscript>
+      <p class="scan__noscript">{s.noscript} <a href={`mailto:${site.email}`}>{site.email}</a>.</p>
+    </noscript>
+  </div>
+  <div class="scan__foot" aria-hidden="true">
+    <span class="scan__caret">&gt;</span>
+    <span data-hint>{s.hintTyping}</span>
+  </div>
+</section>
+
+<style is:global>
+  .scan {
+    --scan-bg: var(--night);
+    display: flex; flex-direction: column; height: 100%; min-height: 520px;
+    background: var(--scan-bg); color: #eaf0e6; border-radius: 8px; overflow: hidden;
+    font-family: var(--sans);
+  }
+  .scan__bar { display: flex; align-items: center; gap: 10px; padding: 12px 16px; background: var(--night-2); border-bottom: 1px solid #24402f; font-family: var(--mono); font-size: 0.8125rem; }
+  .scan__dot { width: 8px; height: 8px; border-radius: 50%; background: var(--lime); }
+  .scan__status { color: var(--on-dark-3); }
+  .scan__progress { margin-left: auto; color: var(--on-dark-3); }
+  .scan__segments { display: flex; gap: 4px; padding: 0 16px 10px; background: var(--night-2); }
+  .scan__segments span { flex: 1 1 0; height: 3px; border-radius: 2px; background: #2c4c39; transition: background-color .3s; }
+  .scan__segments span.is-done { background: var(--lime); }
+  .scan__log { flex: 1 1 auto; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; padding: 18px 18px 14px; scroll-behavior: smooth; }
+  .scan__msg { align-self: flex-start; max-width: 92%; display: flex; flex-direction: column; gap: 5px; }
+  .scan__who { font-family: var(--mono); font-size: 0.75rem; color: var(--on-dark-3); }
+  .scan__text { font-size: 1rem; line-height: 1.5; }
+  .scan__thinking { font-family: var(--mono); font-size: 0.8125rem; color: var(--on-dark-3); }
+  .scan__user { align-self: flex-end; max-width: 84%; background: var(--lime); color: var(--night); padding: 10px 14px; border-radius: 12px 12px 2px 12px; font-size: 0.95rem; font-weight: 500; line-height: 1.45; }
+  .scan__options { display: flex; flex-direction: column; gap: 6px; }
+  .scan__option {
+    display: flex; align-items: center; gap: 12px; min-height: 44px; padding: 8px 12px; border-radius: 8px;
+    border: 1px solid #2c4c39; background: var(--night-2); color: #eaf0e6; font: inherit; font-size: 0.95rem; text-align: left; cursor: pointer;
+    transition: border-color .15s, background-color .15s;
+  }
+  .scan__option:hover { border-color: var(--lime); background: #173426; }
+  .scan__option:focus-visible { outline: 2px solid var(--lime); outline-offset: 2px; }
+  .scan__key { font-family: var(--mono); font-size: 0.75rem; color: var(--lime); width: 14px; }
+  .scan__result { display: flex; flex-direction: column; gap: 12px; padding: 18px; border-radius: 10px; border: 1px solid var(--lime); background: var(--night-2); }
+  .scan__result strong { font-size: 1.6rem; font-weight: 600; line-height: 1.1; letter-spacing: -0.02em; }
+  .scan__result p { font-size: 0.95rem; line-height: 1.5; color: #cfdacf; }
+  .scan__actions { display: flex; flex-wrap: wrap; gap: 10px; }
+  .scan__actions .btn { min-height: 44px; font-size: 0.95rem; padding: 0 16px; }
+  .scan__ghost { min-height: 44px; padding: 0 14px; border-radius: 8px; border: 1px solid #2c4c39; background: transparent; color: #eaf0e6; font: inherit; font-size: 0.875rem; cursor: pointer; }
+  .scan__ghost:hover { border-color: var(--lime); }
+  .scan__note { font-size: 0.8125rem; color: var(--on-dark-3); }
+  .scan__note a { color: #eaf0e6; }
+  .scan__foot { display: flex; align-items: center; gap: 10px; padding: 12px 16px; border-top: 1px solid #24402f; font-family: var(--mono); font-size: 0.8125rem; color: var(--on-dark-3); }
+  .scan__caret { color: var(--lime); }
+  .scan__noscript { font-size: 0.95rem; }
+  .scan__noscript a { color: var(--lime); }
+</style>
+
+<script>
+  type Option = [string, number];
+  type Copy = {
+    status: { connecting: string; typing: string; online: string };
+    thinking: string; bot: string; hintTyping: string; hintChoose: string; hintDone: string;
+    resultLabel: string; discuss: string; restart: string; copy: string; copied: string; mailNote: string;
+    greet: string; thanks: string; subject: string; mailIntro: string; mailOutro: string; resultWord: string;
+    questions: { q: string; o: Option[] }[];
+    profiles: { t: string; d: string }[];
+  };
+
+  const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+  const keys = ['a', 'b', 'c', 'd', 'e'];
+
+  class TeamScan {
+    el: HTMLElement;
+    log: HTMLElement;
+    copy: Copy;
+    email: string;
+    reduce: boolean;
+    answers: string[] = [];
+    scores: number[] = [];
+    run = 0;
+
+    constructor(el: HTMLElement) {
+      this.el = el;
+      this.log = el.querySelector('[data-log]') as HTMLElement;
+      this.copy = JSON.parse((el.querySelector('[data-scan-copy]') as HTMLElement).textContent || '{}');
+      this.email = el.dataset.email || '';
+      this.reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    }
+
+    set(attr: string, text: string) {
+      const node = this.el.querySelector(`[data-${attr}]`);
+      if (node) node.textContent = text;
+    }
+
+    scrollDown() {
+      this.log.scrollTop = this.log.scrollHeight;
+    }
+
+    hasFocus() {
+      return this.el.contains(document.activeElement);
+    }
+
+    async think(run: number, ms: number) {
+      if (this.reduce) return;
+      const node = document.createElement('div');
+      node.className = 'scan__thinking';
+      this.log.append(node);
+      const end = Date.now() + ms;
+      let n = 0;
+      while (Date.now() < end && run === this.run) {
+        node.textContent = `${this.copy.thinking} ${'.'.repeat((n++ % 3) + 1)}`;
+        this.scrollDown();
+        await sleep(160);
+      }
+      node.remove();
+    }
+
+    async say(text: string, run: number) {
+      const msg = document.createElement('div');
+      msg.className = 'scan__msg';
+      const who = document.createElement('span');
+      who.className = 'scan__who';
+      who.textContent = this.copy.bot;
+      const p = document.createElement('p');
+      p.className = 'scan__text';
+      msg.append(who, p);
+      this.log.append(msg);
+      if (this.reduce) {
+        p.textContent = text;
+        this.scrollDown();
+        return;
+      }
+      this.set('status', this.copy.status.typing);
+      this.set('hint', this.copy.hintTyping);
+      for (let i = 0; i <= text.length; i += 2) {
+        if (run !== this.run) return;
+        p.textContent = `${text.slice(0, i)} ▍`;
+        if (i % 12 === 0) this.scrollDown();
+        await sleep(18);
+      }
+      p.textContent = text;
+      this.scrollDown();
+    }
+
+    progress() {
+      const step = Math.min(this.answers.length + 1, this.copy.questions.length);
+      this.set('progress', `${step}/${this.copy.questions.length}`);
+      this.el.querySelectorAll('[data-seg]').forEach((seg, i) => {
+        seg.classList.toggle('is-done', i < this.answers.length);
+      });
+    }
+
+    async start() {
+      const run = ++this.run;
+      this.answers = [];
+      this.scores = [];
+      this.log.replaceChildren();
+      this.progress();
+      this.set('status', this.copy.status.connecting);
+      await this.think(run, 700);
+      if (run !== this.run) return;
+      await this.say(this.copy.greet, run);
+      await this.ask(run);
+    }
+
+    async ask(run: number) {
+      const step = this.answers.length;
+      const question = this.copy.questions[step];
+      if (!question) return this.finish(run);
+      await this.say(question.q, run);
+      if (run !== this.run) return;
+      const hadFocus = this.hasFocus();
+      const list = document.createElement('div');
+      list.className = 'scan__options';
+      question.o.forEach(([label, score], i) => {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'scan__option';
+        const k = document.createElement('span');
+        k.className = 'scan__key';
+        k.setAttribute('aria-hidden', 'true');
+        k.textContent = keys[i];
+        b.append(k, document.createTextNode(label));
+        b.addEventListener('click', () => this.choose(label, score, list));
+        list.append(b);
+      });
+      this.log.append(list);
+      this.set('status', this.copy.status.online);
+      this.set('hint', this.copy.hintChoose);
+      this.scrollDown();
+      if (hadFocus) (list.querySelector('button') as HTMLButtonElement | null)?.focus({ preventScroll: true });
+    }
+
+    async choose(label: string, score: number, list: HTMLElement) {
+      const run = this.run;
+      const keepFocus = this.hasFocus();
+      list.remove();
+      const user = document.createElement('div');
+      user.className = 'scan__user';
+      user.textContent = label;
+      this.log.append(user);
+      this.answers.push(label);
+      this.scores.push(score);
+      this.progress();
+      this.scrollDown();
+      if (keepFocus) this.log.focus({ preventScroll: true });
+      await this.think(run, 450);
+      if (run !== this.run) return;
+      await this.ask(run);
+    }
+
+    mailto(profile: { t: string; d: string }) {
+      const lines = this.copy.questions.map((q, i) => `${q.q}\n→ ${this.answers[i]}`).join('\n\n');
+      const body = `${this.copy.mailIntro}\n\n${lines}\n\n${this.copy.resultWord}: ${profile.t}\n\n${this.copy.mailOutro}`;
+      return `mailto:${this.email}?subject=${encodeURIComponent(`${this.copy.subject}: ${profile.t}`)}&body=${encodeURIComponent(body)}`;
+    }
+
+    async finish(run: number) {
+      await this.say(this.copy.thanks, run);
+      if (run !== this.run) return;
+      const total = this.scores.reduce((a, b) => a + b, 0);
+      const p = this.copy.profiles;
+      const profile = total <= 3 ? p[0] : total <= 7 ? p[1] : total <= 10 ? p[2] : p[3];
+
+      const card = document.createElement('div');
+      card.className = 'scan__result';
+      const label = document.createElement('span');
+      label.className = 'scan__who';
+      label.textContent = this.copy.resultLabel;
+      const title = document.createElement('strong');
+      title.textContent = profile.t;
+      const text = document.createElement('p');
+      text.textContent = profile.d;
+
+      const actions = document.createElement('div');
+      actions.className = 'scan__actions';
+      const mail = document.createElement('a');
+      mail.className = 'btn btn--lime';
+      mail.href = this.mailto(profile);
+      mail.textContent = this.copy.discuss;
+      const again = document.createElement('button');
+      again.type = 'button';
+      again.className = 'scan__ghost';
+      again.textContent = this.copy.restart;
+      again.addEventListener('click', () => this.start());
+      const copyBtn = document.createElement('button');
+      copyBtn.type = 'button';
+      copyBtn.className = 'scan__ghost';
+      copyBtn.textContent = this.copy.copy;
+      copyBtn.addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(this.email);
+          copyBtn.textContent = this.copy.copied;
+        } catch {
+          copyBtn.textContent = this.email;
+        }
+      });
+      actions.append(mail, again, copyBtn);
+
+      const note = document.createElement('p');
+      note.className = 'scan__note';
+      note.append(`${this.copy.mailNote} `);
+      const a = document.createElement('a');
+      a.href = `mailto:${this.email}`;
+      a.textContent = this.email;
+      note.append(a, '.');
+
+      card.append(label, title, text, actions, note);
+      this.log.append(card);
+      this.set('status', this.copy.status.online);
+      this.set('hint', this.copy.hintDone);
+      this.set('progress', `${this.copy.questions.length}/${this.copy.questions.length}`);
+      this.scrollDown();
+    }
+  }
+
+  document.querySelectorAll<HTMLElement>('[data-teamscan]').forEach((el) => {
+    const scan = new TeamScan(el);
+    scan.log.tabIndex = -1;
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          io.disconnect();
+          scan.start();
+        }
+      },
+      { threshold: 0.25 },
+    );
+    io.observe(el);
+  });
+</script>

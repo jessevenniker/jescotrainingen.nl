@@ -1,0 +1,60 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import type { Lang } from '../i18n';
+import { site } from '../data/site';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+
+const copy = {
+  nl: {
+    title: 'Privacy | Jesco Trainingen',
+    description: 'Hoe Jesco Trainingen omgaat met je gegevens: geen cookies, geen tracking, en je gegevens alleen voor contact.',
+    h1: 'Privacy',
+    updated: 'laatst bijgewerkt: oktober 2026',
+    blocks: [
+      ['Wie is verantwoordelijk', `Jesco Trainingen is onderdeel van ${site.legalName}. Voor vragen over je gegevens mail je naar ${site.email}.`],
+      ['Geen cookies, geen tracking', 'Deze website plaatst geen cookies en gebruikt geen analytics- of advertentiediensten. Lettertypes worden vanaf deze website zelf geladen, niet via externe diensten.'],
+      ['De teamscan', 'Je antwoorden in de teamscan blijven in je eigen browser. Er wordt niets opgeslagen of verstuurd, tenzij je zelf op de knop klikt om je uitslag te mailen. Dan opent je eigen mailprogramma en bepaal jij wat je verstuurt.'],
+      ['Als je mailt', 'Als je mailt, gebruik ik je naam, e-mailadres en bericht alleen om je te antwoorden en een eventuele training voor te bereiden. Ik deel ze niet met anderen en bewaar ze niet langer dan nodig.'],
+      ['Hosting', 'De website wordt gehost door een externe partij. Die kan technische gegevens zoals je IP-adres kort bewaren voor beveiliging en het goed laten werken van de site.'],
+      ['Je rechten', 'Je kunt altijd vragen welke gegevens ik van je heb, en vragen om ze aan te passen of te verwijderen. Mail daarvoor naar het adres hierboven. Ben je het niet eens met hoe ik met je gegevens omga, dan kun je een klacht indienen bij de Autoriteit Persoonsgegevens.'],
+    ],
+  },
+  en: {
+    title: 'Privacy | Jesco Trainingen',
+    description: 'How Jesco Trainingen handles your data: no cookies, no tracking, and your details used only to get back to you.',
+    h1: 'Privacy',
+    updated: 'last updated: October 2026',
+    blocks: [
+      ['Who’s responsible', `Jesco Trainingen is part of ${site.legalName}. For questions about your data, email ${site.email}.`],
+      ['No cookies, no tracking', 'This website doesn’t set cookies and doesn’t use analytics or advertising services. Fonts are served from this website itself, not from third parties.'],
+      ['The team scan', 'Your answers in the team scan stay in your own browser. Nothing is stored or sent unless you click the button to email your result. That opens your own email app, and you decide what gets sent.'],
+      ['When you email', 'If you email me, I use your name, email address and message only to reply and to prepare a possible training. I don’t share them and don’t keep them longer than necessary.'],
+      ['Hosting', 'The website is hosted by a third party, which may briefly keep technical data such as your IP address for security and to keep the site running.'],
+      ['Your rights', 'You can always ask what data I hold about you, and ask me to correct or delete it. Just email the address above. If you’re unhappy with how your data is handled, you can file a complaint with the Dutch Data Protection Authority (Autoriteit Persoonsgegevens).'],
+    ],
+  },
+}[lang];
+---
+<Base lang={lang} title={copy.title} description={copy.description}>
+  <PageHead title={copy.h1} lead={copy.updated} />
+  <section class="wrap section">
+    <div class="privacy">
+      {copy.blocks.map(([h, p]) => (
+        <section class="privacy__block">
+          <h2>{h}</h2>
+          <p>{p}</p>
+        </section>
+      ))}
+    </div>
+  </section>
+</Base>
+
+<style>
+  .privacy { max-width: 46rem; border-top: 1px solid var(--ink); }
+  .privacy__block { padding: 24px 0; border-bottom: 1px solid var(--rule); display: flex; flex-direction: column; gap: 10px; }
+  .privacy__block h2 { font-size: 1.3rem; letter-spacing: -0.01em; }
+  .privacy__block p { color: var(--ink-2); line-height: 1.65; }
+</style>

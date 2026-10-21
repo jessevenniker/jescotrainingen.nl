@@ -1,0 +1,74 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import ScanStrip from '../components/ScanStrip.astro';
+import { path, type Lang } from '../i18n';
+import { site } from '../data/site';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const locale = lang === 'nl' ? 'nl-NL' : 'en-GB';
+
+const articles = (await getCollection('kennisbank', (e) => e.data.lang === lang))
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+
+const copy = {
+  nl: {
+    title: 'Kennisbank: AI, gedrag en werk | Jesco Trainingen',
+    description: 'Artikelen over de psychologie van AI op het werk: vertrouwen, gewoontes, weerstand en goed prompten. Onderbouwd met onderzoek, elke maand een nieuw stuk.',
+    label: 'kennisbank',
+    h1: 'AI, gedrag en werk.',
+    lead: 'Over hoe mensen met AI werken: vertrouwen, gewoontes, weerstand en goed prompten. Onderbouwd met onderzoek. Elke maand een nieuw artikel.',
+    read: 'Lees artikel',
+  },
+  en: {
+    title: 'Insights: AI, behaviour and work | Jesco Trainingen',
+    description: 'Articles on the psychology of AI at work: trust, habits, resistance and better prompting. Backed by research, with a new piece every month.',
+    label: 'insights',
+    h1: 'AI, behaviour and work.',
+    lead: 'On how people work with AI: trust, habits, resistance and better prompting. Backed by research. A new article every month.',
+    read: 'Read article',
+  },
+}[lang];
+
+const base = path('knowledge', lang);
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Blog',
+    name: copy.h1,
+    url: new URL(base, site.url).href,
+    inLanguage: lang === 'nl' ? 'nl-NL' : 'en',
+    publisher: { '@id': `${site.url}/#organization` },
+    blogPost: articles.map((a) => ({ '@type': 'BlogPosting', headline: a.data.title, url: new URL(`${base}${a.id}/`, site.url).href, datePublished: a.data.date.toISOString().slice(0, 10) })),
+  },
+];
+---
+<Base lang={lang} title={copy.title} description={copy.description} schema={schema}>
+  <PageHead label={copy.label} title={copy.h1} lead={copy.lead} />
+  <section class="wrap section">
+    <ul class="articles">
+      {articles.map((a) => (
+        <li>
+          <a href={`${base}${a.id}/`} class="article-row">
+            <span class="label">{a.data.date.toLocaleDateString(locale, { day: 'numeric', month: 'long', year: 'numeric' })} · {a.data.cluster}</span>
+            <h2>{a.data.title}</h2>
+            <p>{a.data.description}</p>
+            <span class="textlink">{copy.read}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
+  <ScanStrip lang={lang} />
+</Base>
+
+<style>
+  .articles { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--ink); }
+  .articles li { border-bottom: 1px solid var(--rule); }
+  .article-row { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; padding: 32px 0; text-decoration: none; max-width: 52rem; }
+  .article-row h2 { font-size: clamp(1.6rem, 3vw, 2.4rem); }
+  .article-row p { color: var(--ink-2); line-height: 1.6; }
+  .article-row:hover h2 { color: var(--green); }
+</style>

@@ -1,0 +1,95 @@
+---
+import { render, type CollectionEntry } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import ScanStrip from '../components/ScanStrip.astro';
+import { path, counterpart, type Lang } from '../i18n';
+import { site } from '../data/site';
+import { pick } from '../data/sources';
+import { t } from '../i18n/ui';
+
+interface Props { entry: CollectionEntry<'kennisbank'> }
+const { entry } = Astro.props;
+const lang = entry.data.lang as Lang;
+const s = t(lang);
+const { Content } = await render(entry);
+const locale = lang === 'nl' ? 'nl-NL' : 'en-GB';
+const list = pick(...entry.data.sources);
+const url = new URL(Astro.url.pathname, site.url).href;
+const otherLang: Lang = lang === 'nl' ? 'en' : 'nl';
+const otherHref = counterpart(Astro.url.pathname, otherLang);
+const hasOther = otherHref !== path('home', otherLang);
+
+const copy = {
+  nl: { back: 'Kennisbank', other: 'Read this in English', by: 'door', training: 'Over de training', trainingText: 'Dit onderwerp is een vast onderdeel van de training AI in je werk.' },
+  en: { back: 'Insights', other: 'Lees dit in het Nederlands', by: 'by', training: 'About the training', trainingText: 'This topic is a core part of the AI at work training.' },
+}[lang];
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: entry.data.title,
+    description: entry.data.description,
+    datePublished: entry.data.date.toISOString().slice(0, 10),
+    inLanguage: lang === 'nl' ? 'nl-NL' : 'en',
+    author: { '@id': `${site.url}/#jesse` },
+    publisher: { '@id': `${site.url}/#organization` },
+    mainEntityOfPage: url,
+    citation: list.map((src) => ({ '@type': 'ScholarlyArticle', name: src.citation, url: src.url })),
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: site.name, item: new URL(path('home', lang), site.url).href },
+      { '@type': 'ListItem', position: 2, name: copy.back, item: new URL(path('knowledge', lang), site.url).href },
+      { '@type': 'ListItem', position: 3, name: entry.data.title, item: url },
+    ],
+  },
+];
+---
+<Base lang={lang} title={`${entry.data.title} | Jesco Trainingen`} description={entry.data.description} schema={schema} ogType="article">
+  <article>
+    <header class="page-head">
+      <div class="wrap stack" style="--gap: 20px">
+        <nav class="label" aria-label="Breadcrumb"><a href={path('knowledge', lang)}>{copy.back}</a> / {entry.data.cluster}</nav>
+        <h1 class="article__h1">{entry.data.title}</h1>
+        <p class="lead article__lead">{entry.data.description}</p>
+        <p class="label">
+          {copy.by} {site.trainer} · <time datetime={entry.data.date.toISOString().slice(0, 10)}>{entry.data.date.toLocaleDateString(locale, { day: 'numeric', month: 'long', year: 'numeric' })}</time>
+          {hasOther && <> · <a href={otherHref} hreflang={otherLang} lang={otherLang}>{copy.other}</a></>}
+        </p>
+      </div>
+    </header>
+    <div class="wrap section article__grid">
+      <div class="prose">
+        <Content />
+      </div>
+      <aside class="article__aside stack" style="--gap: 32px">
+        <div class="margin-notes">
+          <span class="label">{s.sources}</span>
+          <ol>
+            {list.map((src) => (
+              <li><cite>{src.citation} <a href={src.url} rel="noopener">DOI</a></cite></li>
+            ))}
+          </ol>
+        </div>
+        <div class="stack" style="--gap: 10px">
+          <p class="muted">{copy.trainingText}</p>
+          <a class="textlink" href={path('training', lang)}>{copy.training}</a>
+        </div>
+      </aside>
+    </div>
+  </article>
+  <ScanStrip lang={lang} />
+</Base>
+
+<style>
+  .article__h1 { font-size: clamp(2.2rem, 5vw, 4.4rem); max-width: 16em; }
+  .article__lead { max-width: 44rem; }
+  .article__grid { display: flex; flex-wrap: wrap; gap: 48px 72px; align-items: flex-start; }
+  .article__grid .prose { flex: 2 1 540px; min-width: 0; }
+  .article__aside { flex: 1 1 260px; min-width: 0; max-width: 340px; }
+  .article__aside .margin-notes > .label { padding-bottom: 12px; }
+  .article__aside .margin-notes li:first-child { border-top-color: var(--ink); }
+</style>

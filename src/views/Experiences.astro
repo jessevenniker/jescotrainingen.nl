@@ -1,0 +1,131 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import ScanStrip from '../components/ScanStrip.astro';
+import { path, type Lang } from '../i18n';
+import { site } from '../data/site';
+import { trainings, traits, quotes, average } from '../data/reviews';
+import photo from '../assets/images/jesse-masterclass.jpg';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const locale = lang === 'nl' ? 'nl-NL' : 'en-GB';
+const num = (n: number) => n.toLocaleString(locale, { minimumFractionDigits: 1 });
+
+const copy = {
+  nl: {
+    title: 'Ervaringen van deelnemers | Jesco Trainingen',
+    description: `Deelnemers beoordelen Jesse Venniker als trainer gemiddeld met een ${num(average)}. Lees de scores en alle reacties uit de evaluaties.`,
+    label: 'ervaringen',
+    h1: 'Wat deelnemers zeggen.',
+    lead: `Gemiddeld een ${num(average)} voor de trainer, over twee trainingen.`,
+    context: 'Dit zijn de evaluaties van mijn eerste twee trainingen: masterclasses Effectief vergaderen, met een flink AI-deel, gegeven in juni 2026. Ervaringen met de AI-training zelf volgen na de eerste trainingen in Nederland.',
+    training: 'training',
+    traitsH2: 'Hoe deelnemers Jesse typeren',
+    traitsNote: 'Training 2, aantal keer genoemd',
+    quotesH2: 'Wat vond je het sterkste aan Jesse als trainer?',
+    quotesNote: 'Letterlijke antwoorden uit het evaluatieformulier.',
+    photoAlt: 'Jesse aan het woord tijdens de masterclass Effectief vergaderen, met op het scherm: psychologie, praktijk, AI',
+    month: 'juni 2026',
+  },
+  en: {
+    title: 'What participants say | Jesco Trainingen',
+    description: `Participants rate Jesse Venniker as a trainer ${num(average)} out of 10 on average. See the scores and every comment from the evaluations.`,
+    label: 'reviews',
+    h1: 'What participants say.',
+    lead: `An average of ${num(average)} out of 10 for the trainer, across two sessions.`,
+    context: 'These are the evaluations from my first two sessions: masterclasses on effective meetings with a substantial AI component, run in June 2026. Reviews of the AI training itself will follow after the first sessions in the Netherlands.',
+    training: 'session',
+    traitsH2: 'How participants describe Jesse',
+    traitsNote: 'Session 2, number of mentions',
+    quotesH2: 'What did you find strongest about Jesse as a trainer?',
+    quotesNote: 'Answers from the evaluation form, translated from Dutch.',
+    photoAlt: 'Jesse speaking during the masterclass on effective meetings, with the screen reading: psychology, practice, AI',
+    month: 'June 2026',
+  },
+}[lang];
+
+const maxTrait = Math.max(...traits.map((x) => x.count));
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: site.name, item: new URL(path('home', lang), site.url).href },
+      { '@type': 'ListItem', position: 2, name: copy.h1, item: new URL(path('experiences', lang), site.url).href },
+    ],
+  },
+];
+---
+<Base lang={lang} title={copy.title} description={copy.description} schema={schema}>
+  <PageHead label={copy.label} title={copy.h1} lead={copy.lead} />
+
+  <section class="wrap section exp">
+    <div class="exp__intro stack" style="--gap: 28px">
+      <p class="lead">{copy.context}</p>
+      <Image src={photo} alt={copy.photoAlt} widths={[480, 800, 1200]} sizes="(max-width: 760px) 100vw, 560px" class="exp__photo" />
+    </div>
+    <div class="exp__scores stack" style="--gap: 48px">
+      {trainings.map((tr, i) => (
+        <div class="stack" style="--gap: 14px">
+          <span class="label">{copy.training} {i + 1} · {tr.org} · {copy.month}</span>
+          <h2 class="exp__h">{tr.title[lang]}</h2>
+          <div class="report">
+            {tr.scores.map((sc) => (
+              <div><span>{sc.label[lang]}</span><span class="dots" aria-hidden="true"></span><strong>{num(sc.value)}</strong></div>
+            ))}
+            {tr.highlight && <div><span class="muted">{tr.highlight[lang]}</span></div>}
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="dark">
+    <div class="wrap section traits">
+      <div class="stack" style="--gap: 10px">
+        <h2 class="traits__h">{copy.traitsH2}</h2>
+        <span class="label">{copy.traitsNote}</span>
+      </div>
+      <ul class="traits__list">
+        {traits.map((tr) => (
+          <li>
+            <span>{tr.label[lang]}</span>
+            <span class="traits__bar" style={`width: ${(tr.count / maxTrait) * 100}%`} aria-hidden="true"></span>
+            <span class="traits__n">{tr.count}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="wrap section stack" style="--gap: 32px">
+    <div class="stack" style="--gap: 10px">
+      <h2 class="exp__qh">{copy.quotesH2}</h2>
+      <span class="label">{copy.quotesNote}</span>
+    </div>
+    <ul class="quote-list">
+      {quotes.map((q) => <li>“{q[lang]}”</li>)}
+    </ul>
+  </section>
+
+  <ScanStrip lang={lang} />
+</Base>
+
+<style>
+  .exp { display: flex; flex-wrap: wrap; gap: 48px 72px; align-items: flex-start; }
+  .exp__intro { flex: 1 1 420px; min-width: 0; }
+  .exp__photo { width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 4px; }
+  .exp__scores { flex: 1 1 380px; min-width: 0; }
+  .exp__h { font-size: clamp(1.3rem, 2vw, 1.6rem); letter-spacing: -0.015em; }
+  .traits { display: flex; flex-wrap: wrap; gap: 32px 72px; }
+  .traits > .stack { flex: 1 1 280px; }
+  .traits__h { font-size: clamp(1.8rem, 3vw, 2.6rem); }
+  .traits__list { flex: 2 1 480px; list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 18px; }
+  .traits__list li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px 16px; align-items: center; }
+  .traits__bar { grid-column: 1 / 2; height: 8px; background: var(--lime); border-radius: 1px; }
+  .traits__n { grid-column: 2; grid-row: 1 / 3; font-family: var(--mono); font-size: 1.1rem; color: var(--lime); }
+  .exp__qh { font-size: clamp(1.8rem, 3vw, 2.6rem); max-width: 22em; }
+</style>

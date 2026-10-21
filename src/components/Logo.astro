@@ -1,0 +1,12 @@
+---
+interface Props { size?: number; dark?: boolean }
+const { size = 36, dark = false } = Astro.props;
+---
+<svg width={size} height={size} viewBox="0 0 68 68" aria-hidden="true" focusable="false" class="logo-mark">
+  <circle cx="34" cy="34" r="31" fill={dark ? '#f5f4ef' : '#183126'}></circle>
+  <line x1="34" y1="14" x2="45" y2="14" stroke={dark ? '#183126' : '#f5f4ef'} stroke-width="4" stroke-linecap="round"></line>
+  <line x1="34" y1="14" x2="34" y2="43" stroke={dark ? '#183126' : '#f5f4ef'} stroke-width="4" stroke-linecap="round"></line>
+  <path d="M 34 43 A 13 13 0 0 1 21 56" fill="none" stroke={dark ? '#2f6b4a' : '#c6f36b'} stroke-width="4" stroke-linecap="round"></path>
+  <circle cx="45" cy="14" r="4.5" fill={dark ? '#183126' : '#f5f4ef'}></circle>
+  <circle cx="21" cy="56" r="4.5" fill={dark ? '#2f6b4a' : '#c6f36b'}></circle>
+</svg>

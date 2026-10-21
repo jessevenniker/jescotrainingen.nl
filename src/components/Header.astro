@@ -1,0 +1,96 @@
+---
+import Logo from './Logo.astro';
+import { path, counterpart, type Lang, type RouteKey } from '../i18n';
+import { t } from '../i18n/ui';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const s = t(lang);
+const current = Astro.url.pathname;
+const other: Lang = lang === 'nl' ? 'en' : 'nl';
+const otherHref = counterpart(current, other);
+
+const items: { key: RouteKey; label: string }[] = [
+  { key: 'training', label: s.nav.training },
+  { key: 'experiences', label: s.nav.experiences },
+  { key: 'research', label: s.nav.research },
+  { key: 'knowledge', label: s.nav.knowledge },
+  { key: 'trainer', label: s.nav.trainer },
+  { key: 'contact', label: s.nav.contact },
+];
+const isCurrent = (href: string) => current === href || (href !== path('home', lang) && current.startsWith(href));
+---
+<header class="site-header">
+  <div class="wrap site-header__inner">
+    <a href={path('home', lang)} class="brand" aria-label={lang === 'nl' ? 'Jesco Trainingen, naar de homepage' : 'Jesco Trainingen, go to homepage'}>
+      <Logo />
+      <span class="brand__name">Jesco Trainingen</span>
+    </a>
+
+    <nav class="nav nav--desktop" aria-label={s.nav.main}>
+      {items.map((i) => (
+        <a href={path(i.key, lang)} aria-current={isCurrent(path(i.key, lang)) ? 'page' : undefined}>{i.label}</a>
+      ))}
+    </nav>
+
+    <div class="site-header__end">
+      <div class="lang" role="group" aria-label={s.nav.language}>
+        {(['nl', 'en'] as Lang[]).map((code, i) => (
+          <>
+            {i > 0 && <span aria-hidden="true">/</span>}
+            {code === lang
+              ? <span class="lang__item is-active" aria-current="true">{code}</span>
+              : <a class="lang__item" href={otherHref} hreflang={code} lang={code}>{code === 'nl' ? 'nl' : 'en'}<span class="visually-hidden">{code === 'nl' ? ' – Nederlands' : ' – English'}</span></a>}
+          </>
+        ))}
+      </div>
+      <a class="btn btn--primary header-cta" href={`${path('home', lang)}#teamscan`}>{s.cta.scan}</a>
+    </div>
+
+    <details class="nav--mobile">
+      <summary>{s.nav.menu}</summary>
+      <nav aria-label={s.nav.main}>
+        {items.map((i) => (
+          <a href={path(i.key, lang)} aria-current={isCurrent(path(i.key, lang)) ? 'page' : undefined}>{i.label}</a>
+        ))}
+        <a class="nav__lang" href={otherHref} hreflang={other} lang={other}>{other === 'en' ? 'English' : 'Nederlands'}</a>
+        <a class="btn btn--primary" href={`${path('home', lang)}#teamscan`}>{s.cta.scan}</a>
+      </nav>
+    </details>
+  </div>
+</header>
+
+<style>
+  .site-header { border-bottom: 1px solid var(--rule); background: var(--paper); position: relative; z-index: 20; }
+  .site-header__inner { display: flex; align-items: center; gap: 16px 36px; padding-block: 16px; }
+  .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--ink); flex-shrink: 0; }
+  .brand__name { font-size: 1.125rem; font-weight: 600; letter-spacing: -0.01em; }
+  .nav { display: flex; flex-wrap: wrap; gap: 6px 24px; font-size: 0.95rem; flex-grow: 1; }
+  .nav a { text-decoration: none; padding-block: 10px; }
+  .nav a[aria-current='page'] { text-decoration: underline; text-decoration-color: var(--green); text-decoration-thickness: 2px; text-underline-offset: 0.45em; }
+  .site-header__end { display: flex; align-items: center; gap: 20px; }
+  .lang { display: flex; gap: 6px; font-family: var(--mono); font-size: 0.8125rem; color: var(--muted); }
+  .lang__item { padding: 10px 2px; text-decoration: none; color: var(--muted); }
+  .lang__item.is-active { color: var(--ink); font-weight: 500; }
+  a.lang__item:hover { color: var(--green); text-decoration: underline; }
+  .header-cta { min-height: 44px; padding: 0 18px; font-size: 0.95rem; }
+  .nav--mobile { display: none; margin-left: auto; position: relative; }
+  .nav--mobile summary { list-style: none; cursor: pointer; font-family: var(--mono); font-size: 0.875rem; padding: 12px 14px; border: 1px solid var(--ink); border-radius: 8px; min-height: 44px; }
+  .nav--mobile summary::-webkit-details-marker { display: none; }
+  .nav--mobile nav { position: absolute; right: 0; top: calc(100% + 8px); width: min(86vw, 320px); background: var(--paper); border: 1px solid var(--ink); border-radius: 10px; padding: 8px 18px 18px; display: flex; flex-direction: column; box-shadow: 0 24px 48px -24px rgba(15, 34, 25, 0.35); }
+  .nav--mobile nav a:not(.btn) { padding: 12px 0; border-bottom: 1px solid var(--rule); text-decoration: none; }
+  .nav--mobile nav .btn { margin-top: 16px; }
+  .nav__lang { font-family: var(--mono); font-size: 0.875rem; }
+  @media (min-width: 1081px) { .nav__lang { display: none; } }
+  @media (max-width: 1080px) {
+    .site-header__inner { gap: 12px 20px; }
+    .nav--desktop, .header-cta { display: none; }
+    .site-header__end { margin-left: auto; }
+    .nav--mobile { display: block; margin-left: 0; }
+  }
+  @media (max-width: 520px) {
+    .site-header__end { display: none; }
+    .nav--mobile { margin-left: auto; }
+    .brand__name { font-size: 1.05rem; }
+  }
+</style>
