@@ -1,10 +1,10 @@
 ---
-import { render, type CollectionEntry } from 'astro:content';
+import { getCollection, render, type CollectionEntry } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import ScanStrip from '../components/ScanStrip.astro';
 import { path, counterpart, type Lang } from '../i18n';
 import { site } from '../data/site';
-import { pick } from '../data/sources';
+import { pick, kindLabel } from '../data/sources';
 import { t } from '../i18n/ui';
 
 interface Props { entry: CollectionEntry<'kennisbank'> }
@@ -14,14 +14,35 @@ const s = t(lang);
 const { Content } = await render(entry);
 const locale = lang === 'nl' ? 'nl-NL' : 'en-GB';
 const list = pick(...entry.data.sources);
+const peer = list.filter((x) => x.kind === 'peer-reviewed').length;
 const url = new URL(Astro.url.pathname, site.url).href;
 const otherLang: Lang = lang === 'nl' ? 'en' : 'nl';
 const otherHref = counterpart(Astro.url.pathname, otherLang);
 const hasOther = otherHref !== path('home', otherLang);
+const words = (entry.body ?? '').split(/\s+/).filter(Boolean).length;
+const minutes = Math.max(1, Math.round(words / 200));
+const date = entry.data.date.toLocaleDateString(locale, { day: 'numeric', month: 'long', year: 'numeric' });
+const base = path('knowledge', lang);
+
+const more = (await getCollection('kennisbank', (e) => e.data.lang === lang && e.id !== entry.id))
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+  .slice(0, 3);
 
 const copy = {
-  nl: { back: 'Kennisbank', other: 'Read this in English', by: 'door', training: 'Over de training', trainingText: 'Dit onderwerp is een vast onderdeel van de training AI in je werk.' },
-  en: { back: 'Insights', other: 'Lees dit in het Nederlands', by: 'by', training: 'About the training', trainingText: 'This topic is a core part of the AI at work training.' },
+  nl: {
+    back: 'Kennisbank', other: 'Read this in English', by: 'door',
+    readTime: 'leestijd', min: 'min', sources: 'bronnen', peer: 'peer-reviewed', published: 'gepubliceerd', topic: 'onderwerp', lang: 'taal',
+    short: 'kort gezegd',
+    training: 'Over de training', trainingText: 'Dit soort onderwerpen bespreken we in de training AI in je werk, met voorbeelden uit jullie eigen team.',
+    more: 'Lees verder',
+  },
+  en: {
+    back: 'Insights', other: 'Lees dit in het Nederlands', by: 'by',
+    readTime: 'reading time', min: 'min', sources: 'sources', peer: 'peer-reviewed', published: 'published', topic: 'topic', lang: 'language',
+    short: 'in short',
+    training: 'About the training', trainingText: 'Topics like this come up in the AI at work training, using examples from your own team.',
+    more: 'Keep reading',
+  },
 }[lang];
 
 const schema = [
@@ -30,19 +51,22 @@ const schema = [
     '@type': 'BlogPosting',
     headline: entry.data.title,
     description: entry.data.description,
+    abstract: entry.data.summary.join(' '),
     datePublished: entry.data.date.toISOString().slice(0, 10),
     inLanguage: lang === 'nl' ? 'nl-NL' : 'en',
+    wordCount: words,
+    timeRequired: `PT${minutes}M`,
     author: { '@id': `${site.url}/#jesse` },
     publisher: { '@id': `${site.url}/#organization` },
     mainEntityOfPage: url,
-    citation: list.map((src) => ({ '@type': 'ScholarlyArticle', name: src.citation, url: src.url })),
+    citation: list.map((src) => ({ '@type': 'CreativeWork', name: src.citation, url: src.url })),
   },
   {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: site.name, item: new URL(path('home', lang), site.url).href },
-      { '@type': 'ListItem', position: 2, name: copy.back, item: new URL(path('knowledge', lang), site.url).href },
+      { '@type': 'ListItem', position: 2, name: copy.back, item: new URL(base, site.url).href },
       { '@type': 'ListItem', position: 3, name: entry.data.title, item: url },
     ],
   },
@@ -50,46 +74,113 @@ const schema = [
 ---
 <Base lang={lang} title={`${entry.data.title} | Jesco Trainingen`} description={entry.data.description} schema={schema} ogType="article">
   <article>
-    <header class="page-head">
-      <div class="wrap stack" style="--gap: 20px">
-        <nav class="label" aria-label="Breadcrumb"><a href={path('knowledge', lang)}>{copy.back}</a> / {entry.data.cluster}</nav>
-        <h1 class="article__h1">{entry.data.title}</h1>
-        <p class="lead article__lead">{entry.data.description}</p>
-        <p class="label">
-          {copy.by} {site.trainer} · <time datetime={entry.data.date.toISOString().slice(0, 10)}>{entry.data.date.toLocaleDateString(locale, { day: 'numeric', month: 'long', year: 'numeric' })}</time>
-          {hasOther && <> · <a href={otherHref} hreflang={otherLang} lang={otherLang}>{copy.other}</a></>}
-        </p>
+    <header class="art-head">
+      <div class="wrap">
+        <nav class="label art-crumb" aria-label="Breadcrumb"><a href={base}>{copy.back}</a> / {entry.data.cluster}</nav>
+        <h1 class="art-title">{entry.data.title}</h1>
+        <div class="art-intro">
+          <p class="lead">{entry.data.description}</p>
+          <dl class="art-card">
+            <div><dt>{copy.readTime}</dt><dd>{minutes} {copy.min}</dd></div>
+            <div><dt>{copy.sources}</dt><dd>{list.length}{peer > 0 && <span class="muted"> · {peer} {copy.peer}</span>}</dd></div>
+            <div><dt>{copy.published}</dt><dd><time datetime={entry.data.date.toISOString().slice(0, 10)}>{date}</time></dd></div>
+            <div><dt>{copy.by}</dt><dd><a href={path('trainer', lang)}>{site.trainer}</a></dd></div>
+            {hasOther && <div><dt>{copy.lang}</dt><dd><a href={otherHref} hreflang={otherLang} lang={otherLang}>{copy.other}</a></dd></div>}
+          </dl>
+        </div>
       </div>
     </header>
-    <div class="wrap section article__grid">
+
+    {entry.data.summary.length > 0 && (
+      <section class="wrap tldr-wrap" aria-label={copy.short}>
+        <div class="tldr">
+          <span class="tldr__label">{copy.short}</span>
+          <ol>
+            {entry.data.summary.map((point) => <li>{point}</li>)}
+          </ol>
+        </div>
+      </section>
+    )}
+
+    <div class="wrap art-grid">
       <div class="prose">
         <Content />
       </div>
-      <aside class="article__aside stack" style="--gap: 32px">
+      <aside class="art-aside stack" style="--gap: 32px">
         <div class="margin-notes">
           <span class="label">{s.sources}</span>
           <ol>
             {list.map((src) => (
-              <li><cite>{src.citation} <a href={src.url} rel="noopener">DOI</a></cite></li>
+              <li>
+                {src.kind && <span class:list={['kind', `kind--${src.kind}`]}>{kindLabel[src.kind][lang]}</span>}
+                <cite>{src.citation} <a href={src.url} rel="noopener">{src.url.includes('doi.org') ? 'DOI' : lang === 'nl' ? 'bron' : 'link'}</a></cite>
+              </li>
             ))}
           </ol>
         </div>
-        <div class="stack" style="--gap: 10px">
-          <p class="muted">{copy.trainingText}</p>
+        <div class="art-cta stack" style="--gap: 12px">
+          <p>{copy.trainingText}</p>
           <a class="textlink" href={path('training', lang)}>{copy.training}</a>
         </div>
       </aside>
     </div>
   </article>
+
+  {more.length > 0 && (
+    <section class="wrap more">
+      <h2 class="more__h">{copy.more}</h2>
+      <ul class="more__list">
+        {more.map((a) => (
+          <li>
+            <a href={`${base}${a.id}/`}>
+              <span class="label">{a.data.cluster}</span>
+              <span class="more__title">{a.data.title}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )}
+
   <ScanStrip lang={lang} />
 </Base>
 
 <style>
-  .article__h1 { font-size: clamp(2.2rem, 5vw, 4.4rem); max-width: 16em; }
-  .article__lead { max-width: 44rem; }
-  .article__grid { display: flex; flex-wrap: wrap; gap: 48px 72px; align-items: flex-start; }
-  .article__grid .prose { flex: 2 1 540px; min-width: 0; }
-  .article__aside { flex: 1 1 260px; min-width: 0; max-width: 340px; }
-  .article__aside .margin-notes > .label { padding-bottom: 12px; }
-  .article__aside .margin-notes li:first-child { border-top-color: var(--ink); }
+  .art-head { padding-block: clamp(40px, 6vw, 72px) clamp(28px, 4vw, 40px); }
+  .art-crumb { display: block; margin-bottom: 18px; }
+  .art-title { font-size: clamp(2.2rem, 5vw, 4.4rem); max-width: 15em; }
+  .art-intro { display: flex; flex-wrap: wrap; gap: 28px 64px; align-items: flex-start; margin-top: clamp(24px, 3vw, 36px); }
+  .art-intro .lead { flex: 2 1 460px; min-width: 0; max-width: 42rem; }
+  .art-card { flex: 1 1 260px; min-width: 0; max-width: 360px; margin: 0; border-top: 1px solid var(--ink); }
+  .art-card div { display: flex; justify-content: space-between; gap: 16px; padding: 9px 0; border-bottom: 1px solid var(--rule); font-size: 0.9rem; }
+  .art-card dt { font-family: var(--mono); font-size: 0.75rem; color: var(--muted); padding-top: 0.15em; }
+  .art-card dd { margin: 0; text-align: right; }
+
+  .tldr-wrap { margin-bottom: clamp(40px, 5vw, 64px); }
+  .tldr { background: var(--forest); color: var(--on-dark); border-radius: 8px; padding: clamp(22px, 3vw, 32px) clamp(22px, 3vw, 40px); display: flex; flex-wrap: wrap; gap: 16px 48px; }
+  .tldr__label { flex: 0 0 140px; font-family: var(--mono); font-size: 0.8125rem; color: var(--lime); padding-top: 0.3em; }
+  .tldr ol { flex: 1 1 480px; min-width: 0; margin: 0; padding: 0; list-style: none; counter-reset: k; display: flex; flex-direction: column; gap: 14px; }
+  .tldr li { counter-increment: k; display: flex; gap: 16px; font-size: 1.08rem; line-height: 1.5; }
+  .tldr li::before { content: counter(k); font-family: var(--mono); font-size: 0.8125rem; color: var(--night); background: var(--lime); border-radius: 50%; flex: 0 0 24px; height: 24px; display: flex; align-items: center; justify-content: center; margin-top: 0.1em; }
+
+  .art-grid { display: flex; flex-wrap: wrap; gap: 48px 72px; align-items: flex-start; padding-bottom: var(--section); }
+  .art-grid .prose { flex: 2 1 540px; min-width: 0; }
+  .art-aside { flex: 1 1 260px; min-width: 0; max-width: 340px; position: sticky; top: 24px; }
+  @media (max-width: 860px) { .art-aside { position: static; } }
+  .art-aside .margin-notes > .label { padding-bottom: 12px; }
+  .art-aside .margin-notes li:first-child { border-top-color: var(--ink); }
+  .kind { align-self: flex-start; font-family: var(--mono); font-size: 0.6875rem; padding: 2px 7px; border-radius: 3px; }
+  .kind--peer-reviewed { background: var(--forest); color: var(--lime); }
+  .kind--preprint { background: #e3eadf; color: var(--green); }
+  .kind--praktijk { background: var(--paper-2); color: var(--ink-2); border: 1px solid var(--rule); }
+  .art-cta { padding: 20px; border: 1px solid var(--rule); border-radius: 8px; }
+  .art-cta p { color: var(--ink-2); line-height: 1.5; font-size: 0.95rem; }
+
+  .more { padding-bottom: var(--section); display: flex; flex-direction: column; gap: 20px; }
+  .more__h { font-size: clamp(1.5rem, 2.4vw, 2rem); }
+  .more__list { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; border-top: 1px solid var(--ink); }
+  .more__list li { flex: 1 1 280px; min-width: 0; border-bottom: 1px solid var(--rule); }
+  .more__list a { display: flex; flex-direction: column; gap: 8px; padding: 20px 24px 20px 0; text-decoration: none; }
+  .more__title { font-size: 1.2rem; font-weight: 600; letter-spacing: -0.015em; line-height: 1.3; }
+  .more__list a:hover .more__title { color: var(--green); }
 </style>

@@ -14,6 +14,10 @@ export const routes = {
 /** Extra paren die niet in `routes` staan, zoals kennisbankartikelen. */
 export const extraPairs = [
   { nl: '/kennisbank/waarom-je-team-ai-te-veel-of-te-weinig-vertrouwt/', en: '/en/insights/why-your-team-trusts-ai-too-much-or-too-little/' },
+  { nl: '/kennisbank/ai-brain-fry-als-toezicht-op-ai-je-hoofd-laat-koken/', en: '/en/insights/ai-brain-fry-when-overseeing-ai-wears-you-out/' },
+  { nl: '/kennisbank/denk-je-nog-zelf-als-ai-meedenkt/', en: '/en/insights/are-you-still-thinking-when-ai-thinks-along/' },
+  { nl: '/kennisbank/voelt-sneller-maar-is-het-ook-sneller/', en: '/en/insights/it-feels-faster-but-is-it/' },
+  { nl: '/kennisbank/workslop-als-ai-werk-meer-werk-oplevert/', en: '/en/insights/workslop-when-ai-output-creates-more-work/' },
 ];
 
 const hreflang = { nl: 'nl-NL', en: 'en' };

@@ -5,6 +5,10 @@ description: De een neemt elk AI-antwoord klakkeloos over, de ander haakt af na 
 date: 2026-10-21
 lang: nl
 cluster: psychologie van AI
+summary:
+  - Na één AI-fout haken mensen sneller af dan na dezelfde fout van een collega. Dat heet algoritme-aversie.
+  - Tegelijk nemen we verzorgde AI-antwoorden makkelijk klakkeloos over. Dat heet automation bias.
+  - Het doel is niet meer of minder vertrouwen, maar het juiste vertrouwen per taak. Drie vragen helpen daarbij.
 sources: [dietvorst2015, logg2019, parasuraman2010, dellacqua2023, edmondson1999]
 ---
 

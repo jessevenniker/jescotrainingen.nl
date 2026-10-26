@@ -11,6 +11,8 @@ const kennisbank = defineCollection({
     date: z.coerce.date(),
     lang: z.enum(['nl', 'en']),
     cluster: z.string(),
+    /** Drie korte kernpunten voor het blok "Kort gezegd". */
+    summary: z.array(z.string()).default([]),
     sources: z.array(z.string()).default([]),
   }),
 });
