@@ -6,7 +6,7 @@ import ScanStrip from '../components/ScanStrip.astro';
 import { path, footnotes, type Lang } from '../i18n';
 import { t } from '../i18n/ui';
 import { site } from '../data/site';
-import { trainings } from '../data/reviews';
+import { runs, strengths, totalRaters } from '../data/reviews';
 import { pick } from '../data/sources';
 import photo from '../assets/images/jesse-whiteboard.jpg';
 
@@ -64,12 +64,13 @@ const copy = {
     ],
     complement: 'Al een Copilot- of ChatGPT-training gehad? Dan is dit de stap die ervoor zorgt dat het ook gebruikt wordt. Het is geen toolcursus: we werken met de tools die jullie al hebben.',
     toTraining: 'Alles over de training',
-    revLabel: 'masterclass effectief vergaderen, met een AI-deel · CITI Curaçao · juni 2026',
-    revQuote: 'Staat rustig en stevig voor groep, goede interactie en procesbewaking.',
-    revQuotes: ['Heel interactief. Goed betrokken, duidelijk en pakt het snel weer op.', 'Goede structuur, pakte terug waar nodig. Goed time management.'],
-    allReviews: 'Alle ervaringen',
+    revLabel: 'trainer card · jesse-venniker',
+    revBy: 'deelnemer, masterclass met AI-deel, juni 2026',
+    runLabel: (i: number, org: string, n: number) => `Trainer algemeen, run ${i} (${org}, ${n} deelnemers)`,
+    nineUp: 'Run 1: deelnemers met een 9 of hoger',
+    nineUpValue: '8 van 8',
+    allReviews: `Bekijk de volledige trainer card (${totalRaters} evaluaties)`,
     photoAlt: 'Jesse geeft een training: hij staat voor een whiteboard en een scherm met een groep',
-    translated: '',
   },
   en: {
     title: 'AI training for teams | Jesco Trainingen',
@@ -120,17 +121,18 @@ const copy = {
     ],
     complement: 'Already done a Copilot or ChatGPT course? This is the step that makes sure people actually use it. It’s not a tool course: we work with whatever your team already has.',
     toTraining: 'All about the training',
-    revLabel: 'masterclass on effective meetings, including AI · CITI Curaçao · June 2026',
-    revQuote: 'Calm and confident in front of the group, good interaction and a firm grip on the process.',
-    revQuotes: ['Very interactive. Engaged, clear, and quick to get things back on track.', 'Good structure, stepped back in where needed. Good time management.'],
-    allReviews: 'All reviews',
+    revLabel: 'trainer card · jesse-venniker',
+    revBy: 'participant, masterclass including AI, June 2026 (translated from Dutch)',
+    runLabel: (i: number, org: string, n: number) => `Trainer overall, run ${i} (${org}, ${n} participants)`,
+    nineUp: 'Run 1: participants scoring 9 or higher',
+    nineUpValue: '8 of 8',
+    allReviews: `See the full trainer card (${totalRaters} evaluations)`,
     photoAlt: 'Jesse running a session, standing in front of a whiteboard and a screen with a group',
-    translated: 'Feedback translated from Dutch.',
   },
 }[lang];
 
 const notes = pick('dietvorst2015', 'parasuraman2010', 'tarafdar2007');
-const citi = trainings[0];
+const quote = strengths[5][lang];
 const max = Math.max(...copy.tokens.map((x) => Number(x[1])));
 
 const schema = [
@@ -267,17 +269,17 @@ const schema = [
       <Image src={photo} alt={copy.photoAlt} widths={[400, 680, 900]} sizes="(max-width: 760px) 100vw, 360px" class="reviews__photo" />
       <div class="stack reviews__body" style="--gap: 32px">
         <span class="label">{copy.revLabel}</span>
-        <blockquote class="quote-xl">“{copy.revQuote}”</blockquote>
+        <figure class="stack" style="--gap: 14px; margin: 0">
+          <blockquote class="quote-xl">“{quote}”</blockquote>
+          <figcaption class="label">{copy.revBy}</figcaption>
+        </figure>
         <div class="report">
-          {citi.scores.map((sc) => (
-            <div><span>{sc.label[lang]}</span><span class="dots" aria-hidden="true"></span><strong>{sc.value.toLocaleString(lang === 'nl' ? 'nl-NL' : 'en-GB')}</strong></div>
+          {runs.map((r, i) => (
+            <div><span>{copy.runLabel(i + 1, r.org, r.n)}</span><span class="dots" aria-hidden="true"></span><strong>{r.scores.overall.toLocaleString(lang === 'nl' ? 'nl-NL' : 'en-GB')}</strong></div>
           ))}
-          {citi.highlight && <div><span>{citi.highlight[lang]}</span></div>}
+          <div><span>{copy.nineUp}</span><span class="dots" aria-hidden="true"></span><strong>{copy.nineUpValue}</strong></div>
         </div>
-        <div class="reviews__more">
-          {copy.revQuotes.map((q) => <p>“{q}”</p>)}
-        </div>
-        <p class="label">{copy.translated} <a href={path('experiences', lang)} class="textlink">{copy.allReviews}</a></p>
+        <a href={path('experiences', lang)} class="textlink">{copy.allReviews}</a>
       </div>
     </div>
   </section>
@@ -340,7 +342,5 @@ const schema = [
   .reviews__grid { display: flex; flex-wrap: wrap; gap: 48px 72px; align-items: flex-start; }
   .reviews__photo { flex: 0 1 340px; min-width: 0; width: 100%; height: 520px; object-fit: cover; object-position: center 30%; border-radius: 4px; }
   .reviews__body { flex: 1 1 460px; min-width: 0; }
-  .reviews__more { display: flex; flex-wrap: wrap; gap: 0 40px; border-top: 1px solid var(--rule); }
-  .reviews__more p { flex: 1 1 220px; padding-top: 16px; color: var(--ink-2); line-height: 1.5; }
   @media (max-width: 760px) { .reviews__photo { height: 380px; flex-basis: 100%; } }
 </style>
