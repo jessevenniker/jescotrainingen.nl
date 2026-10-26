@@ -34,6 +34,16 @@ Node 22.12 of hoger is nodig.
 3. Gebruik bij `sources` alleen id's uit `src/data/sources.ts`. Voeg een nieuwe bron daar eerst toe, met werkende DOI.
 4. Koppel de twee versies in `extraPairs` in `src/i18n/routes.mjs`. Dan kloppen de taalwissel, hreflang en sitemap.
 
+## Wekelijks artikel (automatisch)
+
+Elke maandag rond 09:00 schrijft een geplande Claude-taak (*Jesco Trainingen: wekelijks kennisbankartikel*) een nieuw artikel in het Nederlands en Engels.
+
+- Onderwerp: het bovenste idee uit [kennisbank-ideeen.md](kennisbank-ideeen.md). Is de lijst leeg, dan kiest de taak zelf.
+- Bronnen: minstens één peer-reviewed studie, elke DOI en auteurslijst gecontroleerd.
+- Het artikel komt op een eigen branch (`artikel/...`) en als preview op Vercel. Er gaat niets live zonder jouw "publiceer" in het gesprek van die taak.
+- Lukt het niet (geen goede bron, build faalt), dan gaat er niets live en krijg je een melding met de reden.
+- De taak draait als de Claude-app open is. Is de app dicht, dan draait hij bij de volgende keer opstarten.
+
 ## Nog te doen voor livegang
 
 - [ ] Domein jescotrainingen.nl registreren en koppelen aan Vercel (of een andere statische host).
