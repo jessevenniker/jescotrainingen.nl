@@ -46,8 +46,9 @@ Elke maandag rond 09:00 schrijft een geplande Claude-taak (*Jesco Trainingen: we
 
 ## Nog te doen voor livegang
 
-- [ ] Domein jescotrainingen.nl registreren en koppelen aan Vercel (of een andere statische host).
-- [ ] KVK-nummer invullen in `src/data/site.ts`. Het verschijnt dan vanzelf in de footer en op de contactpagina.
+- [x] Domein jescotrainingen.nl geregistreerd (TransIP) en DNS naar Vercel gezet.
+- [x] KvK-nummer ingevuld (97552356).
 - [ ] Nieuwe foto's toevoegen. Op de huidige foto's staan vergaderslides in beeld.
-- [ ] Controleren of de omschrijving "achtergrond in de toegepaste psychologie" klopt (pagina Over de trainer).
+- [x] Teksten gecontroleerd.
+- [ ] In Vercel: www laten doorsturen naar jescotrainingen.nl, en Analytics aanzetten.
 - [ ] Na livegang: sitemap indienen in Google Search Console en Bing Webmaster Tools.
