@@ -8,6 +8,11 @@ export function path(key: RouteKey, lang: Lang): string {
   return routes[key][lang];
 }
 
+/** Link naar het onderzoeksoverzicht onderaan de kennisbank. */
+export function researchPath(lang: Lang): string {
+  return `${routes.knowledge[lang]}#${lang === 'nl' ? 'onderzoek' : 'research'}`;
+}
+
 /** Het pad van dezelfde pagina in de andere taal. */
 export function counterpart(currentPath: string, target: Lang): string {
   const normalized = currentPath.endsWith('/') ? currentPath : `${currentPath}/`;

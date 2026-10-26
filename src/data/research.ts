@@ -1,27 +1,21 @@
----
-import Base from '../layouts/Base.astro';
-import PageHead from '../components/PageHead.astro';
-import ScanStrip from '../components/ScanStrip.astro';
-import { path, footnotes, type Lang } from '../i18n';
-import { site } from '../data/site';
-import { pick } from '../data/sources';
+// "Wat we weten over AI op de werkvloer": het onderzoeksoverzicht op de kennisbankpagina.
+// Volgorde van `sourceIds` = nummering van de voetnoten [1], [2], ...
 
-interface Props { lang: Lang }
-const { lang } = Astro.props;
+export const sourceIds = [
+  'noy2023', 'brynjolfsson2025', 'dellacqua2023', 'dietvorst2015', 'logg2019',
+  'parasuraman2010', 'davis1989', 'venkatesh2003', 'tarafdar2007', 'edmondson1999',
+];
 
-// Volgorde = nummering van de voetnoten op deze pagina.
-const list = pick('noy2023', 'brynjolfsson2025', 'dellacqua2023', 'dietvorst2015', 'logg2019', 'parasuraman2010', 'davis1989', 'venkatesh2003', 'tarafdar2007', 'edmondson1999');
+export const updated = '2026-10-21';
 
-const copy = {
+export const research = {
   nl: {
-    title: 'Wat we weten over AI op de werkvloer: onderzoek | Jesco Trainingen',
-    description: 'Wat wetenschappelijk onderzoek zegt over AI op het werk: productiviteit, vertrouwen, algoritme-aversie, automation bias, adoptie en technostress. Met bronnen.',
     label: 'onderzoek',
-    h1: 'Wat we weten over AI op de werkvloer.',
+    h2: 'Wat we weten over AI op de werkvloer.',
     lead: 'Wat onderzoek zegt over wat AI oplevert, waarom mensen het wel of niet vertrouwen, en wat ervoor zorgt dat ze het blijven gebruiken. Bij elke bewering staat de bron.',
     updated: 'laatst bijgewerkt: oktober 2026',
     forTeam: 'voor je team',
-    sourcesH2: 'Bronnen',
+    sourcesH: 'Bronnen',
     sections: [
       {
         h: 'Wat AI oplevert, en waar het misgaat',
@@ -65,17 +59,15 @@ const copy = {
       },
     ],
     ownH: 'Eigen cijfers',
-    ownP: 'Vanaf de eerste AI-trainingen meet ik bij deelnemers vooraf en vier weken na de training hoe vaak ze AI gebruiken en hoe zeker ze zich daarbij voelen. Zodra er genoeg data is, komen de resultaten op deze pagina.',
+    ownP: 'Vanaf de eerste AI-trainingen meet ik bij deelnemers vooraf en vier weken na de training hoe vaak ze AI gebruiken en hoe zeker ze zich daarbij voelen. Zodra er genoeg data is, komen de resultaten hier.',
   },
   en: {
-    title: 'What we know about AI at work: the research | Jesco Trainingen',
-    description: 'What the research says about AI at work: productivity, trust, algorithm aversion, automation bias, adoption and technostress. Fully sourced.',
     label: 'research',
-    h1: 'What we know about AI at work.',
+    h2: 'What we know about AI at work.',
     lead: 'What the research says about what AI delivers, why people do or don’t trust it, and what makes them keep using it. Every claim comes with its source.',
     updated: 'last updated: October 2026',
     forTeam: 'for your team',
-    sourcesH2: 'Sources',
+    sourcesH: 'Sources',
     sections: [
       {
         h: 'What AI delivers, and where it goes wrong',
@@ -119,89 +111,6 @@ const copy = {
       },
     ],
     ownH: 'Our own numbers',
-    ownP: 'From the first AI sessions onwards, I measure before the training and four weeks after how often participants use AI and how confident they feel doing it. The results will appear on this page once there’s enough data.',
+    ownP: 'From the first AI sessions onwards, I measure before the training and four weeks after how often participants use AI and how confident they feel doing it. The results will appear here once there’s enough data.',
   },
-}[lang];
-
-const pageUrl = new URL(path('research', lang), site.url).href;
-const schema = [
-  {
-    '@context': 'https://schema.org',
-    '@type': 'Article',
-    headline: copy.h1,
-    description: copy.description,
-    inLanguage: lang === 'nl' ? 'nl-NL' : 'en',
-    dateModified: '2026-10-21',
-    author: { '@id': `${site.url}/#jesse` },
-    publisher: { '@id': `${site.url}/#organization` },
-    mainEntityOfPage: pageUrl,
-    citation: list.map((src) => ({ '@type': 'ScholarlyArticle', name: src.citation, url: src.url })),
-  },
-  {
-    '@context': 'https://schema.org',
-    '@type': 'BreadcrumbList',
-    itemListElement: [
-      { '@type': 'ListItem', position: 1, name: site.name, item: new URL(path('home', lang), site.url).href },
-      { '@type': 'ListItem', position: 2, name: copy.h1, item: pageUrl },
-    ],
-  },
-];
----
-<Base lang={lang} title={copy.title} description={copy.description} schema={schema} ogType="article">
-  <PageHead label={copy.label} title={copy.h1} lead={copy.lead} />
-
-  <div class="wrap research">
-    <p class="label research__updated">{copy.updated}</p>
-    {copy.sections.map((sec, i) => (
-      <section class="finding">
-        <span class="label finding__n">{String(i + 1).padStart(2, '0')}</span>
-        <div class="finding__body stack" style="--gap: 18px">
-          <h2>{sec.h}</h2>
-          <ul class="finding__items">
-            {sec.items.map((item) => <li set:html={footnotes(item)} />)}
-          </ul>
-          <p class="finding__team"><span class="label">{copy.forTeam}</span> {sec.team}</p>
-        </div>
-      </section>
-    ))}
-    <section class="finding">
-      <span class="label finding__n">06</span>
-      <div class="finding__body stack" style="--gap: 18px">
-        <h2>{copy.ownH}</h2>
-        <p class="lead">{copy.ownP}</p>
-      </div>
-    </section>
-  </div>
-
-  <section class="wrap section sources" aria-labelledby="bronnen">
-    <h2 id="bronnen">{copy.sourcesH2}</h2>
-    <ol class="margin-notes sources__list">
-      {list.map((src, i) => (
-        <li id={`bron-${i + 1}`}>
-          <span class="label">[{i + 1}]</span>
-          <cite>{src.citation} <a href={src.url} rel="noopener">{src.url.replace('https://', '')}</a></cite>
-        </li>
-      ))}
-    </ol>
-  </section>
-
-  <ScanStrip lang={lang} />
-</Base>
-
-<style>
-  .research { padding-top: 32px; }
-  .research__updated { padding-bottom: 8px; }
-  .finding { display: flex; flex-wrap: wrap; gap: 16px 48px; padding-block: clamp(40px, 5vw, 64px); border-bottom: 1px solid var(--rule); }
-  .finding__n { flex: 0 0 64px; padding-top: 0.6em; }
-  .finding__body { flex: 1 1 560px; min-width: 0; max-width: 48rem; }
-  .finding h2 { font-size: clamp(1.6rem, 2.8vw, 2.3rem); }
-  .finding__items { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 14px; }
-  .finding__items li { font-size: 1.1rem; line-height: 1.65; color: var(--ink-2); padding-left: 22px; position: relative; }
-  .finding__items li::before { content: ''; position: absolute; left: 0; top: 0.8em; width: 10px; height: 1px; background: var(--ink); }
-  .finding__team { padding: 16px 0 0; border-top: 1px dashed var(--rule); font-size: 1.05rem; line-height: 1.6; }
-  .finding__team .label { color: var(--green); margin-right: 8px; }
-  .sources { display: flex; flex-direction: column; gap: 24px; }
-  .sources h2 { font-size: clamp(1.6rem, 2.8vw, 2.3rem); }
-  .sources__list { margin: 0; padding: 0; max-width: 56rem; }
-  .sources__list a { word-break: break-all; }
-</style>
+};

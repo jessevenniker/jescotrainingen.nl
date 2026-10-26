@@ -5,6 +5,9 @@ import PageHead from '../components/PageHead.astro';
 import ScanStrip from '../components/ScanStrip.astro';
 import { path, type Lang } from '../i18n';
 import { site } from '../data/site';
+import { pick } from '../data/sources';
+import { research, sourceIds, updated } from '../data/research';
+import { footnotes } from '../i18n';
 
 interface Props { lang: Lang }
 const { lang } = Astro.props;
@@ -16,24 +19,31 @@ const articles = (await getCollection('kennisbank', (e) => e.data.lang === lang)
 const minutes = (body?: string) => Math.max(1, Math.round((body ?? '').split(/\s+/).filter(Boolean).length / 200));
 const fmt = (d: Date) => d.toLocaleDateString(locale, { day: 'numeric', month: 'long', year: 'numeric' });
 const [featured, ...rest] = articles;
+const r = research[lang];
+const list = pick(...sourceIds);
+const anchor = lang === 'nl' ? 'onderzoek' : 'research';
 
 const copy = {
   nl: {
-    title: 'Kennisbank: AI, gedrag en werk | Jesco Trainingen',
-    description: 'Artikelen over de psychologie van AI op het werk: vertrouwen, gewoontes, weerstand en goed prompten. Onderbouwd met onderzoek, elke maand een nieuw stuk.',
+    title: 'Kennisbank: onderzoek en artikelen over AI op het werk | Jesco Trainingen',
+    description: 'Artikelen en onderzoek over AI op het werk: vertrouwen, werkdruk, productiviteit en gedrag. Met gecontroleerde bronnen en elke week een nieuw artikel.',
     label: 'kennisbank',
     h1: 'AI, gedrag en werk.',
-    lead: 'Over hoe mensen met AI werken: vertrouwen, gewoontes, weerstand en goed prompten. Onderbouwd met onderzoek. Elke maand een nieuw artikel.',
+    lead: 'Artikelen over hoe mensen met AI werken, en daaronder wat onderzoek er tot nu toe over zegt. Altijd met bronnen, elke week een nieuw artikel.',
+    jumpArticles: 'Artikelen',
+    jumpResearch: 'Onderzoek in het kort',
     read: 'Lees artikel',
     latest: 'nieuwste',
     min: 'min lezen',
   },
   en: {
-    title: 'Insights: AI, behaviour and work | Jesco Trainingen',
-    description: 'Articles on the psychology of AI at work: trust, habits, resistance and better prompting. Backed by research, with a new piece every month.',
+    title: 'Insights: research and articles on AI at work | Jesco Trainingen',
+    description: 'Articles and research on AI at work: trust, workload, productivity and behaviour. Every source checked, with a new article every week.',
     label: 'insights',
     h1: 'AI, behaviour and work.',
-    lead: 'On how people work with AI: trust, habits, resistance and better prompting. Backed by research. A new article every month.',
+    lead: 'Articles on how people work with AI, followed by what the research says so far. Always sourced, with a new article every week.',
+    jumpArticles: 'Articles',
+    jumpResearch: 'Research at a glance',
     read: 'Read article',
     latest: 'latest',
     min: 'min read',
@@ -49,13 +59,24 @@ const schema = [
     url: new URL(base, site.url).href,
     inLanguage: lang === 'nl' ? 'nl-NL' : 'en',
     publisher: { '@id': `${site.url}/#organization` },
+    hasPart: {
+      '@type': 'Article',
+      headline: r.h2,
+      dateModified: updated,
+      author: { '@id': `${site.url}/#jesse` },
+      citation: list.map((src) => ({ '@type': 'CreativeWork', name: src.citation, url: src.url })),
+    },
     blogPost: articles.map((a) => ({ '@type': 'BlogPosting', headline: a.data.title, url: new URL(`${base}${a.id}/`, site.url).href, datePublished: a.data.date.toISOString().slice(0, 10) })),
   },
 ];
 ---
 <Base lang={lang} title={copy.title} description={copy.description} schema={schema}>
   <PageHead label={copy.label} title={copy.h1} lead={copy.lead} />
-  <section class="wrap section kb">
+  <nav class="wrap jump" aria-label={copy.label}>
+    <a href="#artikelen">{copy.jumpArticles} <span class="label">{articles.length}</span></a>
+    <a href={`#${anchor}`}>{copy.jumpResearch} <span class="label">{list.length}</span></a>
+  </nav>
+  <section class="wrap section kb" id="artikelen">
     {featured && (
       <a class="feature" href={`${base}${featured.id}/`}>
         <div class="feature__meta">
@@ -84,11 +105,57 @@ const schema = [
       ))}
     </ul>
   </section>
+
+  <section class="research-block" id={anchor} aria-labelledby="research-h">
+    <div class="wrap section">
+      <div class="research-head stack" style="--gap: 16px">
+        <span class="label accent-text">{r.label}</span>
+        <h2 id="research-h">{r.h2}</h2>
+        <p class="lead">{r.lead}</p>
+        <p class="label">{r.updated}</p>
+      </div>
+      {r.sections.map((sec, i) => (
+        <section class="finding">
+          <span class="label finding__n">{String(i + 1).padStart(2, '0')}</span>
+          <div class="finding__body stack" style="--gap: 16px">
+            <h3>{sec.h}</h3>
+            <ul class="finding__items">
+              {sec.items.map((item) => <li set:html={footnotes(item)} />)}
+            </ul>
+            <p class="finding__team"><span class="label">{r.forTeam}</span> {sec.team}</p>
+          </div>
+        </section>
+      ))}
+      <section class="finding">
+        <span class="label finding__n">{String(r.sections.length + 1).padStart(2, '0')}</span>
+        <div class="finding__body stack" style="--gap: 16px">
+          <h3>{r.ownH}</h3>
+          <p class="lead">{r.ownP}</p>
+        </div>
+      </section>
+      <div class="sources stack" style="--gap: 20px">
+        <h3>{r.sourcesH}</h3>
+        <ol class="margin-notes sources__list">
+          {list.map((src, i) => (
+            <li id={`bron-${i + 1}`}>
+              <span class="label">[{i + 1}]</span>
+              <cite>{src.citation} <a href={src.url} rel="noopener">{src.url.replace('https://', '')}</a></cite>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </div>
+  </section>
+
   <ScanStrip lang={lang} />
 </Base>
 
 <style>
-  .kb { display: flex; flex-direction: column; gap: clamp(40px, 5vw, 64px); }
+  .jump { display: flex; flex-wrap: wrap; gap: 10px; padding-top: 28px; }
+  .jump a { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; padding: 0 16px; border: 1px solid var(--ink); border-radius: 999px; text-decoration: none; font-weight: 500; }
+  .jump a:hover { background: var(--ink); color: var(--paper); }
+  .jump a:hover .label { color: var(--lime); }
+  .kb { scroll-margin-top: 24px; display: flex; flex-direction: column; gap: clamp(40px, 5vw, 64px); }
   .feature { display: flex; flex-direction: column; gap: 16px; padding: clamp(24px, 4vw, 48px); border-radius: 8px; background: var(--forest); color: var(--on-dark); text-decoration: none; }
   .feature:hover { color: var(--on-dark); }
   .feature__meta { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; }
@@ -107,4 +174,20 @@ const schema = [
   .article-row h2 { font-size: clamp(1.6rem, 3vw, 2.4rem); }
   .article-row p { color: var(--ink-2); line-height: 1.6; }
   .article-row:hover h2 { color: var(--green); }
+  .research-block { border-top: 1px solid var(--rule); background: var(--paper-2); scroll-margin-top: 0; }
+  .research-head { max-width: 46rem; padding-bottom: 16px; }
+  .research-head h2 { font-size: clamp(2rem, 4vw, 3.2rem); }
+  .finding { display: flex; flex-wrap: wrap; gap: 16px 48px; padding-block: clamp(32px, 4vw, 52px); border-bottom: 1px solid var(--rule); }
+  .finding__n { flex: 0 0 64px; padding-top: 0.5em; }
+  .finding__body { flex: 1 1 560px; min-width: 0; max-width: 48rem; }
+  .finding h3 { font-size: clamp(1.4rem, 2.4vw, 2rem); letter-spacing: -0.02em; }
+  .finding__items { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 14px; }
+  .finding__items li { font-size: 1.08rem; line-height: 1.65; color: var(--ink-2); padding-left: 22px; position: relative; }
+  .finding__items li::before { content: ''; position: absolute; left: 0; top: 0.8em; width: 10px; height: 1px; background: var(--ink); }
+  .finding__team { padding-top: 14px; border-top: 1px dashed var(--rule); font-size: 1.02rem; line-height: 1.6; }
+  .finding__team .label { color: var(--green); margin-right: 8px; }
+  .sources { padding-top: clamp(40px, 5vw, 56px); }
+  .sources h3 { font-size: clamp(1.4rem, 2.4vw, 2rem); }
+  .sources__list { margin: 0; padding: 0; max-width: 56rem; }
+  .sources__list a { word-break: break-all; }
 </style>

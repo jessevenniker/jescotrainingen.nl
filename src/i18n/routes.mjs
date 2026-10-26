@@ -4,7 +4,6 @@ export const routes = {
   home: { nl: '/', en: '/en/' },
   training: { nl: '/training/', en: '/en/training/' },
   experiences: { nl: '/ervaringen/', en: '/en/experiences/' },
-  research: { nl: '/onderzoek/', en: '/en/research/' },
   knowledge: { nl: '/kennisbank/', en: '/en/insights/' },
   trainer: { nl: '/over-de-trainer/', en: '/en/about-the-trainer/' },
   contact: { nl: '/contact/', en: '/en/contact/' },

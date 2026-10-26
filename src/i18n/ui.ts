@@ -6,7 +6,6 @@ export const ui = {
     nav: {
       training: 'Training',
       experiences: 'Ervaringen',
-      research: 'Onderzoek',
       knowledge: 'Kennisbank',
       trainer: 'Over de trainer',
       contact: 'Contact',
@@ -67,7 +66,6 @@ export const ui = {
     nav: {
       training: 'Training',
       experiences: 'Reviews',
-      research: 'Research',
       knowledge: 'Insights',
       trainer: 'About the trainer',
       contact: 'Contact',

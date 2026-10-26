@@ -2,7 +2,7 @@
 import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
 import ScanStrip from '../components/ScanStrip.astro';
-import { path, type Lang } from '../i18n';
+import { path, researchPath, type Lang } from '../i18n';
 import { site } from '../data/site';
 import portrait from '../assets/images/jesse-portret.jpg';
 
@@ -113,7 +113,7 @@ const schema = [
       </ol>
       <div class="row" style="--gap: 16px 28px; align-items: center">
         <a class="btn btn--lime" href={path('contact', lang)}>{copy.cta}</a>
-        <a class="textlink" href={path('research', lang)}>{copy.research}</a>
+        <a class="textlink" href={researchPath(lang)}>{copy.research}</a>
       </div>
     </div>
   </section>
