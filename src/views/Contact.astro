@@ -18,11 +18,11 @@ const copy = {
     mailH: 'Liever direct mailen?',
     nextH: 'Wat er daarna gebeurt',
     next: [
-      'Ik lees je bericht en reageer persoonlijk.',
+      'Ik lees je bericht en je hoort binnen vijf werkdagen persoonlijk van me.',
       'We plannen een intake: een gesprek over je team, je doelen en de tools die jullie gebruiken.',
       'Je krijgt een voorstel voor een training die past, met datum en prijs.',
     ],
-    company: 'Jesco Trainingen is onderdeel van Jesco Innovation BV.',
+    company: 'Jesco Trainingen is onderdeel van Jesco Innovation B.V.',
   },
   en: {
     title: 'Contact | Jesco Trainingen',
@@ -33,11 +33,11 @@ const copy = {
     mailH: 'Rather email directly?',
     nextH: 'What happens next',
     next: [
-      'I read your message and reply personally.',
+      'I read your message and you’ll hear back from me personally within five working days.',
       'We schedule an intake: a conversation about your team, your goals and the tools you use.',
       'You get a proposal for a session that fits, with a date and a price.',
     ],
-    company: 'Jesco Trainingen is part of Jesco Innovation BV.',
+    company: 'Jesco Trainingen is part of Jesco Innovation B.V.',
   },
 }[lang];
 
@@ -68,7 +68,7 @@ const schema = [
           {copy.next.map((n) => <li>{n}</li>)}
         </ol>
       </div>
-      <p class="muted">{copy.company}{site.kvk && <> KVK {site.kvk}.</>}</p>
+      <p class="muted">{copy.company}{site.kvk && <> {lang === 'nl' ? 'KvK-nummer' : 'Chamber of Commerce no.'} {site.kvk}.</>}</p>
     </div>
   </section>
 </Base>

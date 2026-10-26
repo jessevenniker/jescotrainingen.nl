@@ -38,6 +38,7 @@ const organization = {
   logo: `${site.url}/logo.svg`,
   founder: { '@id': `${site.url}/#jesse` },
   knowsLanguage: ['nl', 'en'],
+  ...(site.kvk ? { identifier: { '@type': 'PropertyValue', propertyID: 'KvK', value: site.kvk } } : {}),
 };
 const person = {
   '@context': 'https://schema.org',

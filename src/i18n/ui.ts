@@ -17,8 +17,8 @@ export const ui = {
     cta: { scan: 'Doe de teamscan', training: 'Bekijk de training' },
     footer: {
       tagline: 'Een praktische AI-training voor teams, met de psychologie van gedrag als basis.',
-      partOf: 'Jesco Trainingen is onderdeel van Jesco Innovation BV',
-      kvk: 'KVK',
+      partOf: 'Jesco Trainingen is onderdeel van Jesco Innovation B.V.',
+      kvk: 'KvK-nummer',
       privacy: 'Privacy',
       pages: 'Pagina’s',
       contact: 'Contact',
@@ -78,8 +78,8 @@ export const ui = {
     cta: { scan: 'Take the team scan', training: 'See the training' },
     footer: {
       tagline: 'Hands-on AI training for teams, built on the psychology of how people actually work.',
-      partOf: 'Jesco Trainingen is part of Jesco Innovation BV',
-      kvk: 'Chamber of Commerce',
+      partOf: 'Jesco Trainingen is part of Jesco Innovation B.V.',
+      kvk: 'Chamber of Commerce no.',
       privacy: 'Privacy',
       pages: 'Pages',
       contact: 'Contact',

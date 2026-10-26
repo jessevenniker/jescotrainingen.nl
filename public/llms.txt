@@ -1,6 +1,6 @@
 # Jesco Trainingen
 
-> Jesco Trainingen (part of Jesco Innovation BV) offers a hands-on, half-day in-house AI training for teams of 8 to 16 office staff in the Netherlands, in Dutch or English. The training combines prompting with participants' own work, understanding when AI output can be trusted, and agreeing on team-wide AI agreements, grounded in the psychology of behaviour and technology adoption. Trainer: Jesse Venniker. Price from €1,250 excl. VAT per group, including an intake and a four-week follow-up measurement. It is not a tool course; it complements Copilot or ChatGPT tool training.
+> Jesco Trainingen (part of Jesco Innovation B.V., Chamber of Commerce no. 97552356) offers a hands-on, half-day in-house AI training for teams of 8 to 16 office staff in the Netherlands, in Dutch or English. The training combines prompting with participants' own work, understanding when AI output can be trusted, and agreeing on team-wide AI agreements, grounded in the psychology of behaviour and technology adoption. Trainer: Jesse Venniker. Price from €1,250 excl. VAT per group, including an intake and a four-week follow-up measurement. It is not a tool course; it complements Copilot or ChatGPT tool training.
 
 ## Nederlands
 - [Home](https://jescotrainingen.nl/): AI-training voor teams, met de teamscan

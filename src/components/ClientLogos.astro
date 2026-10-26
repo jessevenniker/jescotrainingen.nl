@@ -1,0 +1,31 @@
+---
+import { Image } from 'astro:assets';
+import type { Lang } from '../i18n';
+import citi from '../assets/logos/citi.png';
+import youmeet from '../assets/logos/youmeet.png';
+import balance from '../assets/logos/balance.png';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const label = lang === 'nl' ? 'eerder getraind bij' : 'previously trained at';
+const logos = [
+  { src: citi, alt: 'CITI, Curaçao Innovation & Technology Institute', h: 40 },
+  { src: youmeet, alt: 'Youmeet Curaçao', h: 30 },
+  { src: balance, alt: 'Balance Blended Learning', h: 44 },
+];
+---
+<div class="clients">
+  <span class="label">{label}</span>
+  <ul>
+    {logos.map((l) => (
+      <li><Image src={l.src} alt={l.alt} height={l.h * 2} style={`height: ${l.h}px`} /></li>
+    ))}
+  </ul>
+</div>
+
+<style>
+  .clients { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 40px; }
+  .clients ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 20px 44px; }
+  .clients img { width: auto; filter: grayscale(1) contrast(1.1); opacity: 0.72; transition: filter 0.2s, opacity 0.2s; }
+  .clients li:hover img { filter: none; opacity: 1; }
+</style>
