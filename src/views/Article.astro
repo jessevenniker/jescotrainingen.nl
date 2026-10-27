@@ -24,7 +24,7 @@ const minutes = Math.max(1, Math.round(words / 200));
 const date = entry.data.date.toLocaleDateString(locale, { day: 'numeric', month: 'long', year: 'numeric' });
 const base = path('knowledge', lang);
 
-const more = (await getCollection('kennisbank', (e) => e.data.lang === lang && e.id !== entry.id))
+const more = (await getCollection('kennisbank', (e) => e.data.lang === lang && e.id !== entry.id && !e.data.draft))
   .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
   .slice(0, 3);
 

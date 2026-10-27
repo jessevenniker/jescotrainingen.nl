@@ -1,0 +1,212 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import ScanStrip from '../components/ScanStrip.astro';
+import { path, type Lang } from '../i18n';
+import { site } from '../data/site';
+import { bundles, bundleDocs, euro } from '../data/werkbladen';
+import previewMedewerkersNl from '../assets/werkbladen/medewerkers-nl.png';
+import previewMedewerkersEn from '../assets/werkbladen/medewerkers-en.png';
+import previewLeidinggevendenNl from '../assets/werkbladen/leidinggevenden-nl.png';
+import previewLeidinggevendenEn from '../assets/werkbladen/leidinggevenden-en.png';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const previews = {
+  medewerkers: { nl: previewMedewerkersNl, en: previewMedewerkersEn },
+  leidinggevenden: { nl: previewLeidinggevendenNl, en: previewLeidinggevendenEn },
+};
+
+const copy = {
+  nl: {
+    title: 'Tools en werkbladen voor werken met AI | Jesco Trainingen',
+    description: 'Gratis tools om te zien waar je staat met AI, en praktische werkbladen voor medewerkers en leidinggevenden. Direct te downloaden, in het Nederlands en Engels.',
+    label: 'tools',
+    h1: 'Tools en werkbladen.',
+    lead: 'Gratis tools om te zien waar jij of je team staat met AI, en praktische werkbladen om er in je werk mee aan de slag te gaan.',
+    freeH: 'Gratis tools',
+    freeNote: 'Geen account nodig. Je antwoorden blijven op je eigen apparaat.',
+    tools: [
+      { href: `${path('home', lang)}#teamscan`, tag: '1 minuut', title: 'Teamscan', text: 'Vijf vragen over hoe je team met AI werkt, met een uitslag en advies.' },
+      { href: path('toolCompass', lang), tag: '3 minuten', title: 'AI-adoptiekompas', text: 'Hoe sta jij tegenover AI in je werk, en wat heb je nodig om het goed te gebruiken? Je krijgt een profiel met concrete tips.' },
+      { href: path('toolWeek', lang), tag: '1 minuut per week', title: 'Weekmeter', text: 'Vijf korte vragen per week over energie, focus en herstel, met je verloop in een grafiek.' },
+    ],
+    open: 'Openen',
+    sheetsH: 'Werkbladen',
+    sheetsLead: 'Uitgewerkte werkbladen met uitleg, een voorbeeld en een pagina om zelf in te vullen. Gebaseerd op onderzoek, direct bruikbaar in je werk.',
+    count: (n: number) => `${n} werkbladen`,
+    incl: 'incl. btw',
+    buy: 'Kopen en direct downloaden',
+    perks: ['Direct downloaden na betaling', 'Nederlands en Engels', 'Factuur per mail', 'Voor gebruik binnen je eigen organisatie'],
+    inside: 'Wat erin zit',
+    error: 'Afrekenen lukte niet. Probeer het later opnieuw of mail naar',
+    faqH: 'Vragen over de werkbladen',
+    faq: [
+      ['Hoe krijg ik de werkbladen?', 'Na de betaling kom je op een pagina waar je de pdf’s direct downloadt, in het Nederlands en het Engels. Die link blijft 30 dagen werken. De factuur krijg je per mail.'],
+      ['Hoe kan ik betalen?', 'Via Stripe, met de betaalmethoden die daar worden aangeboden, zoals iDEAL en creditcard. Bedrijven kunnen hun btw-nummer invullen voor de factuur.'],
+      ['Mag ik de werkbladen delen met collega’s?', 'Ja, binnen je eigen organisatie. Doorverkopen of openbaar delen mag niet.'],
+      ['Hoe verhouden de werkbladen zich tot de training?', 'Ze sluiten op elkaar aan: de training gebruikt dezelfde aanpak. De werkbladen kun je ook los gebruiken, zonder training.'],
+    ],
+  },
+  en: {
+    title: 'Tools and worksheets for working with AI | Jesco Trainingen',
+    description: 'Free tools to see where you stand with AI, and practical worksheets for employees and managers. Instant download, in English and Dutch.',
+    label: 'tools',
+    h1: 'Tools and worksheets.',
+    lead: 'Free tools to see where you or your team stand with AI, and practical worksheets to put it to work in your day-to-day.',
+    freeH: 'Free tools',
+    freeNote: 'No account needed. Your answers stay on your own device.',
+    tools: [
+      { href: `${path('home', lang)}#teamscan`, tag: '1 minute', title: 'Team scan', text: 'Five questions about how your team works with AI, with a result and advice.' },
+      { href: path('toolCompass', lang), tag: '3 minutes', title: 'AI adoption compass', text: 'How do you feel about AI in your work, and what do you need to use it well? You get a profile with concrete tips.' },
+      { href: path('toolWeek', lang), tag: '1 minute a week', title: 'Weekly check', text: 'Five short questions a week about energy, focus and recovery, with your trend in a chart.' },
+    ],
+    open: 'Open',
+    sheetsH: 'Worksheets',
+    sheetsLead: 'Fully worked-out worksheets with an explanation, an example and a page to fill in yourself. Grounded in research, ready to use at work.',
+    count: (n: number) => `${n} worksheets`,
+    incl: 'incl. VAT',
+    buy: 'Buy and download now',
+    perks: ['Instant download after payment', 'English and Dutch', 'Invoice by email', 'For use within your own organisation'],
+    inside: 'What’s inside',
+    error: 'Checkout didn’t work. Please try again later or email',
+    faqH: 'Questions about the worksheets',
+    faq: [
+      ['How do I get the worksheets?', 'After payment you land on a page where you can download the PDFs straight away, in English and Dutch. That link keeps working for 30 days. Your invoice arrives by email.'],
+      ['How can I pay?', 'Through Stripe, with the payment methods offered there, such as card and iDEAL. Businesses can add their VAT number for the invoice.'],
+      ['Can I share the worksheets with colleagues?', 'Yes, within your own organisation. Reselling or sharing them publicly isn’t allowed.'],
+      ['How do the worksheets relate to the training?', 'They fit together: the training uses the same approach. You can also use the worksheets on their own, without the training.'],
+    ],
+  },
+}[lang];
+
+const pageUrl = new URL(path('tools', lang), site.url).href;
+const schema = [
+  ...bundles.map((b) => ({
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: b.title[lang],
+    description: b.forWho[lang],
+    brand: { '@type': 'Brand', name: site.name },
+    url: `${pageUrl}#${b.id}`,
+    offers: { '@type': 'Offer', price: (b.priceCents / 100).toFixed(2), priceCurrency: 'EUR', availability: 'https://schema.org/InStock', url: `${pageUrl}#${b.id}` },
+  })),
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    inLanguage: lang === 'nl' ? 'nl-NL' : 'en',
+    mainEntity: copy.faq.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })),
+  },
+];
+---
+<Base lang={lang} title={copy.title} description={copy.description} schema={schema}>
+  <PageHead label={copy.label} title={copy.h1} lead={copy.lead} />
+
+  <section class="wrap section stack" style="--gap: 28px">
+    <div class="row" style="--gap: 8px 32px; align-items: baseline; justify-content: space-between">
+      <h2 class="t-h2">{copy.freeH}</h2>
+      <p class="muted">{copy.freeNote}</p>
+    </div>
+    <ul class="toolgrid">
+      {copy.tools.map((t) => (
+        <li>
+          <a href={t.href} class="toolcard">
+            <span class="label">{t.tag}</span>
+            <h3>{t.title}</h3>
+            <p>{t.text}</p>
+            <span class="toolcard__open">{copy.open} →</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <section class="dark">
+    <div class="wrap section stack" style="--gap: 40px">
+      <div class="stack" style="--gap: 14px; max-width: 46rem">
+        <h2 class="t-h2">{copy.sheetsH}</h2>
+        <p class="lead">{copy.sheetsLead}</p>
+      </div>
+      <p class="pay-error" data-pay-error hidden>{copy.error} <a href={`mailto:${site.email}`}>{site.email}</a>.</p>
+      {bundles.map((b) => {
+        const docs = bundleDocs(b.id, lang);
+        return (
+          <article class="bundle" id={b.id}>
+            <Image src={previews[b.id][lang]} alt="" widths={[320, 520]} sizes="(max-width: 760px) 70vw, 260px" class="bundle__img" />
+            <div class="bundle__body stack" style="--gap: 18px">
+              <span class="label">{copy.count(docs.length)}</span>
+              <h3 class="bundle__title">{b.title[lang]}</h3>
+              <p class="bundle__for">{b.forWho[lang]}</p>
+              <div class="bundle__inside">
+                <span class="label">{copy.inside}</span>
+                <ol>
+                  {docs.map((d) => <li><strong>{d.title}</strong><span>{d.summary}</span></li>)}
+                </ol>
+              </div>
+              <form method="post" action="/api/checkout/" class="bundle__buy">
+                <input type="hidden" name="bundle" value={b.id} />
+                <input type="hidden" name="lang" value={lang} />
+                <div class="bundle__price"><strong>{euro(b.priceCents, lang)}</strong> <span>{copy.incl}</span></div>
+                <button type="submit" class="btn btn--lime">{copy.buy}</button>
+              </form>
+              <ul class="bundle__perks">
+                {copy.perks.map((p) => <li>{p}</li>)}
+              </ul>
+            </div>
+          </article>
+        );
+      })}
+    </div>
+  </section>
+
+  <section class="wrap section split-faq">
+    <h2 class="t-h2">{copy.faqH}</h2>
+    <div class="faq">
+      {copy.faq.map(([q, a]) => (
+        <details>
+          <summary>{q}</summary>
+          <p>{a}</p>
+        </details>
+      ))}
+    </div>
+  </section>
+
+  <ScanStrip lang={lang} />
+</Base>
+
+<style>
+  .t-h2 { font-size: clamp(1.8rem, 3vw, 2.6rem); }
+  .toolgrid { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; border-top: 1px solid var(--ink); }
+  .toolgrid li { flex: 1 1 280px; min-width: 0; border-bottom: 1px solid var(--rule); }
+  .toolcard { display: flex; flex-direction: column; gap: 10px; height: 100%; padding: 24px 28px 24px 0; text-decoration: none; }
+  .toolcard h3 { font-size: 1.4rem; }
+  .toolcard p { color: var(--ink-2); line-height: 1.55; }
+  .toolcard__open { margin-top: auto; font-weight: 600; color: var(--green); }
+  .toolcard:hover h3 { color: var(--green); }
+  .pay-error { padding: 14px 16px; border: 1px solid var(--lime); border-radius: 6px; }
+  .pay-error a { color: var(--lime); }
+  .bundle { display: flex; flex-wrap: wrap; gap: 32px 56px; padding-top: 40px; border-top: 1px solid var(--dark-rule); scroll-margin-top: 24px; }
+  .bundle__img { flex: 0 1 260px; width: 100%; max-width: 260px; height: auto; border-radius: 4px; box-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.6); align-self: flex-start; }
+  .bundle__body { flex: 1 1 420px; min-width: 0; }
+  .bundle__title { font-size: clamp(1.6rem, 2.6vw, 2.2rem); letter-spacing: -0.02em; }
+  .bundle__for { color: var(--on-dark-2); font-size: 1.08rem; line-height: 1.55; max-width: 40rem; }
+  .bundle__inside ol { margin: 10px 0 0; padding: 0; list-style: none; counter-reset: s; border-top: 1px solid var(--dark-rule); }
+  .bundle__inside li { counter-increment: s; display: grid; grid-template-columns: 32px minmax(0, 1fr); gap: 2px 8px; padding: 10px 0; border-bottom: 1px solid var(--dark-rule); }
+  .bundle__inside li::before { content: counter(s, decimal-leading-zero); grid-row: 1 / 3; font-family: var(--mono); font-size: 0.75rem; color: var(--lime); padding-top: 0.3em; }
+  .bundle__inside li span { color: var(--on-dark-2); font-size: 0.95rem; }
+  .bundle__buy { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 24px; padding-top: 8px; }
+  .bundle__price strong { font-size: 1.8rem; font-weight: 600; letter-spacing: -0.02em; }
+  .bundle__price span { color: var(--on-dark-3); font-size: 0.9rem; }
+  .bundle__perks { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px 18px; font-family: var(--mono); font-size: 0.75rem; color: var(--on-dark-3); }
+  .bundle__perks li::before { content: '✓ '; color: var(--lime); }
+  .split-faq { display: flex; flex-wrap: wrap; gap: 24px 64px; align-items: flex-start; }
+  .split-faq > h2 { flex: 1 1 280px; }
+  .split-faq > .faq { flex: 2 1 520px; min-width: 0; max-width: 46rem; }
+</style>
+
+<script>
+  if (new URLSearchParams(location.search).get('betaling') === 'fout') {
+    document.querySelector<HTMLElement>('[data-pay-error]')?.removeAttribute('hidden');
+  }
+</script>

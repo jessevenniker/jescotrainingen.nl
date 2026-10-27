@@ -1,0 +1,161 @@
+// Teksten voor de gratis tools: het AI-adoptiekompas en de weekmeter (nl + en).
+// Overgenomen uit het Paice-project en aangepast voor Jesco Trainingen.
+
+export const adoptiekompas = {
+  nl: {
+    scale: ['Helemaal oneens', 'Oneens', 'Neutraal', 'Eens', 'Helemaal eens'],
+    factors: [
+      { id: 'nut', name: 'Nut', axis: 'houding', items: ['AI helpt me om mijn werk beter te doen.', 'AI bespaart me tijd die ik voor ander werk kan gebruiken.'] },
+      { id: 'vertrouwen', name: 'Vertrouwen in output', axis: 'houding', items: ['Ik weet wanneer ik AI-output kan vertrouwen en wanneer niet.'] },
+      { id: 'omgeving', name: 'Steun uit je omgeving', axis: 'houding', items: ['Collega’s en mijn leidinggevende moedigen het gebruik van AI aan.'] },
+      { id: 'zorgen', name: 'Zorgen', axis: 'houding', reverse: true, items: ['Ik maak me zorgen over wat AI betekent voor mijn baan.', 'Ik voel druk om AI te gebruiken, ook als ik dat liever niet wil.', 'Ik maak me zorgen over fouten of privacy als ik AI gebruik.'] },
+      { id: 'gemak', name: 'Gemak', axis: 'mogelijkheden', items: ['Ik vind AI-tools makkelijk in gebruik.', 'Ik weet hoe ik een goede opdracht aan AI geef.'] },
+      { id: 'middelen', name: 'Training en afspraken', axis: 'mogelijkheden', items: ['Ik heb de training en hulp die ik nodig heb om met AI te werken.', 'Er zijn duidelijke afspraken over hoe we AI mogen gebruiken.'] },
+      { id: 'zeggenschap', name: 'Zeggenschap', axis: 'mogelijkheden', items: ['Ik kan zelf bepalen waarvoor ik AI wel en niet gebruik.'] },
+    ],
+    reverseNote: '(omgekeerd: hoger is minder zorgen)',
+    axes: { houding: 'Houding', mogelijkheden: 'Mogelijkheden' },
+    profiles: {
+      koploper: {
+        name: 'Koploper',
+        tagline: 'Je ziet het nut van AI en weet hoe je het inzet.',
+        risk: 'Koplopers doen vaak het meeste AI-werk, en lopen daardoor juist meer kans op overbelasting: meer tools, meer output om te controleren, en werk dat doorloopt.',
+        you: ['Bewaak je grenzen: bundel AI-werk en plan focustijd zonder AI.', 'Deel je werkwijzen met collega’s, zodat je niet de vraagbaak van iedereen wordt.'],
+        org: 'Geef koplopers een rol in het delen van kennis, maar met tijd en mandaat, niet erbovenop.',
+      },
+      starter: {
+        name: 'Starter',
+        tagline: 'Je wilt wel, maar het lukt nog niet zoals je zou willen.',
+        risk: 'Zonder steun kan enthousiasme omslaan in frustratie of onzekerheid, en ga je AI-output te snel vertrouwen of juist alles dubbel controleren.',
+        you: ['Kies één taak en oefen daar vier weken mee.', 'Vraag een collega hoe die het aanpakt, en vraag om training waar je die mist.'],
+        org: 'Starters hebben vooral training, voorbeelden en duidelijke afspraken nodig. Niet meer tools.',
+      },
+      kritisch: {
+        name: 'Kritische vakmens',
+        tagline: 'Je kunt met AI werken, maar je hebt er je bedenkingen bij.',
+        risk: 'Kritische vakmensen worden soms als weerstand gezien, terwijl hun scherpte waardevol is: zij zien fouten en risico’s die anderen missen.',
+        you: ['Maak bewust keuzes: waarvoor gebruik je AI wel, en wat blijf je zelf doen?', 'Zet je kritische blik in, bijvoorbeeld bij afspraken over controle in je team.'],
+        org: 'Geef zeggenschap over hoe AI wordt ingezet, en neem zorgen serieus in plaats van ze weg te praten.',
+      },
+      afstand: {
+        name: 'Op afstand',
+        tagline: 'AI voelt nog ver weg, of roept vooral vragen en zorgen op.',
+        risk: 'Wie zich buitengesloten of onder druk gezet voelt, haakt verder af. Dat vergroot de zorgen en de afstand tot collega’s.',
+        you: ['Bespreek je vragen en zorgen met je leidinggevende: wat betekent AI voor jouw werk?', 'Begin klein en veilig, met een taak waarbij fouten weinig uitmaken.'],
+        org: 'Begin met een gesprek, niet met een tool. Heldere afspraken en ruimte om te oefenen nemen de meeste zorgen weg.',
+      },
+    },
+    ui: {
+      left: (n: number, total: number) => `Nog ${n} van ${total} uitspraken te gaan. Je profiel verschijnt hier zodra alles is ingevuld.`,
+      yourProfile: 'Jouw adoptieprofiel',
+      watch: 'Let op',
+      youCan: 'Wat jij kunt doen',
+      orgCan: 'Wat je organisatie kan doen',
+      teamHint: 'Wil je weten hoe dit in je hele team zit? Doe samen de teamscan, of bekijk de training.',
+      worksheets: 'Bijpassende werkbladen',
+      print: 'Bewaar als pdf of print',
+      reset: 'Wis en opnieuw',
+      basis: 'Gebaseerd op het Technology Acceptance Model (Davis, 1989), UTAUT en UTAUT2 (Venkatesh e.a., 2003; 2012), de zelfdeterminatietheorie (Deci en Ryan, 2000) en onderzoek naar AI-angst (Wang en Wang, 2019). Indicatief, geen gevalideerde test. Je antwoorden blijven op dit apparaat.',
+    },
+  },
+  en: {
+    scale: ['Strongly disagree', 'Disagree', 'Neutral', 'Agree', 'Strongly agree'],
+    factors: [
+      { id: 'nut', name: 'Usefulness', axis: 'houding', items: ['AI helps me do my work better.', 'AI saves me time I can spend on other work.'] },
+      { id: 'vertrouwen', name: 'Trust in output', axis: 'houding', items: ['I know when I can trust AI output and when I can’t.'] },
+      { id: 'omgeving', name: 'Support around you', axis: 'houding', items: ['My colleagues and manager encourage the use of AI.'] },
+      { id: 'zorgen', name: 'Concerns', axis: 'houding', reverse: true, items: ['I worry about what AI means for my job.', 'I feel pressure to use AI, even when I’d rather not.', 'I worry about mistakes or privacy when I use AI.'] },
+      { id: 'gemak', name: 'Ease of use', axis: 'mogelijkheden', items: ['I find AI tools easy to use.', 'I know how to give AI a good instruction.'] },
+      { id: 'middelen', name: 'Training and agreements', axis: 'mogelijkheden', items: ['I have the training and support I need to work with AI.', 'There are clear agreements on how we may use AI.'] },
+      { id: 'zeggenschap', name: 'Autonomy', axis: 'mogelijkheden', items: ['I can decide for myself what I do and don’t use AI for.'] },
+    ],
+    reverseNote: '(reversed: higher means fewer concerns)',
+    axes: { houding: 'Attitude', mogelijkheden: 'Ability' },
+    profiles: {
+      koploper: {
+        name: 'Front-runner',
+        tagline: 'You see the value of AI and know how to use it.',
+        risk: 'Front-runners often do the most AI work, which makes them more likely to get overloaded: more tools, more output to check, and work that spills over.',
+        you: ['Guard your boundaries: batch AI work and plan focus time without AI.', 'Share your ways of working with colleagues, so you don’t become everyone’s help desk.'],
+        org: 'Give front-runners a role in sharing knowledge, but with time and a mandate, not on top of their job.',
+      },
+      starter: {
+        name: 'Starter',
+        tagline: 'You’re keen, but it isn’t working the way you’d like yet.',
+        risk: 'Without support, enthusiasm can turn into frustration or insecurity, and you may trust AI output too quickly or end up double-checking everything.',
+        you: ['Pick one task and practise it for four weeks.', 'Ask a colleague how they approach it, and ask for training where you’re missing it.'],
+        org: 'Starters mainly need training, examples and clear agreements. Not more tools.',
+      },
+      kritisch: {
+        name: 'Critical professional',
+        tagline: 'You can work with AI, but you have your reservations.',
+        risk: 'Critical professionals are sometimes seen as resistant, while their sharpness is valuable: they spot mistakes and risks others miss.',
+        you: ['Make deliberate choices: what do you use AI for, and what do you keep doing yourself?', 'Put your critical eye to use, for example in your team’s agreements on checking.'],
+        org: 'Give people a say in how AI is used, and take concerns seriously instead of talking them away.',
+      },
+      afstand: {
+        name: 'At a distance',
+        tagline: 'AI still feels far away, or mostly raises questions and concerns.',
+        risk: 'People who feel left out or pressured tend to disengage further. That deepens the concerns and the distance from colleagues.',
+        you: ['Discuss your questions and concerns with your manager: what does AI mean for your work?', 'Start small and safe, with a task where mistakes hardly matter.'],
+        org: 'Start with a conversation, not a tool. Clear agreements and room to practise remove most concerns.',
+      },
+    },
+    ui: {
+      left: (n: number, total: number) => `${n} of ${total} statements to go. Your profile will appear here once everything is filled in.`,
+      yourProfile: 'Your adoption profile',
+      watch: 'Watch out',
+      youCan: 'What you can do',
+      orgCan: 'What your organisation can do',
+      teamHint: 'Want to know how this looks across your team? Take the team scan together, or see the training.',
+      worksheets: 'Matching worksheets',
+      print: 'Save as PDF or print',
+      reset: 'Clear and start again',
+      basis: 'Based on the Technology Acceptance Model (Davis, 1989), UTAUT and UTAUT2 (Venkatesh et al., 2003; 2012), self-determination theory (Deci and Ryan, 2000) and research on AI anxiety (Wang and Wang, 2019). Indicative, not a validated test. Your answers stay on this device.',
+    },
+  },
+};
+
+/** Welke werkbladbundel past bij welk profiel. */
+export const profileBundle = { koploper: 'medewerkers', starter: 'medewerkers', kritisch: 'leidinggevenden', afstand: 'medewerkers' } as const;
+
+export const weekmeter = {
+  nl: {
+    items: [
+      { id: 'energie', label: 'Hoeveel energie had je deze week?', low: 'Op', high: 'Vol energie' },
+      { id: 'herstel', label: 'Hoe goed kwam je na het werk weer bij?', low: 'Helemaal niet', high: 'Helemaal' },
+      { id: 'focus', label: 'Hoe goed kon je je concentreren?', low: 'Nauwelijks', high: 'Heel goed' },
+      { id: 'loskomen', label: 'Hoe goed kon je je werk loslaten in je vrije tijd?', low: 'Helemaal niet', high: 'Helemaal' },
+      { id: 'aiwerk', label: 'Hoe licht voelde je werk met AI?', low: 'Heel zwaar', high: 'Heel licht' },
+    ],
+    save: 'Bewaar deze week',
+    saved: 'Bewaard',
+    clear: 'Wis alle weken',
+    note: 'Je scores blijven op dit apparaat en worden niet verstuurd. Indicatief, geen test.',
+    trend: 'Jouw verloop',
+    chartLabel: 'Gemiddelde score per week',
+    lastWeek: (v: string) => `Laatste week gemiddeld ${v} van 10.`,
+    weekBefore: (v: string) => ` Week ervoor: ${v}.`,
+    low: 'Je scoort twee weken op rij laag. Neem dat serieus en bespreek het met je leidinggevende of iemand die je vertrouwt. Houden klachten aan, ga dan naar je huisarts of bedrijfsarts.',
+    locale: 'nl-NL',
+  },
+  en: {
+    items: [
+      { id: 'energie', label: 'How much energy did you have this week?', low: 'Drained', high: 'Full of energy' },
+      { id: 'herstel', label: 'How well did you recover after work?', low: 'Not at all', high: 'Completely' },
+      { id: 'focus', label: 'How well could you concentrate?', low: 'Barely', high: 'Very well' },
+      { id: 'loskomen', label: 'How well could you let go of work in your free time?', low: 'Not at all', high: 'Completely' },
+      { id: 'aiwerk', label: 'How light did your work with AI feel?', low: 'Very heavy', high: 'Very light' },
+    ],
+    save: 'Save this week',
+    saved: 'Saved',
+    clear: 'Clear all weeks',
+    note: 'Your scores stay on this device and are never sent anywhere. Indicative, not a test.',
+    trend: 'Your trend',
+    chartLabel: 'Average score per week',
+    lastWeek: (v: string) => `Last week’s average: ${v} out of 10.`,
+    weekBefore: (v: string) => ` The week before: ${v}.`,
+    low: 'You’ve scored low two weeks in a row. Take that seriously and talk to your manager or someone you trust. If symptoms persist, see your GP or occupational doctor.',
+    locale: 'en-GB',
+  },
+};

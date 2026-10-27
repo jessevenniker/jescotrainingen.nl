@@ -10,14 +10,16 @@ const { lang } = Astro.props;
 const copy = {
   nl: {
     title: 'Privacy | Jesco Trainingen',
-    description: 'Hoe Jesco Trainingen omgaat met je gegevens: geen cookies, alleen anonieme bezoekersstatistieken, en je gegevens alleen voor contact.',
+    description: 'Hoe Jesco Trainingen omgaat met je gegevens: geen cookies, anonieme bezoekersstatistieken, betalingen via Stripe en je gegevens alleen voor contact en levering.',
     h1: 'Privacy',
-    updated: 'laatst bijgewerkt: oktober 2026',
+    updated: 'laatst bijgewerkt: 27 oktober 2026',
     blocks: [
       ['Wie is verantwoordelijk', `Jesco Trainingen is onderdeel van ${site.legalName}. Voor vragen over je gegevens mail je naar ${site.email}.`],
       ['Geen cookies', 'Deze website plaatst geen cookies en gebruikt geen advertentiediensten. Lettertypes worden vanaf deze website zelf geladen, niet via externe diensten. Daarom is er ook geen cookiemelding.'],
       ['Bezoekersstatistieken', 'Om te zien hoeveel mensen de site bezoeken en welke pagina’s ze lezen, gebruik ik Vercel Web Analytics. Dat werkt zonder cookies en zonder dat je als persoon herkenbaar bent: een bezoek wordt geteld met een tijdelijke code die na een dag vervalt en niet naar jou te herleiden is. Ik zie alleen totalen, zoals het aantal bezoeken per pagina, het land en het type apparaat. De gegevens worden niet gebruikt voor advertenties en niet gedeeld met anderen.'],
       ['De teamscan', 'Je antwoorden in de teamscan blijven in je eigen browser. Er wordt niets opgeslagen of verstuurd, tenzij je zelf op de knop klikt om je uitslag te mailen. Dan opent je eigen mailprogramma en bepaal jij wat je verstuurt.'],
+      ['De tools', 'Het AI-adoptiekompas en de weekmeter bewaren je antwoorden alleen in je eigen browser (in de lokale opslag van je apparaat), zodat je later verder kunt. Er wordt niets naar mij of naar anderen verstuurd. Met de knop “Wis” of door je browsergegevens te wissen, haal je alles weg.'],
+      ['Werkbladen kopen', 'Als je werkbladen koopt, verloopt de betaling via Stripe. Stripe verwerkt daarvoor je naam, e-mailadres, factuuradres, eventueel btw-nummer en je betaalgegevens. Ik krijg je betaalgegevens niet te zien, wel je naam, e-mailadres, adres en wat je hebt gekocht. Die gebruik ik om je de werkbladen te leveren, je de factuur te sturen en vragen te beantwoorden. Omdat ik wettelijk verplicht ben mijn administratie zeven jaar te bewaren, bewaar ik de factuurgegevens zo lang. Stripe is zelf verantwoordelijk voor de verwerking van je betaalgegevens, heeft een eigen privacybeleid (stripe.com/nl/privacy) en kan gegevens ook buiten de EU verwerken, met passende waarborgen.'],
       ['Als je mailt', 'Als je mailt, gebruik ik je naam, e-mailadres en bericht alleen om je te antwoorden en een eventuele training voor te bereiden. Ik deel ze niet met anderen en bewaar ze niet langer dan nodig.'],
       ['Hosting', 'De website wordt gehost door Vercel. Vercel kan technische gegevens zoals je IP-adres kort bewaren voor beveiliging en het goed laten werken van de site.'],
       ['Je rechten', 'Je kunt altijd vragen welke gegevens ik van je heb, en vragen om ze aan te passen of te verwijderen. Mail daarvoor naar het adres hierboven. Ben je het niet eens met hoe ik met je gegevens omga, dan kun je een klacht indienen bij de Autoriteit Persoonsgegevens.'],
@@ -25,14 +27,16 @@ const copy = {
   },
   en: {
     title: 'Privacy | Jesco Trainingen',
-    description: 'How Jesco Trainingen handles your data: no cookies, only anonymous visitor statistics, and your details used only to get back to you.',
+    description: 'How Jesco Trainingen handles your data: no cookies, anonymous visitor statistics, payments through Stripe, and your details used only to get back to you and deliver your order.',
     h1: 'Privacy',
-    updated: 'last updated: October 2026',
+    updated: 'last updated: 27 October 2026',
     blocks: [
       ['Who’s responsible', `Jesco Trainingen is part of ${site.legalName}. For questions about your data, email ${site.email}.`],
       ['No cookies', 'This website doesn’t set cookies and doesn’t use advertising services. Fonts are served from this website itself, not from third parties. That’s also why there’s no cookie banner.'],
       ['Visitor statistics', 'To see how many people visit the site and which pages they read, I use Vercel Web Analytics. It works without cookies and without identifying you personally: a visit is counted using a temporary code that expires after a day and can’t be traced back to you. I only see totals, such as visits per page, country and device type. The data isn’t used for advertising and isn’t shared with anyone else.'],
       ['The team scan', 'Your answers in the team scan stay in your own browser. Nothing is stored or sent unless you click the button to email your result. That opens your own email app, and you decide what gets sent.'],
+      ['The tools', 'The AI adoption compass and the weekly check store your answers only in your own browser (your device’s local storage), so you can pick up where you left off. Nothing is sent to me or anyone else. Use the “Clear” button or clear your browser data to remove everything.'],
+      ['Buying worksheets', 'When you buy worksheets, payment is handled by Stripe. Stripe processes your name, email address, billing address, VAT number if you add one, and your payment details. I never see your payment details, but I do receive your name, email address, address and what you bought. I use these to deliver the worksheets, send your invoice and answer questions. Because I’m legally required to keep my accounts for seven years, I keep invoice details for that long. Stripe is itself responsible for processing your payment details as an independent controller, has its own privacy policy (stripe.com/privacy) and may process data outside the EU, with appropriate safeguards.'],
       ['When you email', 'If you email me, I use your name, email address and message only to reply and to prepare a possible training. I don’t share them and don’t keep them longer than necessary.'],
       ['Hosting', 'The website is hosted by Vercel, which may briefly keep technical data such as your IP address for security and to keep the site running.'],
       ['Your rights', 'You can always ask what data I hold about you, and ask me to correct or delete it. Just email the address above. If you’re unhappy with how your data is handled, you can file a complaint with the Dutch Data Protection Authority (Autoriteit Persoonsgegevens).'],

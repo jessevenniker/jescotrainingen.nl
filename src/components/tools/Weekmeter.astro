@@ -1,0 +1,129 @@
+---
+import type { Lang } from '../../i18n';
+import { weekmeter } from '../../data/tools';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const c = weekmeter[lang];
+const data = {
+  items: c.items,
+  saved: c.saved,
+  trend: c.trend,
+  chartLabel: c.chartLabel,
+  lastWeek: c.lastWeek('{v}'),
+  weekBefore: c.weekBefore('{v}'),
+  low: c.low,
+  locale: c.locale,
+  storageKey: 'jesco-weekmeter',
+};
+---
+<div class="wm" data-weekmeter>
+  <script type="application/json" data-wm-data set:html={JSON.stringify(data)} />
+  <div class="wm__items">
+    {c.items.map((i) => (
+      <div class="wm__item">
+        <label for={`wm-${i.id}`}>{i.label} <strong data-wm-value={i.id}>5</strong></label>
+        <input id={`wm-${i.id}`} type="range" min="0" max="10" step="1" value="5" data-wm-input={i.id} />
+        <span class="wm__ends"><span>{i.low}</span><span>{i.high}</span></span>
+      </div>
+    ))}
+  </div>
+  <div class="wm__actions">
+    <button type="button" class="btn btn--primary" data-wm-save>{c.save}</button>
+    <button type="button" class="wm__clear" data-wm-clear hidden>{c.clear}</button>
+  </div>
+  <p class="wm__note">{c.note}</p>
+  <section class="wm__chart" data-wm-chart hidden aria-live="polite"></section>
+</div>
+
+<style is:global>
+  .wm { display: flex; flex-direction: column; gap: 24px; }
+  .wm__items { display: flex; flex-direction: column; gap: 28px; }
+  .wm__item { display: flex; flex-direction: column; gap: 8px; }
+  .wm__item label { font-size: 1.05rem; display: flex; justify-content: space-between; gap: 16px; }
+  .wm__item strong { font-family: var(--mono); font-weight: 500; font-variant-numeric: tabular-nums; min-width: 2ch; text-align: right; }
+  .wm__item input { width: 100%; accent-color: var(--forest); height: 28px; }
+  .wm__ends { display: flex; justify-content: space-between; font-family: var(--mono); font-size: 0.75rem; color: var(--muted); }
+  .wm__actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+  .wm__clear { min-height: 48px; padding: 0 16px; border: 1px solid var(--rule); border-radius: 8px; background: transparent; font: inherit; cursor: pointer; color: var(--ink); }
+  .wm__clear:hover { border-color: var(--ink); }
+  .wm__note { font-size: 0.85rem; color: var(--muted); }
+  .wm__chart { padding: clamp(20px, 3vw, 32px); border-radius: 8px; background: var(--forest); color: var(--on-dark); display: flex; flex-direction: column; gap: 14px; }
+  .wm__chart .label { color: var(--lime); }
+  .wm__chart svg { width: 100%; height: auto; }
+  .wm__chart svg text { font-family: var(--mono); }
+  .wm__chart p { color: var(--on-dark-2); }
+  .wm__low { padding: 14px 16px; border-radius: 6px; border: 1px solid var(--lime); color: var(--on-dark) !important; }
+</style>
+
+<script>
+  type Data = {
+    items: { id: string; label: string; low: string; high: string }[];
+    saved: string; trend: string; chartLabel: string; lastWeek: string; weekBefore: string; low: string; locale: string; storageKey: string;
+  };
+  type Entry = { date: string; scores: Record<string, number> };
+
+  document.querySelectorAll<HTMLElement>('[data-weekmeter]').forEach((root) => {
+    const d: Data = JSON.parse((root.querySelector('[data-wm-data]') as HTMLElement).textContent || '{}');
+    const chart = root.querySelector('[data-wm-chart]') as HTMLElement;
+    const clearBtn = root.querySelector('[data-wm-clear]') as HTMLButtonElement;
+    const saveBtn = root.querySelector('[data-wm-save]') as HTMLButtonElement;
+    const saveLabel = saveBtn.textContent || '';
+    const fmt = new Intl.DateTimeFormat(d.locale, { day: 'numeric', month: 'short' });
+
+    const load = (): Entry[] => {
+      try { return JSON.parse(localStorage.getItem(d.storageKey) || '[]'); } catch { return []; }
+    };
+    const store = (h: Entry[]) => {
+      try { localStorage.setItem(d.storageKey, JSON.stringify(h)); } catch { /* geen opslag beschikbaar */ }
+    };
+    let history = load();
+    const draft: Record<string, number> = Object.fromEntries(d.items.map((i) => [i.id, 5]));
+
+    root.querySelectorAll<HTMLInputElement>('[data-wm-input]').forEach((input) => {
+      input.addEventListener('input', () => {
+        const id = input.dataset.wmInput as string;
+        draft[id] = Number(input.value);
+        (root.querySelector(`[data-wm-value="${id}"]`) as HTMLElement).textContent = input.value;
+      });
+    });
+
+    const avg = (e: Entry) => d.items.reduce((s, i) => s + (e.scores[i.id] ?? 0), 0) / d.items.length;
+
+    function render() {
+      clearBtn.hidden = history.length === 0;
+      if (history.length === 0) { chart.hidden = true; return; }
+      const last = history.slice(-12);
+      const W = 640, H = 220, pad = 34;
+      const x = (i: number) => pad + (last.length <= 1 ? (W - 2 * pad) / 2 : (i * (W - 2 * pad)) / (last.length - 1));
+      const y = (v: number) => H - pad - (v / 10) * (H - 2 * pad);
+      const grid = [0, 5, 10].map((v) => `<line x1="${pad}" x2="${W - pad}" y1="${y(v)}" y2="${y(v)}" stroke="var(--dark-rule)"/><text x="4" y="${y(v) + 4}" font-size="12" fill="var(--on-dark-3)">${v}</text>`).join('');
+      const lowBand = `<rect x="${pad}" y="${y(4)}" width="${W - 2 * pad}" height="${y(0) - y(4)}" fill="rgba(198,243,107,0.06)"/>`;
+      const line = `<polyline fill="none" stroke="var(--lime)" stroke-width="2.5" points="${last.map((e, i) => `${x(i)},${y(avg(e))}`).join(' ')}"/>`;
+      const dots = last.map((e, i) => `<circle cx="${x(i)}" cy="${y(avg(e))}" r="4.5" fill="var(--lime)"/><text x="${x(i)}" y="${H - 8}" font-size="11" fill="var(--on-dark-3)" text-anchor="middle">${fmt.format(new Date(e.date))}</text>`).join('');
+      const lastAvg = avg(last[last.length - 1]).toFixed(1);
+      const prev = last.length > 1 ? d.weekBefore.replace('{v}', avg(last[last.length - 2]).toFixed(1)) : '';
+      const lowStreak = history.length >= 2 && history.slice(-2).every((e) => avg(e) < 4);
+      chart.innerHTML = `<span class="label">${d.trend}</span>
+        <svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${d.chartLabel}">${grid}${lowBand}${line}${dots}</svg>
+        <p>${d.lastWeek.replace('{v}', lastAvg)}${prev}</p>
+        ${lowStreak ? `<p class="wm__low">${d.low}</p>` : ''}`;
+      chart.hidden = false;
+    }
+
+    saveBtn.addEventListener('click', () => {
+      history = [...history, { date: new Date().toISOString(), scores: { ...draft } }].slice(-52);
+      store(history);
+      render();
+      saveBtn.textContent = d.saved;
+      setTimeout(() => (saveBtn.textContent = saveLabel), 1600);
+    });
+    clearBtn.addEventListener('click', () => {
+      history = [];
+      store(history);
+      render();
+    });
+
+    render();
+  });
+</script>

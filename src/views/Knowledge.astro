@@ -13,7 +13,7 @@ interface Props { lang: Lang }
 const { lang } = Astro.props;
 const locale = lang === 'nl' ? 'nl-NL' : 'en-GB';
 
-const articles = (await getCollection('kennisbank', (e) => e.data.lang === lang))
+const articles = (await getCollection('kennisbank', (e) => e.data.lang === lang && !e.data.draft))
   .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 
 const minutes = (body?: string) => Math.max(1, Math.round((body ?? '').split(/\s+/).filter(Boolean).length / 200));

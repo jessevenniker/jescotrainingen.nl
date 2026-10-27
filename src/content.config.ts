@@ -14,6 +14,8 @@ const kennisbank = defineCollection({
     /** Drie korte kernpunten voor het blok "Kort gezegd". */
     summary: z.array(z.string()).default([]),
     sources: z.array(z.string()).default([]),
+    /** Concept: staat klaar, maar wordt nog niet gepubliceerd. De wekelijkse taak zet dit op false. */
+    draft: z.boolean().default(false),
   }),
 });
 

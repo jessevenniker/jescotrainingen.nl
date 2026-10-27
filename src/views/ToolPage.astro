@@ -1,0 +1,80 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import ScanStrip from '../components/ScanStrip.astro';
+import Adoptiekompas from '../components/tools/Adoptiekompas.astro';
+import Weekmeter from '../components/tools/Weekmeter.astro';
+import { path, type Lang } from '../i18n';
+import { site } from '../data/site';
+
+interface Props { lang: Lang; tool: 'compass' | 'week' }
+const { lang, tool } = Astro.props;
+
+const copy = {
+  compass: {
+    nl: {
+      title: 'AI-adoptiekompas: hoe sta jij tegenover AI? | Jesco Trainingen',
+      description: 'Gratis AI-adoptiekompas: ontdek in drie minuten hoe je tegenover AI in je werk staat, en wat je nodig hebt om het goed te gebruiken.',
+      label: 'gratis tool',
+      h1: 'AI-adoptiekompas',
+      lead: 'Twaalf uitspraken, drie minuten. Je ziet hoe je tegenover AI staat, en wat jij en je organisatie kunnen doen om het goed te gebruiken.',
+    },
+    en: {
+      title: 'AI adoption compass: how do you feel about AI? | Jesco Trainingen',
+      description: 'Free AI adoption compass: find out in three minutes how you feel about AI in your work, and what you need to use it well.',
+      label: 'free tool',
+      h1: 'AI adoption compass',
+      lead: 'Twelve statements, three minutes. See how you relate to AI, and what you and your organisation can do to use it well.',
+    },
+  },
+  week: {
+    nl: {
+      title: 'Weekmeter: houd je energie bij | Jesco Trainingen',
+      description: 'Gratis weekmeter: vijf korte vragen per week over energie, focus en herstel, met je verloop in een grafiek. Alles blijft op je eigen apparaat.',
+      label: 'gratis tool',
+      h1: 'Weekmeter',
+      lead: 'Vijf vragen, één minuut, elke week. Zo zie je hoe je energie, focus en herstel zich ontwikkelen nu AI een vaste plek in je werk krijgt.',
+    },
+    en: {
+      title: 'Weekly check: keep track of your energy | Jesco Trainingen',
+      description: 'Free weekly check: five short questions a week about energy, focus and recovery, with your trend in a chart. Everything stays on your own device.',
+      label: 'free tool',
+      h1: 'Weekly check',
+      lead: 'Five questions, one minute, every week. See how your energy, focus and recovery develop as AI becomes a fixed part of your work.',
+    },
+  },
+}[tool][lang];
+
+const back = lang === 'nl' ? 'Alle tools en werkbladen' : 'All tools and worksheets';
+const key = tool === 'compass' ? 'toolCompass' : 'toolWeek';
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebApplication',
+    name: copy.h1,
+    description: copy.description,
+    url: new URL(path(key, lang), site.url).href,
+    applicationCategory: 'BusinessApplication',
+    operatingSystem: 'Any',
+    isAccessibleForFree: true,
+    inLanguage: lang === 'nl' ? 'nl-NL' : 'en',
+    provider: { '@id': `${site.url}/#organization` },
+    offers: { '@type': 'Offer', price: '0', priceCurrency: 'EUR' },
+  },
+];
+---
+<Base lang={lang} title={copy.title} description={copy.description} schema={schema}>
+  <PageHead label={copy.label} title={copy.h1} lead={copy.lead} />
+  <section class="wrap section tool">
+    <div class="tool__main">
+      {tool === 'compass' ? <Adoptiekompas lang={lang} /> : <Weekmeter lang={lang} />}
+    </div>
+    <p><a class="textlink" href={path('tools', lang)}>{back}</a></p>
+  </section>
+  <ScanStrip lang={lang} />
+</Base>
+
+<style>
+  .tool { display: flex; flex-direction: column; gap: 40px; }
+  .tool__main { max-width: 56rem; }
+</style>

@@ -145,6 +145,48 @@ export const sources: Record<string, Source> = {
     url: 'https://investors.upwork.com/news-releases/news-release-details/upwork-study-finds-employee-workloads-rising-despite-increased-c',
     kind: 'praktijk',
   },
+  sonnentag2007: {
+    id: 'sonnentag2007',
+    short: 'Sonnentag & Fritz (2007)',
+    citation: 'Sonnentag, S., & Fritz, C. (2007). The Recovery Experience Questionnaire: Development and validation of a measure for assessing recuperation and unwinding from work. Journal of Occupational Health Psychology, 12(3), 204–221.',
+    url: 'https://doi.org/10.1037/1076-8998.12.3.204',
+    kind: 'peer-reviewed',
+  },
+  wendsche2017: {
+    id: 'wendsche2017',
+    short: 'Wendsche & Lohmann-Haislah (2017)',
+    citation: 'Wendsche, J., & Lohmann-Haislah, A. (2017). A meta-analysis on antecedents and outcomes of detachment from work. Frontiers in Psychology, 7, 2072.',
+    url: 'https://doi.org/10.3389/fpsyg.2016.02072',
+    kind: 'peer-reviewed',
+  },
+  masicampo2011: {
+    id: 'masicampo2011',
+    short: 'Masicampo & Baumeister (2011)',
+    citation: 'Masicampo, E. J., & Baumeister, R. F. (2011). Consider it done! Plan making can eliminate the cognitive effects of unfulfilled goals. Journal of Personality and Social Psychology, 101(4), 667–683.',
+    url: 'https://doi.org/10.1037/a0024192',
+    kind: 'peer-reviewed',
+  },
+  gollwitzer1999: {
+    id: 'gollwitzer1999',
+    short: 'Gollwitzer (1999)',
+    citation: 'Gollwitzer, P. M. (1999). Implementation intentions: Strong effects of simple plans. American Psychologist, 54(7), 493–503.',
+    url: 'https://doi.org/10.1037/0003-066X.54.7.493',
+    kind: 'peer-reviewed',
+  },
+  venkatesh2012: {
+    id: 'venkatesh2012',
+    short: 'Venkatesh, Thong & Xu (2012)',
+    citation: 'Venkatesh, V., Thong, J. Y. L., & Xu, X. (2012). Consumer acceptance and use of information technology: Extending the unified theory of acceptance and use of technology. MIS Quarterly, 36(1), 157–178.',
+    url: 'https://doi.org/10.2307/41410412',
+    kind: 'peer-reviewed',
+  },
+  deci2000: {
+    id: 'deci2000',
+    short: 'Deci & Ryan (2000)',
+    citation: 'Deci, E. L., & Ryan, R. M. (2000). The “what” and “why” of goal pursuits: Human needs and the self-determination of behavior. Psychological Inquiry, 11(4), 227–268.',
+    url: 'https://doi.org/10.1207/S15327965PLI1104_01',
+    kind: 'peer-reviewed',
+  },
 };
 
 export function pick(...ids: string[]): Source[] {

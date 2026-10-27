@@ -1,0 +1,90 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import { path, type Lang } from '../i18n';
+import { site } from '../data/site';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const copy = {
+  nl: {
+    title: 'Bedankt voor je bestelling | Jesco Trainingen',
+    h1: 'Bedankt voor je bestelling.',
+    lead: 'Je werkbladen staan hieronder klaar. Je factuur komt per mail.',
+    loading: 'Je bestelling wordt opgehaald…',
+    ready: 'Download je werkbladen',
+    nl: 'Nederlands',
+    en: 'Engels',
+    keep: 'Deze downloadlinks blijven 30 dagen werken. Bewaar de bestanden op je computer.',
+    fail: 'We konden je bestelling niet vinden. Was de betaling net klaar? Ververs de pagina over een minuut. Lukt het daarna niet, mail dan naar',
+    next: 'Tip: bespreek de werkbladen in je volgende teamoverleg, of bekijk de training.',
+    training: 'Bekijk de training',
+  },
+  en: {
+    title: 'Thank you for your order | Jesco Trainingen',
+    h1: 'Thank you for your order.',
+    lead: 'Your worksheets are ready below. Your invoice is on its way by email.',
+    loading: 'Fetching your order…',
+    ready: 'Download your worksheets',
+    nl: 'Dutch',
+    en: 'English',
+    keep: 'These download links keep working for 30 days. Save the files to your computer.',
+    fail: 'We couldn’t find your order. Did the payment just finish? Refresh the page in a minute. If it still doesn’t work, email',
+    next: 'Tip: discuss the worksheets at your next team meeting, or have a look at the training.',
+    training: 'See the training',
+  },
+}[lang];
+const ui = { nl: copy.nl, en: copy.en };
+---
+<Base lang={lang} title={copy.title} description={copy.lead} noindex>
+  <PageHead label="tools" title={copy.h1} lead={copy.lead} />
+  <section class="wrap section thanks" data-thanks data-labels={JSON.stringify(ui)}>
+    <p class="muted" data-state="loading">{copy.loading}</p>
+    <div data-state="ready" hidden class="stack" style="--gap: 20px">
+      <h2 class="thanks__h" data-title></h2>
+      <div class="thanks__files" data-files></div>
+      <p class="muted">{copy.keep}</p>
+      <p>{copy.next} <a class="textlink" href={path('training', lang)}>{copy.training}</a></p>
+    </div>
+    <p data-state="fail" hidden class="thanks__fail">{copy.fail} <a href={`mailto:${site.email}`}>{site.email}</a>.</p>
+  </section>
+</Base>
+
+<style>
+  .thanks { max-width: 46rem; }
+  .thanks__h { font-size: clamp(1.6rem, 2.6vw, 2.2rem); }
+  .thanks__files { display: flex; flex-wrap: wrap; gap: 10px; }
+  .thanks__fail { padding: 16px; border: 1px solid var(--ink); border-radius: 6px; }
+</style>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-thanks]');
+  if (root) {
+    const labels = JSON.parse(root.dataset.labels || '{}');
+    const lang = document.documentElement.lang === 'en' ? 'en' : 'nl';
+    const show = (state: string) => root.querySelectorAll<HTMLElement>('[data-state]').forEach((el) => (el.hidden = el.dataset.state !== state));
+    const id = new URLSearchParams(location.search).get('session_id');
+    if (!id) {
+      show('fail');
+    } else {
+      fetch(`/api/order/?session_id=${encodeURIComponent(id)}`)
+        .then((r) => r.json())
+        .then((data) => {
+          if (!data.ok) return show('fail');
+          (root.querySelector('[data-title]') as HTMLElement).textContent = data.title[lang];
+          const files = root.querySelector('[data-files]') as HTMLElement;
+          // Eerst de taal van de pagina, dan de andere.
+          const order = [...data.files].sort((a: { lang: string }) => (a.lang === lang ? -1 : 1));
+          for (const f of order) {
+            const a = document.createElement('a');
+            a.className = f.lang === lang ? 'btn btn--primary' : 'btn btn--line';
+            a.href = f.url;
+            a.textContent = `${labels[lang].ready} (${labels[lang][f.lang]})`;
+            files.append(a);
+          }
+          show('ready');
+        })
+        .catch(() => show('fail'));
+    }
+  }
+</script>

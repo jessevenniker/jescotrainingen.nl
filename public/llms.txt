@@ -5,6 +5,7 @@
 ## Nederlands
 - [Home](https://jescotrainingen.nl/): AI-training voor teams, met de teamscan
 - [Training: AI in je werk](https://jescotrainingen.nl/training/): opbouw, prijs, praktische info en veelgestelde vragen
+- [Tools en werkbladen](https://jescotrainingen.nl/tools/): gratis AI-adoptiekompas en weekmeter, en werkbladen voor medewerkers (€19) en leidinggevenden (€29), direct te downloaden
 - [Ervaringen](https://jescotrainingen.nl/ervaringen/): scores en reacties van deelnemers
 - [Kennisbank](https://jescotrainingen.nl/kennisbank/): artikelen over AI, gedrag en werk, plus een overzicht van wat onderzoek zegt over AI op de werkvloer, met bronnen (https://jescotrainingen.nl/kennisbank/#onderzoek)
   - [Waarom je team AI te veel of te weinig vertrouwt](https://jescotrainingen.nl/kennisbank/waarom-je-team-ai-te-veel-of-te-weinig-vertrouwt/)
@@ -18,6 +19,7 @@
 ## English
 - [Home](https://jescotrainingen.nl/en/): AI training for teams, with the team scan
 - [Training: AI at work](https://jescotrainingen.nl/en/training/): structure, price, practical details and FAQ
+- [Tools and worksheets](https://jescotrainingen.nl/en/tools/): free AI adoption compass and weekly check, plus worksheets for employees (€19) and managers (€29), instant download
 - [Reviews](https://jescotrainingen.nl/en/experiences/): participant scores and comments
 - [Insights](https://jescotrainingen.nl/en/insights/): articles on AI, behaviour and work, plus an overview of what research says about AI at work, fully sourced (https://jescotrainingen.nl/en/insights/#research)
   - [Why your team trusts AI too much, or too little](https://jescotrainingen.nl/en/insights/why-your-team-trusts-ai-too-much-or-too-little/)

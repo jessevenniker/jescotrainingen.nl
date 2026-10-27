@@ -1,8 +1,15 @@
 # Ideeën voor de kennisbank
 
-De wekelijkse taak (maandag 09:00) pakt het **bovenste idee uit de wachtrij**. Is de wachtrij leeg, dan kiest de taak zelf een nieuw onderwerp.
+De wekelijkse taak (maandag 09:00) publiceert eerst de **kant-en-klare concepten**, één per week. Zijn die op, dan pakt hij het **bovenste idee uit de wachtrij**. Is ook de wachtrij leeg, dan kiest de taak zelf een nieuw onderwerp.
 
 Je kunt hier altijd ideeën toevoegen, verschuiven of weghalen. Eén regel per idee is genoeg; een studie of link erbij helpt.
+
+## Concepten (klaar om te publiceren)
+
+Deze artikelen staan al in beide talen in `src/content/kennisbank/` met `draft: true`. De bronnen zijn gecontroleerd.
+
+1. Mentaal loskomen van je werk: waarom AI het lastiger maakt (`mentaal-loskomen-van-je-werk-waarom-ai-het-lastiger-maakt` / `switching-off-from-work-why-ai-makes-it-harder`)
+2. AI-adoptie aan de menskant (`ai-adoptie-aan-de-menskant` / `the-human-side-of-ai-adoption`)
 
 ## Wachtrij
 
@@ -10,7 +17,6 @@ Je kunt hier altijd ideeën toevoegen, verschuiven of weghalen. Eén regel per i
 - [ ] **Leren met AI: blijft er iets hangen?** Leerlingen die oefenden met een AI-tutor zonder vangrails scoorden later slechter zonder AI. Wat betekent dat voor nieuwe medewerkers die met AI ingewerkt worden? Studie: Bastani e.a. (2025), PNAS, doi.org/10.1073/pnas.2422633122
 - [ ] **AI maakt jou creatiever, maar het team eentoniger.** Met AI-ideeën schreven mensen betere verhalen, maar ze leken meer op elkaar. Wat betekent dat voor brainstormen met AI? Studie: Doshi & Hauser (2024), Science Advances, doi.org/10.1126/sciadv.adn5290
 - [ ] **AI-agents uitgelegd voor niet-techneuten.** Wat een agent wel en niet zelfstandig kan, en waar je als team afspraken over moet maken. (Zoek een peer-reviewed bron over automatisering en menselijk toezicht.)
-- [ ] **Waarom AI-adoptie stokt na de eerste weken.** Nut, gemak en sociale invloed als verklaring, met recente toepassingen op generatieve AI. (Basis: Davis 1989, Venkatesh e.a. 2003, plus een recente studie.)
 
 ## Gepubliceerd
 

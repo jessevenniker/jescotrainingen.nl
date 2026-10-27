@@ -1,0 +1,219 @@
+---
+import type { Lang } from '../../i18n';
+import { path } from '../../i18n';
+import { adoptiekompas, profileBundle } from '../../data/tools';
+import { bundles } from '../../data/werkbladen';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const c = adoptiekompas[lang];
+const items = c.factors.flatMap((f) => f.items.map((text, i) => ({ key: `${f.id}-${i}`, text })));
+
+// Alles wat het script nodig heeft, als platte JSON.
+const data = {
+  scale: c.scale,
+  factors: c.factors,
+  axes: c.axes,
+  reverseNote: c.reverseNote,
+  profiles: c.profiles,
+  ui: { ...c.ui, left: c.ui.left(999, 888).replace('999', '{n}').replace('888', '{total}') },
+  links: {
+    scan: `${path('home', lang)}#teamscan`,
+    training: path('training', lang),
+    tools: path('tools', lang),
+  },
+  bundleFor: Object.fromEntries(Object.entries(profileBundle).map(([p, b]) => [p, { id: b, title: bundles.find((x) => x.id === b)!.title[lang] }])),
+  storageKey: 'jesco-adoptiekompas',
+};
+---
+<div class="ak" data-adoptiekompas>
+  <script type="application/json" data-ak-data set:html={JSON.stringify(data)} />
+  <div class="ak__head" aria-hidden="true">
+    <span></span>
+    {c.scale.map((l) => <span>{l}</span>)}
+  </div>
+  {items.map((item) => (
+    <fieldset class="ak__q">
+      <legend class="ak__text">{item.text}</legend>
+      <div class="ak__opts">
+        {c.scale.map((l, v) => (
+          <label class="ak__opt">
+            <input type="radio" name={item.key} value={v + 1} />
+            <span class="ak__optlabel">{l}</span>
+          </label>
+        ))}
+      </div>
+    </fieldset>
+  ))}
+  <p class="ak__basis">{c.ui.basis}</p>
+  <p class="ak__left muted" data-ak-left aria-live="polite"></p>
+  <section class="ak__result" data-ak-result hidden aria-live="polite"></section>
+</div>
+
+<style is:global>
+  .ak { display: flex; flex-direction: column; }
+  .ak__head { display: grid; grid-template-columns: minmax(0, 1fr) repeat(5, 76px); gap: 4px; font-family: var(--mono); font-size: 0.6875rem; color: var(--muted); text-align: center; padding-bottom: 10px; border-bottom: 1px solid var(--ink); }
+  .ak__q { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 12px; margin: 0; padding: 14px 0; border: 0; border-bottom: 1px solid var(--rule); }
+  .ak__text { float: left; padding: 0; font-size: 1.02rem; line-height: 1.45; }
+  .ak__opts { display: grid; grid-template-columns: repeat(5, 76px); gap: 4px; }
+  .ak__opt { display: flex; justify-content: center; align-items: center; min-height: 44px; cursor: pointer; }
+  .ak__opt input { width: 22px; height: 22px; accent-color: var(--forest); cursor: pointer; }
+  .ak__optlabel { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .ak__basis { margin-top: 16px; font-size: 0.85rem; color: var(--muted); line-height: 1.5; }
+  .ak__left { margin-top: 24px; }
+  @media (max-width: 760px) {
+    .ak__head { display: none; }
+    .ak__q { grid-template-columns: 1fr; }
+    .ak__opts { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+    .ak__opt { flex-direction: column; gap: 4px; border: 1px solid var(--rule); border-radius: 6px; padding: 6px 2px; }
+    .ak__optlabel { position: static; width: auto; height: auto; clip: auto; font-size: 0.6875rem; text-align: center; color: var(--muted); line-height: 1.2; }
+  }
+  .ak__result { margin-top: 32px; padding: clamp(22px, 3vw, 36px); border-radius: 8px; background: var(--forest); color: var(--on-dark); display: flex; flex-direction: column; gap: 24px; }
+  .ak__result .label { color: var(--lime); }
+  .ak__result h2 { font-size: clamp(2rem, 4vw, 3rem); }
+  .ak__tag { color: var(--on-dark-2); font-size: 1.15rem; }
+  .ak__grid { display: flex; flex-wrap: wrap; gap: 24px 48px; }
+  .ak__grid > * { flex: 1 1 300px; min-width: 0; }
+  .ak__quad text { font-family: var(--sans); }
+  .ak__bars { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 14px; }
+  .ak__bars li { display: grid; grid-template-columns: minmax(0, 1fr) 40px; gap: 6px 12px; align-items: center; font-size: 0.95rem; }
+  .ak__bars small { color: var(--on-dark-3); font-size: 0.75rem; }
+  .ak__track { grid-column: 1; height: 6px; background: var(--dark-rule); border-radius: 3px; overflow: hidden; }
+  .ak__track span { display: block; height: 100%; background: var(--lime); }
+  .ak__bars strong { grid-column: 2; grid-row: 1 / 3; text-align: right; font-family: var(--mono); font-weight: 500; }
+  .ak__result h3 { font-size: 1.1rem; margin-bottom: 8px; }
+  .ak__result p, .ak__result li { color: var(--on-dark-2); line-height: 1.55; }
+  .ak__result ul.ak__list { margin: 0; padding-left: 1.1em; display: flex; flex-direction: column; gap: 6px; }
+  .ak__result a:not(.btn) { color: var(--lime); }
+  .ak__actions { display: flex; flex-wrap: wrap; gap: 10px; }
+  .ak__ghost { min-height: 48px; padding: 0 18px; border-radius: 8px; border: 1px solid var(--dark-rule); background: transparent; color: var(--on-dark); font: inherit; cursor: pointer; }
+  .ak__ghost:hover { border-color: var(--lime); }
+  @media print {
+    .site-header, .site-footer, .scan-strip, .ak__actions, .page-head .lead { display: none !important; }
+    .ak__result { background: #fff; color: #000; border: 1px solid #000; }
+    .ak__result p, .ak__result li, .ak__tag { color: #000; }
+  }
+</style>
+
+<script>
+  type Factor = { id: string; name: string; axis: 'houding' | 'mogelijkheden'; reverse?: boolean; items: string[] };
+  type Profile = { name: string; tagline: string; risk: string; you: string[]; org: string };
+  type Data = {
+    scale: string[]; factors: Factor[]; axes: { houding: string; mogelijkheden: string }; reverseNote: string;
+    profiles: Record<string, Profile>;
+    ui: Record<string, string>;
+    links: { scan: string; training: string; tools: string };
+    bundleFor: Record<string, { id: string; title: string }>;
+    storageKey: string;
+  };
+
+  const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+  document.querySelectorAll<HTMLElement>('[data-adoptiekompas]').forEach((root) => {
+    const d: Data = JSON.parse((root.querySelector('[data-ak-data]') as HTMLElement).textContent || '{}');
+    const keys = d.factors.flatMap((f) => f.items.map((_, i) => `${f.id}-${i}`));
+    const left = root.querySelector('[data-ak-left]') as HTMLElement;
+    const result = root.querySelector('[data-ak-result]') as HTMLElement;
+
+    const load = (): Record<string, number> => {
+      try { return JSON.parse(localStorage.getItem(d.storageKey) || '{}'); } catch { return {}; }
+    };
+    const store = (a: Record<string, number>) => {
+      try { localStorage.setItem(d.storageKey, JSON.stringify(a)); } catch { /* geen opslag beschikbaar */ }
+    };
+    let answers = load();
+
+    // Eerder ingevulde antwoorden terugzetten.
+    for (const [k, v] of Object.entries(answers)) {
+      const input = root.querySelector<HTMLInputElement>(`input[name="${k}"][value="${v}"]`);
+      if (input) input.checked = true;
+    }
+
+    const score = (f: Factor) => {
+      const vals = f.items.map((_, i) => answers[`${f.id}-${i}`]).filter(Boolean);
+      const mean = vals.reduce((s, v) => s + v, 0) / Math.max(vals.length, 1);
+      return f.reverse ? 6 - mean : mean;
+    };
+    const axis = (name: 'houding' | 'mogelijkheden') => {
+      const fs = d.factors.filter((f) => f.axis === name);
+      return fs.reduce((s, f) => s + score(f), 0) / fs.length;
+    };
+
+    function render() {
+      const missing = keys.filter((k) => !answers[k]).length;
+      if (missing > 0) {
+        left.hidden = false;
+        left.textContent = d.ui.left.replace('{n}', String(missing)).replace('{total}', String(keys.length));
+        result.hidden = true;
+        return;
+      }
+      left.hidden = true;
+      const h = axis('houding');
+      const m = axis('mogelijkheden');
+      const id = h >= 3.5 ? (m >= 3.5 ? 'koploper' : 'starter') : m >= 3.5 ? 'kritisch' : 'afstand';
+      const p = d.profiles[id];
+      const px = 60 + ((m - 1) / 4) * 400;
+      const py = 380 - ((h - 1) / 4) * 340;
+      const bundle = d.bundleFor[id];
+      const fill = 'var(--on-dark-3)';
+      result.innerHTML = `
+        <div><span class="label">${esc(d.ui.yourProfile)}</span><h2>${esc(p.name)}</h2><p class="ak__tag">${esc(p.tagline)}</p></div>
+        <div class="ak__grid">
+          <svg class="ak__quad" viewBox="0 0 520 440" role="img" aria-label="${esc(p.name)}">
+            <line x1="60" y1="210" x2="460" y2="210" stroke="var(--dark-rule)"/>
+            <line x1="260" y1="40" x2="260" y2="380" stroke="var(--dark-rule)"/>
+            <rect x="60" y="40" width="400" height="340" fill="none" stroke="var(--on-dark-2)"/>
+            <text x="70" y="62" font-size="14" fill="${fill}">${esc(d.profiles.starter.name)}</text>
+            <text x="450" y="62" font-size="14" fill="${fill}" text-anchor="end">${esc(d.profiles.koploper.name)}</text>
+            <text x="70" y="370" font-size="14" fill="${fill}">${esc(d.profiles.afstand.name)}</text>
+            <text x="450" y="370" font-size="14" fill="${fill}" text-anchor="end">${esc(d.profiles.kritisch.name)}</text>
+            <text x="260" y="410" font-size="14" fill="var(--on-dark)" text-anchor="middle">${esc(d.axes.mogelijkheden)} →</text>
+            <text x="30" y="210" font-size="14" fill="var(--on-dark)" text-anchor="middle" transform="rotate(-90 30 210)">${esc(d.axes.houding)} →</text>
+            <circle cx="${px}" cy="${py}" r="16" fill="none" stroke="var(--lime)" stroke-opacity="0.4"/>
+            <circle cx="${px}" cy="${py}" r="9" fill="var(--lime)"/>
+          </svg>
+          <ul class="ak__bars">${d.factors.map((f) => {
+            const v = score(f);
+            return `<li><span>${esc(f.name)}${f.reverse ? ` <small>${esc(d.reverseNote)}</small>` : ''}</span><span class="ak__track" aria-hidden="true"><span style="width:${((v - 1) / 4) * 100}%"></span></span><strong>${v.toFixed(1)}</strong></li>`;
+          }).join('')}</ul>
+        </div>
+        <div class="ak__grid">
+          <div>
+            <h3>${esc(d.ui.watch)}</h3><p>${esc(p.risk)}</p>
+            <h3 style="margin-top:16px">${esc(d.ui.youCan)}</h3>
+            <ul class="ak__list">${p.you.map((t) => `<li>${esc(t)}</li>`).join('')}</ul>
+            <p style="margin-top:12px">${esc(d.ui.worksheets)}: <a href="${d.links.tools}#${bundle.id}">${esc(bundle.title)}</a></p>
+          </div>
+          <div>
+            <h3>${esc(d.ui.orgCan)}</h3><p>${esc(p.org)}</p>
+            <p style="margin-top:12px">${esc(d.ui.teamHint)} <a href="${d.links.scan}">Teamscan</a> · <a href="${d.links.training}">Training</a></p>
+          </div>
+        </div>
+        <div class="ak__actions">
+          <button type="button" class="btn btn--lime" data-ak-print>${esc(d.ui.print)}</button>
+          <button type="button" class="ak__ghost" data-ak-reset>${esc(d.ui.reset)}</button>
+        </div>`;
+      result.hidden = false;
+      (result.querySelector('[data-ak-print]') as HTMLElement).addEventListener('click', () => window.print());
+      (result.querySelector('[data-ak-reset]') as HTMLElement).addEventListener('click', () => {
+        answers = {};
+        store(answers);
+        root.querySelectorAll<HTMLInputElement>('input[type="radio"]').forEach((i) => (i.checked = false));
+        render();
+        root.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    }
+
+    root.addEventListener('change', (e) => {
+      const t = e.target as HTMLInputElement;
+      if (t.type !== 'radio') return;
+      const wasDone = keys.every((k) => answers[k]);
+      answers[t.name] = Number(t.value);
+      store(answers);
+      render();
+      if (!wasDone && keys.every((k) => answers[k])) result.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+
+    render();
+  });
+</script>
