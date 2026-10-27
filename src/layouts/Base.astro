@@ -7,7 +7,7 @@ import Analytics from '@vercel/analytics/astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { alternatesFor } from '../i18n/routes.mjs';
-import { htmlLang, ogLocale, type Lang } from '../i18n';
+import { htmlLang, ogLocale, path, type Lang } from '../i18n';
 import { t } from '../i18n/ui';
 import { site } from '../data/site';
 import ogSource from '../assets/images/jesse-masterclass.jpg';
@@ -46,6 +46,8 @@ const person = {
   '@type': 'Person',
   '@id': `${site.url}/#jesse`,
   name: site.trainer,
+  url: new URL(path('trainer', lang), site.url).href,
+  sameAs: [site.trainerLinkedIn],
   jobTitle: lang === 'nl' ? 'Trainer AI en gedrag' : 'Trainer, AI and behaviour',
   worksFor: { '@id': `${site.url}/#organization` },
   knowsAbout: ['Generative AI', 'Prompting', 'Technology adoption', 'Applied psychology', 'Team learning'],

@@ -38,6 +38,17 @@
   ],
   "redirects": [
     {
+      "source": "/((?!api/).*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "jescotrainingen.vercel.app"
+        }
+      ],
+      "destination": "https://jescotrainingen.nl/$1",
+      "permanent": true
+    },
+    {
       "source": "/onderzoek",
       "destination": "/kennisbank/#onderzoek",
       "permanent": true
