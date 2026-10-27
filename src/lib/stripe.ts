@@ -40,8 +40,15 @@ export function priceIdFor(id: BundleId): string | undefined {
 
 /** Maakt een Stripe Checkout-sessie voor één bundel en geeft de betaal-URL terug. */
 export async function createCheckout(opts: { bundle: BundleId; lang: 'nl' | 'en'; origin: string }) {
-  const price = priceIdFor(opts.bundle);
+  let price = priceIdFor(opts.bundle);
   if (!price) throw new Error(`Geen Stripe-prijs ingesteld voor ${opts.bundle}`);
+  // Een product-ID (prod_…) mag ook: dan gebruiken we de standaardprijs van dat product.
+  if (price.startsWith('prod_')) {
+    const product = await stripe(`/products/${encodeURIComponent(price)}`);
+    const def = typeof product.default_price === 'string' ? product.default_price : product.default_price?.id;
+    if (!def) throw new Error(`Product ${price} heeft geen standaardprijs`);
+    price = def as string;
+  }
   const thanks = opts.lang === 'nl' ? '/tools/bedankt/' : '/en/tools/thank-you/';
   const back = opts.lang === 'nl' ? `/tools/#${opts.bundle}` : `/en/tools/#${opts.bundle}`;
 

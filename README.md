@@ -45,7 +45,7 @@ De werkbladen worden verkocht op `/tools/` in twee bundels. Na betaling via Stri
 2. Zet bij Instellingen › Openbare gegevens de link naar je algemene voorwaarden.
 3. Zet in Vercel (Settings › Environment Variables) deze variabelen:
    - `STRIPE_SECRET_KEY`: je geheime sleutel (begin met de testsleutel `sk_test_…`)
-   - `STRIPE_PRICE_MEDEWERKERS` en `STRIPE_PRICE_LEIDINGGEVENDEN`: de prijs-ID's (`price_…`)
+   - `STRIPE_PRICE_MEDEWERKERS` en `STRIPE_PRICE_LEIDINGGEVENDEN`: de prijs-ID's (`price_…`) of de product-ID's (`prod_…`, dan wordt de standaardprijs gebruikt)
    - `STRIPE_REQUIRE_TERMS` = `true`: dan moet de klant akkoord geven op de voorwaarden en het vervallen van het herroepingsrecht
 4. Test met kaart `4242 4242 4242 4242`, en wissel daarna naar de live-sleutel en live-prijzen.
 
