@@ -50,7 +50,13 @@ const person = {
   sameAs: [site.trainerLinkedIn],
   jobTitle: lang === 'nl' ? 'Trainer AI en gedrag' : 'Trainer, AI and behaviour',
   worksFor: { '@id': `${site.url}/#organization` },
-  knowsAbout: ['Generative AI', 'Prompting', 'Technology adoption', 'Applied psychology', 'Team learning'],
+  // Student aan de HAN (afstuderen 2027), dus 'affiliation' en nog geen 'alumniOf'.
+  affiliation: { '@type': 'CollegeOrUniversity', name: 'HAN University of Applied Sciences', url: 'https://www.han.nl/' },
+  alumniOf: { '@type': 'CollegeOrUniversity', name: 'University of Wollongong', url: 'https://www.uow.edu.au/' },
+  knowsAbout: [
+    'Generative AI', 'Prompting', 'Technology adoption', 'Applied psychology', 'Team learning',
+    'Behaviour change', 'Motivational interviewing', 'Solution-focused coaching', 'Learning design', 'App development',
+  ],
   knowsLanguage: ['nl', 'en'],
 };
 ---
