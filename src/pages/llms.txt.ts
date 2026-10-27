@@ -26,7 +26,7 @@ Full text of all articles: ${abs('/llms-full.txt')}
 ## Nederlands
 - [Home](${abs(path('home', 'nl'))}): AI-training voor teams, met de teamscan
 - [Training: AI in je werk](${abs(path('training', 'nl'))}): opbouw, prijs, praktische info en veelgestelde vragen
-- [Tools en werkbladen](${abs(path('tools', 'nl'))}): gratis AI-adoptiekompas en weekmeter, en werkbladen voor medewerkers (€19) en leidinggevenden (€29), direct te downloaden
+- [Tools en werkbladen](${abs(path('tools', 'nl'))}): gratis AI-adoptiekompas en weekmeter, en werkbladen voor medewerkers (€19,95) en leidinggevenden (€29,95), direct te downloaden
 - [Ervaringen](${abs(path('experiences', 'nl'))}): scores en reacties van deelnemers
 - [Kennisbank](${abs(path('knowledge', 'nl'))}): artikelen over AI, gedrag en werk, plus een overzicht van wat onderzoek zegt over AI op de werkvloer, met bronnen (${abs(researchPath('nl'))})
 ${await articles('nl')}
@@ -36,7 +36,7 @@ ${await articles('nl')}
 ## English
 - [Home](${abs(path('home', 'en'))}): AI training for teams, with the team scan
 - [Training: AI at work](${abs(path('training', 'en'))}): structure, price, practical details and FAQ
-- [Tools and worksheets](${abs(path('tools', 'en'))}): free AI adoption compass and weekly check, plus worksheets for employees (€19) and managers (€29), instant download
+- [Tools and worksheets](${abs(path('tools', 'en'))}): free AI adoption compass and weekly check, plus worksheets for employees (€19.95) and managers (€29.95), instant download
 - [Reviews](${abs(path('experiences', 'en'))}): participant scores and comments
 - [Insights](${abs(path('knowledge', 'en'))}): articles on AI, behaviour and work, plus an overview of what research says about AI at work, fully sourced (${abs(researchPath('en'))})
 ${await articles('en')}

@@ -41,7 +41,7 @@ De werkbladen worden verkocht op `/tools/` in twee bundels. Na betaling via Stri
 **Inhoud aanpassen:** `src/data/werkbladen.nl.ts` en `src/data/werkbladen.en.ts`. Draai daarna `npm run werkbladen` (vereist Google Chrome) om de pdf's en voorbeeldafbeeldingen opnieuw te maken.
 
 **Stripe instellen (eenmalig):**
-1. Maak in Stripe twee producten met elk een eenmalige prijs, inclusief btw: *Werkbladen voor medewerkers* (€19) en *Werkbladen voor leidinggevenden* (€29).
+1. Maak in Stripe twee producten met elk een eenmalige prijs, inclusief btw: *Werkbladen voor medewerkers* (€19,95) en *Werkbladen voor leidinggevenden* (€29,95).
 2. Zet bij Instellingen › Openbare gegevens de link naar je algemene voorwaarden.
 3. Zet in Vercel (Settings › Environment Variables) deze variabelen:
    - `STRIPE_SECRET_KEY`: je geheime sleutel (begin met de testsleutel `sk_test_…`)

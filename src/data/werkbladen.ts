@@ -19,7 +19,7 @@ export const bundles: {
   {
     id: 'medewerkers',
     audience: 'Medewerker',
-    priceCents: 1900,
+    priceCents: 1995,
     title: { nl: 'Werkbladen voor medewerkers', en: 'Worksheets for employees' },
     forWho: {
       nl: 'Voor iedereen die dagelijks met AI werkt en meer grip wil op focus, controle en herstel.',
@@ -30,7 +30,7 @@ export const bundles: {
   {
     id: 'leidinggevenden',
     audience: 'Leidinggevende',
-    priceCents: 2900,
+    priceCents: 2995,
     title: { nl: 'Werkbladen voor leidinggevenden', en: 'Worksheets for managers' },
     forWho: {
       nl: 'Voor leidinggevenden die AI-werk bespreekbaar willen maken en samen met hun team afspraken willen maken.',
