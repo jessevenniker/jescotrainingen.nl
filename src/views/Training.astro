@@ -17,6 +17,11 @@ const copy = {
     label: 'de training',
     h1: 'AI in je werk',
     lead: 'Een dagdeel waarin je team leert hoe AI tot een antwoord komt, oefent met eigen werk en samen afspraken maakt. Zodat AI geen hobby van een paar mensen blijft.',
+    // De video is (nog) alleen in het Nederlands; de Engelse pagina toont hem niet.
+    video: {
+      caption: 'het dagdeel in 39 seconden · zonder geluid',
+      description: 'Video van 39 seconden zonder geluid. AI geeft een zelfverzekerd antwoord met een verzonnen bron: klinkt overtuigend, klopt niet altijd. Daarna kiest een taalmodel het meest waarschijnlijke woord, naast een meter die loopt van te weinig naar te veel vertrouwen. Dan een goede vraag aan AI in vijf delen: rol, context, grenzen, toon en vervolgstap, met het antwoord zonder en met die opbouw. Tot slot sluiten collega’s één voor één aan: geen hobby van een paar mensen.',
+    },
     forH2: 'Voor wie',
     forP: [
       'Voor organisaties met zo’n 10 tot 50 kantoormedewerkers, waar AI al gebruikt wordt of juist nog niet echt van de grond komt.',
@@ -71,6 +76,7 @@ const copy = {
     label: 'the training',
     h1: 'AI at work',
     lead: 'A half-day in which your team learns how AI arrives at an answer, practises with real work and agrees on how to use it. So AI stops being a side project for a few enthusiasts.',
+    video: null,
     forH2: 'Who it’s for',
     forP: [
       'Organisations with roughly 10 to 50 office staff, where AI is already in use or hasn’t quite taken off yet.',
@@ -156,6 +162,28 @@ const schema = [
 <Base lang={lang} title={copy.title} description={copy.description} schema={schema}>
   <PageHead label={copy.label} title={copy.h1} lead={copy.lead} />
 
+  {copy.video && (
+    <section class="wrap promo-video">
+      <figure class="stack" style="--gap: 12px">
+        <video
+          class="promo-video__player"
+          src="/video/ai-workshop.mp4"
+          poster="/video/ai-workshop-poster.jpg"
+          width="1920"
+          height="1080"
+          muted
+          loop
+          playsinline
+          controls
+          preload="none"
+          aria-describedby="promo-video-desc"
+        ></video>
+        <figcaption class="label">{copy.video.caption}</figcaption>
+        <p id="promo-video-desc" class="visually-hidden">{copy.video.description}</p>
+      </figure>
+    </section>
+  )}
+
   <section class="wrap section split">
     <h2 class="split__h">{copy.forH2}</h2>
     <div class="stack split__body" style="--gap: 18px">
@@ -229,6 +257,36 @@ const schema = [
   <ScanStrip lang={lang} />
 </Base>
 
+<script>
+  // De video speelt vanzelf (zonder geluid) zodra hij in beeld is, en pauzeert als je wegscrolt.
+  // Met "minder beweging" aan blijft hij stil staan. Wie zelf pauzeert, wordt niet overruled.
+  const video = document.querySelector<HTMLVideoElement>('.promo-video__player');
+  const calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (video && !calm && 'IntersectionObserver' in window) {
+    let userPaused = false;
+    let autoPausing = false;
+
+    video.addEventListener('pause', () => {
+      if (!autoPausing) userPaused = true;
+      autoPausing = false;
+    });
+    video.addEventListener('play', () => { userPaused = false; });
+
+    new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !userPaused) {
+          video.play().catch(() => {});
+        } else if (!entry.isIntersecting && !video.paused) {
+          autoPausing = true;
+          video.pause();
+        }
+      },
+      { threshold: 0.5 },
+    ).observe(video);
+  }
+</script>
+
 <style>
   .split { display: flex; flex-wrap: wrap; gap: 24px 64px; align-items: flex-start; }
   .split__h { flex: 1 1 280px; min-width: 0; font-size: clamp(1.8rem, 3vw, 2.6rem); }
@@ -248,4 +306,7 @@ const schema = [
   .practical { display: flex; flex-direction: column; gap: 24px; align-items: flex-start; }
   .practical .specs { width: 100%; max-width: 34rem; }
   .faq-section { padding-bottom: var(--section); }
+  .promo-video { padding-top: clamp(40px, 6vw, 64px); }
+  .promo-video figure { margin: 0; }
+  .promo-video__player { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; background: var(--paper-2); border: 1px solid var(--rule); }
 </style>

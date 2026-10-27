@@ -1,0 +1,25 @@
+{
+  "name": "jesco-video",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "studio": "remotion studio",
+    "render:scene1": "remotion render Scene1 out/scene1-herkenning.mp4",
+    "render:scene2": "remotion render Scene2 out/scene2-denken.mp4",
+    "render:scene3": "remotion render Scene3 out/scene3-prompten.mp4",
+    "render:scene4": "remotion render Scene4 out/scene4-team.mp4",
+    "render:video": "remotion render Video out/jesco-ai-workshop.mp4"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.539",
+    "@remotion/google-fonts": "4.0.539",
+    "@remotion/transitions": "4.0.539",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "remotion": "4.0.539"
+  },
+  "devDependencies": {
+    "@types/react": "19.1.8",
+    "typescript": "5.8.3"
+  }
+}
