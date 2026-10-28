@@ -17,8 +17,9 @@ const copy = {
     label: 'de training',
     h1: 'AI in je werk',
     lead: 'Een dagdeel waarin je team leert hoe AI tot een antwoord komt, oefent met eigen werk en samen afspraken maakt. Zodat AI geen hobby van een paar mensen blijft.',
-    // De video is (nog) alleen in het Nederlands; de Engelse pagina toont hem niet.
     video: {
+      src: '/video/ai-workshop.mp4',
+      poster: '/video/ai-workshop-poster.jpg',
       caption: 'het dagdeel in 39 seconden · zonder geluid',
       description: 'Video van 39 seconden zonder geluid. AI geeft een zelfverzekerd antwoord met een verzonnen bron: klinkt overtuigend, klopt niet altijd. Daarna kiest een taalmodel het meest waarschijnlijke woord, naast een meter die loopt van te weinig naar te veel vertrouwen. Dan een goede vraag aan AI in vijf delen: rol, context, grenzen, toon en vervolgstap, met het antwoord zonder en met die opbouw. Tot slot sluiten collega’s één voor één aan: geen hobby van een paar mensen.',
     },
@@ -77,7 +78,12 @@ const copy = {
     label: 'the training',
     h1: 'AI at work',
     lead: 'A half-day in which your team learns how AI arrives at an answer, practises with real work and agrees on how to use it. So AI stops being a side project for a few enthusiasts.',
-    video: null,
+    video: {
+      src: '/video/ai-workshop-en.mp4',
+      poster: '/video/ai-workshop-en-poster.jpg',
+      caption: 'the session in 39 seconds · no sound',
+      description: 'A 39-second video without sound. AI gives a confident answer with a made-up source: sounds convincing, isn’t always right. Next, a language model picks the most likely word, next to a meter running from too little to too much trust. Then a good prompt in five parts: role, context, limits, tone and next step, with the answer without and with that structure. Finally, colleagues join one by one: not a side project for a few enthusiasts.',
+    },
     forH2: 'Who it’s for',
     forP: [
       'Organisations with roughly 10 to 50 office staff, where AI is already in use or hasn’t quite taken off yet.',
@@ -169,8 +175,8 @@ const schema = [
       <figure class="stack" style="--gap: 12px">
         <video
           class="promo-video__player"
-          src="/video/ai-workshop.mp4"
-          poster="/video/ai-workshop-poster.jpg"
+          src={copy.video.src}
+          poster={copy.video.poster}
           width="1920"
           height="1080"
           muted
