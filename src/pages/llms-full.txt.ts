@@ -2,7 +2,7 @@ import type { APIRoute } from 'astro';
 import { getCollection } from 'astro:content';
 import { path } from '../i18n';
 import { site } from '../data/site';
-import { pick } from '../data/sources';
+import { pick, cite } from '../data/sources';
 
 // llms-full.txt: de volledige tekst van alle gepubliceerde kennisbankartikelen, met bronnen.
 // AI-assistenten kunnen zo in één keer alles lezen en correct naar de juiste pagina verwijzen.
@@ -13,7 +13,7 @@ export const GET: APIRoute = async () => {
 
   const parts = list.map((e) => {
     const url = new URL(`${path('knowledge', e.data.lang)}${e.id}/`, site.url).href;
-    const sources = pick(...e.data.sources).map((s) => `- ${s.citation} ${s.url}`).join('\n');
+    const sources = pick(...e.data.sources).map((s) => `- ${cite(s, e.data.lang)} ${s.url}`).join('\n');
     const summary = e.data.summary.map((x) => `- ${x}`).join('\n');
     return [
       `# ${e.data.title}`,

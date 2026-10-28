@@ -5,7 +5,7 @@ import PageHead from '../components/PageHead.astro';
 import ScanStrip from '../components/ScanStrip.astro';
 import { path, type Lang } from '../i18n';
 import { site } from '../data/site';
-import { pick } from '../data/sources';
+import { pick, cite } from '../data/sources';
 import { research, sourceIds, updated } from '../data/research';
 import { footnotes } from '../i18n';
 
@@ -64,7 +64,7 @@ const schema = [
       headline: r.h2,
       dateModified: updated,
       author: { '@id': `${site.url}/#jesse` },
-      citation: list.map((src) => ({ '@type': 'CreativeWork', name: src.citation, url: src.url })),
+      citation: list.map((src) => ({ '@type': 'CreativeWork', name: cite(src, lang), url: src.url })),
     },
     blogPost: articles.map((a) => ({ '@type': 'BlogPosting', headline: a.data.title, url: new URL(`${base}${a.id}/`, site.url).href, datePublished: a.data.date.toISOString().slice(0, 10) })),
   },
@@ -139,7 +139,7 @@ const schema = [
           {list.map((src, i) => (
             <li id={`bron-${i + 1}`}>
               <span class="label">[{i + 1}]</span>
-              <cite>{src.citation} <a href={src.url} rel="noopener">{src.url.replace('https://', '')}</a></cite>
+              <cite>{cite(src, lang)} <a href={src.url} rel="noopener">{src.url.replace('https://', '')}</a></cite>
             </li>
           ))}
         </ol>

@@ -7,6 +7,8 @@ export type Source = {
   id: string;
   short: string; // auteurs + jaar, voor in de kantlijn
   citation: string; // volledige verwijzing (APA-achtig)
+  /** Engelse versie, alleen nodig als `citation` Nederlandse woorden bevat (datum, toelichting). */
+  citationEn?: string;
   url: string;
   /** Hoe sterk het bewijs is: peer-reviewed onderzoek, preprint, of praktijkonderzoek (enquête, werkpaper). */
   kind?: SourceKind;
@@ -128,6 +130,7 @@ export const sources: Record<string, Source> = {
     id: 'niederhoffer2025',
     short: 'Niederhoffer e.a. (2025)',
     citation: 'Niederhoffer, K., Kellerman, G. R., Lee, A., Liebscher, A., Rapuano, K., & Hancock, J. T. (2025, 22 september). AI-generated “workslop” is destroying productivity. Harvard Business Review.',
+    citationEn: 'Niederhoffer, K., Kellerman, G. R., Lee, A., Liebscher, A., Rapuano, K., & Hancock, J. T. (2025, September 22). AI-generated “workslop” is destroying productivity. Harvard Business Review.',
     url: 'https://hbr.org/2025/09/ai-generated-workslop-is-destroying-productivity',
     kind: 'praktijk',
   },
@@ -135,6 +138,7 @@ export const sources: Record<string, Source> = {
     id: 'bedard2026',
     short: 'Bedard e.a. (2026)',
     citation: 'Bedard, J., Kropp, M., Hsu, M., Karaman, O. T., Hawes, J., & Kellerman, G. R. (2026, 5 maart). When using AI leads to “brain fry”. Harvard Business Review.',
+    citationEn: 'Bedard, J., Kropp, M., Hsu, M., Karaman, O. T., Hawes, J., & Kellerman, G. R. (2026, March 5). When using AI leads to “brain fry”. Harvard Business Review.',
     url: 'https://hbr.org/2026/03/when-using-ai-leads-to-brain-fry',
     kind: 'praktijk',
   },
@@ -142,6 +146,7 @@ export const sources: Record<string, Source> = {
     id: 'upwork2024',
     short: 'Upwork Research Institute (2024)',
     citation: 'Upwork Research Institute (2024, 23 juli). Upwork study finds employee workloads rising despite increased C-suite investment in artificial intelligence. Persbericht en onderzoek onder 2.500 werkenden en leidinggevenden.',
+    citationEn: 'Upwork Research Institute (2024, July 23). Upwork study finds employee workloads rising despite increased C-suite investment in artificial intelligence. Press release and survey of 2,500 workers and executives.',
     url: 'https://investors.upwork.com/news-releases/news-release-details/upwork-study-finds-employee-workloads-rising-despite-increased-c',
     kind: 'praktijk',
   },
@@ -187,7 +192,28 @@ export const sources: Record<string, Source> = {
     url: 'https://doi.org/10.1207/S15327965PLI1104_01',
     kind: 'peer-reviewed',
   },
+  google2025: {
+    id: 'google2025',
+    short: 'Google (2025)',
+    citation: 'Vahdat, A., & Dean, J. (2025, 21 augustus). How much energy does Google’s AI use? We did the math. Google Cloud Blog. Met technisch rapport over de meetmethode; cijfers niet onafhankelijk gecontroleerd.',
+    citationEn: 'Vahdat, A., & Dean, J. (2025, August 21). How much energy does Google’s AI use? We did the math. Google Cloud Blog. Includes a technical paper on the measurement method; figures not independently verified.',
+    url: 'https://cloud.google.com/blog/products/infrastructure/measuring-the-environmental-impact-of-ai-inference',
+    kind: 'praktijk',
+  },
+  iea2025: {
+    id: 'iea2025',
+    short: 'IEA (2025)',
+    citation: 'International Energy Agency (2025, april). Energy and AI. IEA, Parijs.',
+    citationEn: 'International Energy Agency (2025, April). Energy and AI. IEA, Paris.',
+    url: 'https://www.iea.org/reports/energy-and-ai',
+    kind: 'praktijk',
+  },
 };
+
+/** De verwijzing in de taal van de pagina. */
+export function cite(src: Source, lang: 'nl' | 'en'): string {
+  return lang === 'en' && src.citationEn ? src.citationEn : src.citation;
+}
 
 export function pick(...ids: string[]): Source[] {
   return ids.map((id) => sources[id]);

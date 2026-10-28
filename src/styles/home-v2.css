@@ -1,0 +1,49 @@
+/* Homepage "mens × machine": kleuren, figuren en beweging.
+   Standaard tekenen de figuren zichzelf als je ernaartoe scrolt (.anim-scroll).
+   Wil je dat alles direct bij het laden afspeelt? Zet dan .anim-load op .home-v2. */
+.home-v2{--marker:#C8402B}
+.home-v2 svg{color:var(--marker);display:block}
+.home-v2 a:hover{opacity:.85}
+.migrate{transform-box:view-box}
+.anim-load .migrate{animation:migrate 2.2s cubic-bezier(.5,0,.2,1) var(--m,4s) both}
+.anim-scroll .migrate{animation:migrate linear both;animation-timeline:view();animation-range:cover 30% cover 60%}
+@keyframes migrate{from{transform:translate(0,0)}to{transform:translate(var(--dx),var(--dy))}}
+
+.draw,.drawm{stroke-dasharray:1;stroke-dashoffset:0}
+.pop,.grow,.growy,.pulse{transform-box:fill-box}
+.pop,.pulse{transform-origin:center}.grow{transform-origin:left center}.growy{transform-origin:center bottom}
+.anim-load .draw{animation:draw 1.3s cubic-bezier(.45,0,.2,1) var(--d,0s) both}
+.anim-load .drawm{animation:draw .75s ease-out var(--d,0s) both}
+.anim-load .pop{animation:pop .55s cubic-bezier(.3,1.5,.5,1) var(--d,0s) both}
+.anim-load .grow{animation:grow .9s cubic-bezier(.2,.8,.2,1) var(--d,0s) both}
+.anim-load .growy{animation:growy .9s cubic-bezier(.2,.8,.2,1) var(--d,0s) both}
+.anim-load .fade{animation:fade .6s ease-out var(--d,0s) both}
+.anim-load .write{animation:write 1s ease-in-out var(--d,0s) both}
+.anim-load .rise{animation:rise .8s cubic-bezier(.2,.8,.2,1) var(--d,0s) both}
+.anim-scroll .draw,.anim-scroll .drawm{animation:draw linear both;animation-timeline:view();animation-range:entry 5% cover 40%}
+.anim-scroll .pop{animation:pop linear both;animation-timeline:view();animation-range:entry 10% cover 40%}
+.anim-scroll .grow{animation:grow linear both;animation-timeline:view();animation-range:entry 10% cover 40%}
+.anim-scroll .growy{animation:growy linear both;animation-timeline:view();animation-range:entry 10% cover 40%}
+.anim-scroll .fade,.anim-scroll .rise{animation:fade linear both;animation-timeline:view();animation-range:entry 0% cover 30%}
+.anim-scroll .write{animation:write linear both;animation-timeline:view();animation-range:entry 20% cover 45%}
+.blink{animation:blink 1.05s steps(1) infinite}
+.pulse{animation:pulse 2.4s ease-out infinite}
+.loadbar{transform-origin:left center;opacity:0}
+.anim-load .loadbar,.anim-scroll .loadbar{animation:loadbar 1.8s cubic-bezier(.4,0,.2,1) both}
+.scanload{animation:scanload 5s cubic-bezier(.4,0,.2,1) infinite}
+.scanmsg-a{animation:msga 5s infinite}.scanmsg-b{animation:msgb 5s infinite}
+@keyframes draw{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
+@keyframes pop{from{opacity:0;transform:translateY(-18px) scale(.3)}to{opacity:1;transform:none}}
+@keyframes grow{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@keyframes growy{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+@keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+@keyframes write{from{clip-path:inset(-30% 100% -30% 0)}to{clip-path:inset(-30% 0 -30% 0)}}
+@keyframes blink{50%{opacity:0}}
+@keyframes pulse{from{transform:scale(1);opacity:.8}to{transform:scale(4.5);opacity:0}}
+@keyframes loadbar{0%{transform:scaleX(0);opacity:1}75%{transform:scaleX(1);opacity:1}100%{transform:scaleX(1);opacity:0}}
+@keyframes scanload{0%{transform:scaleX(0)}65%{transform:scaleX(1)}100%{transform:scaleX(1)}}
+@keyframes msga{0%,62%{opacity:1}68%,96%{opacity:0}100%{opacity:1}}
+@keyframes msgb{0%,62%{opacity:0}68%,96%{opacity:1}100%{opacity:0}}
+@media (prefers-reduced-motion: reduce){.anim-load *,.anim-scroll *{animation:none !important}.loadbar{opacity:0}}
+.anim-off *{animation:none !important}

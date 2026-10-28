@@ -4,7 +4,7 @@ import Base from '../layouts/Base.astro';
 import ScanStrip from '../components/ScanStrip.astro';
 import { path, counterpart, type Lang } from '../i18n';
 import { site } from '../data/site';
-import { pick, kindLabel } from '../data/sources';
+import { pick, kindLabel, cite } from '../data/sources';
 import { t } from '../i18n/ui';
 
 interface Props { entry: CollectionEntry<'kennisbank'> }
@@ -59,7 +59,7 @@ const schema = [
     author: { '@id': `${site.url}/#jesse` },
     publisher: { '@id': `${site.url}/#organization` },
     mainEntityOfPage: url,
-    citation: list.map((src) => ({ '@type': 'CreativeWork', name: src.citation, url: src.url })),
+    citation: list.map((src) => ({ '@type': 'CreativeWork', name: cite(src, lang), url: src.url })),
   },
   {
     '@context': 'https://schema.org',
@@ -113,7 +113,7 @@ const schema = [
             {list.map((src) => (
               <li>
                 {src.kind && <span class:list={['kind', `kind--${src.kind}`]}>{kindLabel[src.kind][lang]}</span>}
-                <cite>{src.citation} <a href={src.url} rel="noopener">{src.url.includes('doi.org') ? 'DOI' : lang === 'nl' ? 'bron' : 'link'}</a></cite>
+                <cite>{cite(src, lang)} <a href={src.url} rel="noopener">{src.url.includes('doi.org') ? 'DOI' : lang === 'nl' ? 'bron' : 'link'}</a></cite>
               </li>
             ))}
           </ol>

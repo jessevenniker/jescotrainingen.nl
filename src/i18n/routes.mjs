@@ -21,6 +21,9 @@ export const extraPairs = [
   { nl: '/kennisbank/denk-je-nog-zelf-als-ai-meedenkt/', en: '/en/insights/are-you-still-thinking-when-ai-thinks-along/' },
   { nl: '/kennisbank/voelt-sneller-maar-is-het-ook-sneller/', en: '/en/insights/it-feels-faster-but-is-it/' },
   { nl: '/kennisbank/workslop-als-ai-werk-meer-werk-oplevert/', en: '/en/insights/workslop-when-ai-output-creates-more-work/' },
+  { nl: '/kennisbank/ai-adoptie-aan-de-menskant/', en: '/en/insights/the-human-side-of-ai-adoption/' },
+  { nl: '/kennisbank/mentaal-loskomen-van-je-werk-waarom-ai-het-lastiger-maakt/', en: '/en/insights/switching-off-from-work-why-ai-makes-it-harder/' },
+  { nl: '/kennisbank/wat-kost-ai-aan-stroom-en-water/', en: '/en/insights/what-does-an-ai-prompt-cost-in-electricity-and-water/' },
 ];
 
 const hreflang = { nl: 'nl-NL', en: 'en' };
