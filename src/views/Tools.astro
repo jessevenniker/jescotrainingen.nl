@@ -1,5 +1,5 @@
 ---
-import { Image } from 'astro:assets';
+import { Image, getImage } from 'astro:assets';
 import Base from '../layouts/Base.astro';
 import PageHead from '../components/PageHead.astro';
 import ScanStrip from '../components/ScanStrip.astro';
@@ -82,12 +82,23 @@ const copy = {
 }[lang];
 
 const pageUrl = new URL(path('tools', lang), site.url).href;
+// Google wil een afbeelding bij elk product; we gebruiken dezelfde preview als op de pagina.
+const schemaImages = Object.fromEntries(
+  await Promise.all(
+    bundles.map(async (b) => {
+      const img = await getImage({ src: previews[b.id][lang], format: 'jpg', width: 794 });
+      return [b.id, new URL(img.src, site.url).href];
+    }),
+  ),
+);
+
 const schema = [
   ...bundles.map((b) => ({
     '@context': 'https://schema.org',
     '@type': 'Product',
     name: b.title[lang],
     description: b.forWho[lang],
+    image: schemaImages[b.id],
     brand: { '@type': 'Brand', name: site.name },
     url: `${pageUrl}#${b.id}`,
     offers: { '@type': 'Offer', price: (b.priceCents / 100).toFixed(2), priceCurrency: 'EUR', availability: 'https://schema.org/InStock', url: `${pageUrl}#${b.id}` },
