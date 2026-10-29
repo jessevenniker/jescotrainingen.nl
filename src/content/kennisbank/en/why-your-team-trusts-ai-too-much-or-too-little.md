@@ -10,6 +10,7 @@ summary:
   - At the same time, we readily copy polished AI answers without checking. That's automation bias.
   - The goal isn't more or less trust, but the right trust for each task. Three questions help.
 sources: [dietvorst2015, logg2019, parasuraman2010, dellacqua2023, edmondson1999]
+figure: mechanismen
 ---
 
 You see it in almost every team. One person pastes everything into ChatGPT and takes whatever comes back. Someone else tries it once, spots a mistake and never touches it again. Both are very human reactions, and both cost your team time and quality.

@@ -2,6 +2,7 @@
 import { getCollection, render, type CollectionEntry } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import ScanStrip from '../components/ScanStrip.astro';
+import ArticleFigure from '../components/ArticleFigure.astro';
 import { path, counterpart, type Lang } from '../i18n';
 import { site } from '../data/site';
 import { pick, kindLabel, cite } from '../data/sources';
@@ -101,6 +102,8 @@ const schema = [
         </div>
       </section>
     )}
+
+    {entry.data.figure && <ArticleFigure name={entry.data.figure} lang={lang} />}
 
     <div class="wrap art-grid">
       <div class="prose">

@@ -1,0 +1,52 @@
+---
+// Grafiek bovenaan een kennisbankartikel. Kies hem met `figure:` in de frontmatter.
+// Deze grafieken stonden eerst op de homepage.
+import '@fontsource/kalam/400.css';
+import '../styles/home-v2.css';
+import type { Lang } from '../i18n';
+import FigMechAversie from './figures/FigMechAversie.astro';
+import FigMechBias from './figures/FigMechBias.astro';
+import FigMechStress from './figures/FigMechStress.astro';
+import FigStudies from './figures/FigStudies.astro';
+
+interface Props { name: 'studies' | 'mechanismen'; lang: Lang }
+const { name, lang } = Astro.props;
+const L = (nl: string, en: string) => (lang === 'en' ? en : nl);
+
+const mechs = [
+  { title: L('Algoritme-aversie', 'Algorithm aversion'), Fig: FigMechAversie, text: L('Eén fout van een algoritme en we haken af. Dezelfde fout van een collega vergeven we.', 'One mistake by an algorithm and we give up on it. The same mistake by a colleague, we forgive.'), src: L('Schematisch. Dietvorst, Simmons & Massey (2015).', 'Schematic. Dietvorst, Simmons & Massey (2015).') },
+  { title: 'Automation bias', Fig: FigMechBias, text: L('Wat er verzorgd uitziet, nemen we makkelijker klakkeloos over.', 'What looks polished, we accept more readily without checking.'), src: L('Schematisch. Parasuraman & Manzey (2010).', 'Schematic. Parasuraman & Manzey (2010).') },
+  { title: 'Technostress', Fig: FigMechStress, text: L('Voelt een nieuwe tool vooral als extra druk, dan groeit de weerstand.', 'When a new tool mostly feels like extra pressure, resistance grows.'), src: L('Schematisch. Tarafdar e.a. (2007).', 'Schematic. Tarafdar et al. (2007).') },
+];
+---
+<div class="wrap art-fig home-v2 anim-scroll">
+  {name === 'studies' && (
+    <figure class="art-fig__one">
+      <FigStudies lang={lang} />
+      <figcaption>{L('Effect van AI in drie studies. Verschillende taken en maten, dus niet één-op-één vergelijkbaar. Bronnen: Noy & Zhang (2023), Brynjolfsson e.a. (2025), Becker e.a. (2025).', 'The effect of AI in three studies. Different tasks and measures, so not directly comparable. Sources: Noy & Zhang (2023), Brynjolfsson et al. (2025), Becker et al. (2025).')}</figcaption>
+    </figure>
+  )}
+  {name === 'mechanismen' && (
+    <div class="art-fig__grid">
+      {mechs.map(({ title, Fig, text, src }) => (
+        <figure>
+          <span class="art-fig__title">{title}</span>
+          <Fig lang={lang} />
+          <span class="art-fig__text">{text}</span>
+          <figcaption>{src}</figcaption>
+        </figure>
+      ))}
+    </div>
+  )}
+</div>
+
+<style>
+  .art-fig { margin-bottom: clamp(40px, 5vw, 64px); }
+  .art-fig figure { margin: 0; display: flex; flex-direction: column; gap: 12px; }
+  .art-fig__one { padding-top: 24px; border-top: 1px solid var(--rule); }
+  .art-fig__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 40px; }
+  .art-fig__grid figure { padding-top: 20px; border-top: 1px solid var(--rule); }
+  .art-fig__title { font-size: 1.3rem; font-weight: 600; letter-spacing: -0.015em; color: var(--ink); }
+  .art-fig__text { font-size: 1rem; line-height: 1.55; color: var(--ink-2); }
+  .art-fig figcaption { max-width: 48rem; font-size: 0.9rem; font-style: italic; line-height: 1.55; color: var(--muted); }
+</style>

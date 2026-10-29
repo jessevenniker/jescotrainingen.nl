@@ -10,6 +10,7 @@ summary:
   - Tegelijk nemen we verzorgde AI-antwoorden makkelijk klakkeloos over. Dat heet automation bias.
   - Het doel is niet meer of minder vertrouwen, maar het juiste vertrouwen per taak. Drie vragen helpen daarbij.
 sources: [dietvorst2015, logg2019, parasuraman2010, dellacqua2023, edmondson1999]
+figure: mechanismen
 ---
 
 In bijna elk team zie je het gebeuren. De een plakt alles in ChatGPT en neemt het antwoord over. De ander probeert het één keer, ziet een fout en raakt het daarna niet meer aan. Allebei zijn het heel menselijke reacties, en allebei kosten ze je team tijd en kwaliteit.

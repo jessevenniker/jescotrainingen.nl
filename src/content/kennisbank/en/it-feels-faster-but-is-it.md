@@ -10,6 +10,7 @@ summary:
   - Other studies show big time savings. The difference comes down to the type of task and how experienced someone already is.
   - Don't rely on gut feeling alone. Time a few recurring tasks, with and without AI.
 sources: [becker2025, noy2023, brynjolfsson2025, dellacqua2023]
+figure: studies
 ---
 
 Ask people whether AI makes them faster and most will say yes. It certainly feels that way: you type a question and a few seconds later there's a complete answer. But does feeling faster mean being faster?

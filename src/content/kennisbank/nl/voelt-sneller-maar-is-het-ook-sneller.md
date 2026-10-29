@@ -10,6 +10,7 @@ summary:
   - Ander onderzoek laat juist grote tijdwinst zien. Het verschil zit in het soort taak en hoeveel ervaring iemand al heeft.
   - Vertrouw niet alleen op gevoel. Meet bij een paar vaste taken hoe lang ze duren, met en zonder AI.
 sources: [becker2025, noy2023, brynjolfsson2025, dellacqua2023]
+figure: studies
 ---
 
 Vraag mensen of AI hen sneller maakt, en de meesten zeggen ja. Het voelt ook zo: je typt een vraag, en binnen een paar seconden staat er een complete tekst. Maar voelt sneller ook ís sneller?
