@@ -2,21 +2,31 @@
 import Base from '../layouts/Base.astro';
 import PageHead from '../components/PageHead.astro';
 import ScanStrip from '../components/ScanStrip.astro';
+import SlideLaptop from '../components/SlideLaptop.astro';
+import TrustMeter from '../components/TrustMeter.astro';
 import { path, type Lang } from '../i18n';
 import { t } from '../i18n/ui';
 import { site } from '../data/site';
+import { runs, totalRaters, average } from '../data/reviews';
+import '../styles/training.css';
 
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const s = t(lang);
+const num = (n: number) => n.toLocaleString(lang === 'nl' ? 'nl-NL' : 'en-GB');
+const kb = (slug: { nl: string; en: string }) => (lang === 'nl' ? `/kennisbank/${slug.nl}/` : `/en/insights/${slug.en}/`);
+const trustArticle = kb({ nl: 'waarom-je-team-ai-te-veel-of-te-weinig-vertrouwt', en: 'why-your-team-trusts-ai-too-much-or-too-little' });
+const thinkArticle = kb({ nl: 'denk-je-nog-zelf-als-ai-meedenkt', en: 'are-you-still-thinking-when-ai-thinks-along' });
 
 const copy = {
   nl: {
-    title: 'AI in je werk: training van een dagdeel voor teams | Jesco Trainingen',
-    description: 'Een praktische AI-training op locatie voor 8 tot 16 medewerkers. Prompten met eigen werk, AI leren vertrouwen waar het kan, en samen afspraken maken. Vanaf €1.250 excl. btw.',
+    title: 'AI-training voor teams, vanuit de psychologie | Jesco Trainingen',
+    description: 'Incompany AI-training van een dagdeel voor teams, gebouwd op de psychologie van gedrag. Oefenen met eigen werk, AI terecht vertrouwen en werken aan AI-geletterdheid. Vanaf €1.250 excl. btw.',
     label: 'de training',
     h1: 'AI in je werk',
-    lead: 'Een dagdeel waarin je team leert hoe AI tot een antwoord komt, oefent met eigen werk en samen afspraken maakt. Zodat AI geen hobby van een paar mensen blijft.',
+    lead: 'Een AI-training van een dagdeel, gebouwd op de psychologie van gedrag. Je team leert waarom AI zo overtuigend klinkt, wanneer je het kunt vertrouwen en hoe het in je eigen werk past. Zodat AI geen hobby van een paar mensen blijft.',
+    proof: [`${runs.length} trainingen`, `${totalRaters} deelnemers`, `gemiddeld een ${num(average)}`],
+    proofLink: 'Bekijk de ervaringen',
     video: {
       src: '/video/ai-workshop.mp4',
       poster: '/video/ai-workshop-poster.jpg',
@@ -28,18 +38,44 @@ const copy = {
       'Voor organisaties met zo’n 10 tot 50 kantoormedewerkers, waar AI al gebruikt wordt of juist nog niet echt van de grond komt.',
       'De groep bestaat uit 8 tot 16 deelnemers. Dat mag een heel team zijn, of een mix van afdelingen. Ervaring met AI is niet nodig: juist een gemengde groep leert veel van elkaar.',
     ],
+    rolesH2: 'Met jullie eigen werk',
+    rolesP: 'Geen verzonnen casussen. Iedereen oefent met een taak die morgen weer op zijn bureau ligt. Een paar voorbeelden van wat we in de training doen:',
+    roles: [
+      ['HR', 'Een vacaturetekst die klinkt als jullie organisatie, en niet als iedere andere.', 'Waar het misgaat: AI maakt elke tekst even glad. Je leert sturen op toon en checken op aannames over de kandidaat.'],
+      ['Communicatie', 'Een eerste versie van een nieuwsbericht of LinkedIn-post, plus vijf koppen om uit te kiezen.', 'Waar het misgaat: ideeën van AI lijken op elkaar. Je leert AI gebruiken om breder te denken, niet om sneller hetzelfde te maken.'],
+      ['Beleid', 'Een lang stuk samenvatten of in gewone taal zetten voor bewoners, klanten of collega’s.', 'Waar het misgaat: een samenvatting klinkt zeker, ook waar het origineel twijfelt. Je leert wat je altijd naast de bron legt.'],
+      ['Klantenservice', 'Een antwoord op een lastige klacht: vriendelijk, duidelijk en binnen jullie afspraken.', 'Waar het misgaat: AI belooft makkelijk iets wat jullie niet waarmaken. Je leert grenzen meegeven in je vraag.'],
+    ],
     howH2: 'Hoe het werkt',
     steps: [
       ['01', 'Intake', 'Een gesprek met jou van ongeveer drie kwartier. Wat speelt er in je team, waar wil je naartoe, welke tools gebruiken jullie? De kern van de training staat vast, de rest stemmen we hierop af.'],
-      ['02', 'Het dagdeel', 'Twee à drie uur bij jullie op locatie, in drie delen: hoe AI denkt en hoe wij denken, prompten met eigen werk, en afspraken en het gesprek.'],
+      ['02', 'Het dagdeel', 'Twee à drie uur bij jullie op locatie, in drie delen: hoe AI denkt en hoe wij denken, prompten met eigen werk, en afspraken en het gesprek. Met slides en werkbladen in jullie huisstijl.'],
       ['03', 'Na vier weken', 'Een korte meting bij de deelnemers: gebruiken ze AI, en hoe zeker voelen ze zich? Zo zie je wat de training heeft opgeleverd.'],
     ],
     dayH2: 'Wat er in het dagdeel gebeurt',
     day: [
-      ['0:00', 'Hoe AI denkt, en hoe wij denken', ['Wat een taalmodel wel en niet kan', 'Waarom AI altijd overtuigend klinkt, ook als het niet klopt', 'Waarom de een te veel vertrouwt en de ander te weinig', 'Wat één vraag kost aan stroom en water, en waarom dat optelt'], 45],
-      ['0:45', 'Prompten met eigen werk', ['Een vaste opbouw voor goede vragen: rol, context, grenzen, toon, vervolgstap', 'Oefenen met echte taken uit jullie praktijk', 'Groepsgesprek: wat werkt, wat niet, en waarom'], 75],
+      ['0:00', 'Hoe AI denkt, en hoe wij denken', ['Wat een taalmodel wel en niet kan', 'Waarom AI altijd overtuigend klinkt, ook als het niet klopt', 'Waarom AI je zo makkelijk gelijk geeft', 'Waarom de een te veel vertrouwt en de ander te weinig', 'Wat één vraag kost aan stroom en water, en waarom dat optelt'], 45],
+      ['0:45', 'Prompten met eigen werk', ['Een vaste opbouw voor goede vragen: rol, context, grenzen, toon, vervolgstap', 'Oefenen met echte taken uit jullie praktijk', 'Eerst zelf denken, dan AI: zo blijft het je eigen werk', 'Groepsgesprek: wat werkt, wat niet, en waarom'], 75],
       ['2:00', 'Afspraken en het gesprek', ['Wat mag wel en niet in AI-tools, en wie checkt wat', 'Werkdruk en brain fry: minder tools, vaste momenten om AI-werk na te lopen en een eindtijd', 'Wanneer je AI bewust níet gebruikt', 'Hoe je collega’s meeneemt die twijfelen of weerstand voelen', 'Een eerste versie van jullie eigen AI-afspraken'], 60],
     ],
+    termsH2: 'De psychologie erachter',
+    termsP: 'De meeste AI-trainingen gaan over wat de tool kan. Deze gaat ook over wat er in je hoofd gebeurt als je ermee werkt. Vier begrippen die in de training terugkomen:',
+    terms: [
+      ['Automation bias', 'De neiging om een antwoord van een systeem over te nemen, ook als je eigen kennis iets anders zegt. Hoe overtuigender AI klinkt, hoe sterker dit werkt.', trustArticle, 'Lees meer over vertrouwen in AI'],
+      ['Algoritme-aversie', 'Het omgekeerde: na één fout van AI haak je af, terwijl je een collega die dezelfde fout maakt gewoon een tweede kans geeft.', trustArticle, 'Lees meer over vertrouwen in AI'],
+      ['Cognitive offloading', 'Denkwerk uitbesteden aan een hulpmiddel. Vaak slim, maar wie te vroeg en te veel uitbesteedt, denkt minder kritisch na.', thinkArticle, 'Lees meer over zelf blijven denken'],
+      ['Motiverende gespreksvoering', 'Een gespreksmethode uit de psychologie om mensen te helpen die twijfelen. In de training gebruik ik die om collega’s mee te nemen die weerstand voelen, zonder te duwen.', path('trainer', 'nl'), 'Over de achtergrond van de trainer'],
+    ],
+    literacyH2: 'Werken aan AI-geletterdheid',
+    literacyP: [
+      'Sinds februari 2025 vraagt de Europese AI-verordening (artikel 4 van de AI Act) organisaties die AI gebruiken om werk te maken van AI-geletterdheid bij hun medewerkers. De wet schrijft geen vaste cursus voor. Wel moet je kunnen laten zien wat je eraan doet.',
+      'Deze training helpt je daarbij. Je team leert hoe AI werkt, waar de risico’s zitten en welke afspraken jullie maken. Daarnaast krijg je:',
+    ],
+    literacyItems: [
+      'een deelnamebewijs voor iedere deelnemer;',
+      'een verslag van één pagina met de leerdoelen, de aanwezigen en de afspraken die jullie hebben gemaakt, voor jullie AI-dossier.',
+    ],
+    literacyNote: 'Dit is geen juridisch advies. Wat jullie organisatie verder nodig heeft, hangt af van welke AI-systemen je gebruikt en waarvoor.',
     afterH2: 'Wat je team daarna anders doet',
     after: [
       'Ze stellen betere vragen aan AI en hoeven minder te herschrijven.',
@@ -55,17 +91,26 @@ const copy = {
       ['groep', '8 tot 16 deelnemers'],
       ['waar', 'bij jullie op locatie'],
       ['taal', 'Nederlands of Engels'],
-      ['inclusief', 'intake en meting na vier weken'],
+      ['materiaal', 'slides en werkbladen in jullie huisstijl'],
+      ['inclusief', 'intake, meting na vier weken, deelnamebewijs en verslag'],
     ],
     priceLabel: 'vanaf',
     price: '€1.250 excl. btw per groep',
+    crossLabel: 'ook beschikbaar',
+    crossH: 'Masterclass Effectief vergaderen',
+    crossP: 'De psychologie van vergaderen, een agenda-oefening en AI voor notulen en actiepunten. Los te boeken of samen met deze training.',
+    crossCta: 'Bekijk de masterclass',
     faqH2: 'Veelgestelde vragen',
     faq: [
       ['Moeten deelnemers al met AI werken?', 'Nee. De training werkt voor beginners en voor mensen die AI al dagelijks gebruiken. In een gemengde groep leren mensen juist veel van elkaar.'],
+      ['Wat bedoel je met “vanuit de psychologie”?', 'Dat de training niet alleen gaat over wat AI kan, maar over wat mensen ermee doen. Waarom vertrouwt de een te veel en de ander te weinig? Waarom voelt werken met AI sneller dan het soms is? En hoe neem je collega’s mee die twijfelen? Daar komt mijn achtergrond in de toegepaste psychologie vandaan.'],
+      ['Helpt de training bij AI-geletterdheid uit de AI Act?', 'Ja. De AI Act vraagt organisaties werk te maken van AI-geletterdheid, maar schrijft geen vaste cursus voor. De training is een concrete stap: iedere deelnemer krijgt een deelnamebewijs en je krijgt een kort verslag voor jullie AI-dossier. Of dat voor jullie organisatie genoeg is, hangt af van welke AI je gebruikt en waarvoor.'],
       ['Met welke AI-tool werken we?', 'Met wat jullie al gebruiken: ChatGPT, Copilot, Gemini of iets anders. De aanpak werkt in elke tool. Heeft jullie organisatie nog niets, dan bespreken we in de intake waar je mee kunt beginnen.'],
+      ['Is het materiaal in onze eigen huisstijl?', 'Ja. De slides en eventuele werkbladen krijgen jullie kleuren en jullie logo. Dat zit bij de prijs in. Zo past het materiaal na de training gewoon tussen jullie eigen documenten.'],
       ['Gaat de training ook over werkdruk en het milieu?', 'Ja. AI kan werkdruk verhogen, bijvoorbeeld door het vele nakijken, en elke vraag kost stroom en water. We bespreken wat onderzoek daarover zegt en nemen het mee in jullie afspraken: minder tools, vaste momenten om AI-werk na te lopen, en bewust kiezen wanneer je AI níet gebruikt.'],
       ['Is dit een Copilot- of ChatGPT-cursus?', 'Nee. Het is geen uitleg van knoppen en menu’s, maar een training in hoe je team AI goed en verantwoord inzet. Het past goed na een toolcursus.'],
-      ['Wat kost het?', 'De training kost vanaf €1.250 excl. btw per groep, inclusief intake en de meting na vier weken. De precieze prijs hoor je na de intake.'],
+      ['Wat kost het?', 'De training kost vanaf €1.250 excl. btw per groep, inclusief intake, de meting na vier weken, deelnamebewijzen en het verslag. De precieze prijs hoor je na de intake.'],
+      ['Kunnen we dit combineren met de masterclass vergaderen?', 'Ja. Beide trainingen zijn samen te boeken, bijvoorbeeld op één dag of met een paar weken ertussen. In de intake kijken we wat het beste past.'],
       ['Waar vindt de training plaats?', 'Bij jullie op locatie. Een ruimte met een scherm is genoeg. Deelnemers nemen hun eigen laptop mee.'],
       ['Kan de training in het Engels?', 'Ja. De training kan volledig in het Engels, bijvoorbeeld voor internationale teams.'],
       ['Wat gebeurt er met onze bedrijfsgegevens?', 'Tijdens de training oefenen we zonder vertrouwelijke gegevens. Wat wel en niet in AI-tools mag, is juist een van de onderwerpen waar jullie samen afspraken over maken.'],
@@ -73,11 +118,13 @@ const copy = {
     ],
   },
   en: {
-    title: 'AI at work: a half-day training for teams | Jesco Trainingen',
-    description: 'A hands-on, in-house AI training for 8 to 16 people. Prompting with your own work, trusting AI where it makes sense, and agreeing on how you use it. From €1,250 excl. VAT.',
+    title: 'AI training for teams, grounded in psychology | Jesco Trainingen',
+    description: 'A half-day, in-house AI training for teams, built on the psychology of behaviour. Practise on your own work, trust AI where it makes sense and build AI literacy. From €1,250 excl. VAT.',
     label: 'the training',
     h1: 'AI at work',
-    lead: 'A half-day in which your team learns how AI arrives at an answer, practises with real work and agrees on how to use it. So AI stops being a side project for a few enthusiasts.',
+    lead: 'A half-day AI training built on the psychology of behaviour. Your team learns why AI sounds so convincing, when it can be trusted and how it fits into their own work. So AI stops being a side project for a few enthusiasts.',
+    proof: [`${runs.length} sessions`, `${totalRaters} participants`, `average score ${num(average)}`],
+    proofLink: 'See the reviews',
     video: {
       src: '/video/ai-workshop-en.mp4',
       poster: '/video/ai-workshop-en-poster.jpg',
@@ -89,18 +136,44 @@ const copy = {
       'Organisations with roughly 10 to 50 office staff, where AI is already in use or hasn’t quite taken off yet.',
       'Groups are 8 to 16 people: a whole team or a mix of departments. No AI experience needed. A mixed group actually learns a lot from each other.',
     ],
+    rolesH2: 'With your own work',
+    rolesP: 'No made-up case studies. Everyone practises on a task that will be back on their desk tomorrow. A few examples of what we do in the session:',
+    roles: [
+      ['HR', 'A job ad that sounds like your organisation, not like every other one.', 'Where it goes wrong: AI makes every text equally smooth. You learn to steer the tone and check for assumptions about the candidate.'],
+      ['Communications', 'A first draft of a news item or LinkedIn post, plus five headlines to choose from.', 'Where it goes wrong: AI ideas tend to look alike. You learn to use AI to think wider, not to make the same thing faster.'],
+      ['Policy', 'Summarising a long document, or rewriting it in plain language for residents, customers or colleagues.', 'Where it goes wrong: a summary sounds certain, even where the original has doubts. You learn what to always check against the source.'],
+      ['Customer service', 'A reply to a tricky complaint: friendly, clear and within your own policies.', 'Where it goes wrong: AI easily promises things you can’t deliver. You learn to build limits into your prompt.'],
+    ],
     howH2: 'How it works',
     steps: [
       ['01', 'Intake', 'A conversation with you of about 45 minutes. What’s going on in your team, where do you want to get to, which tools do you use? The core of the training is fixed; the rest is shaped around this.'],
-      ['02', 'The session', 'Two to three hours at your office, in three parts: how AI thinks and how we think, prompting with your own work, and agreements and the conversation.'],
+      ['02', 'The session', 'Two to three hours at your office, in three parts: how AI thinks and how we think, prompting with your own work, and agreements and the conversation. With slides and worksheets in your house style.'],
       ['03', 'Four weeks later', 'A short check-in survey for participants: are they using AI, and how confident do they feel? That way you see what the training actually changed.'],
     ],
     dayH2: 'What happens in the session',
     day: [
-      ['0:00', 'How AI thinks, and how we think', ['What a language model can and can’t do', 'Why AI always sounds convincing, even when it’s wrong', 'Why some people trust it too much and others too little', 'What a single prompt costs in electricity and water, and why it adds up'], 45],
-      ['0:45', 'Prompting with your own work', ['A simple structure for good prompts: role, context, limits, tone, next step', 'Practising on real tasks from your day-to-day', 'Group discussion: what works, what doesn’t, and why'], 75],
+      ['0:00', 'How AI thinks, and how we think', ['What a language model can and can’t do', 'Why AI always sounds convincing, even when it’s wrong', 'Why AI agrees with you so easily', 'Why some people trust it too much and others too little', 'What a single prompt costs in electricity and water, and why it adds up'], 45],
+      ['0:45', 'Prompting with your own work', ['A simple structure for good prompts: role, context, limits, tone, next step', 'Practising on real tasks from your day-to-day', 'Think first, then use AI: that’s how it stays your own work', 'Group discussion: what works, what doesn’t, and why'], 75],
       ['2:00', 'Agreements, and the conversation', ['What can and can’t go into AI tools, and who checks what', 'Workload and brain fry: fewer tools, set times to review AI work, and a cut-off time', 'When to deliberately not use AI', 'How to bring along colleagues who hesitate or push back', 'A first draft of your own team agreements on AI'], 60],
     ],
+    termsH2: 'The psychology behind it',
+    termsP: 'Most AI training is about what the tool can do. This one is also about what happens in your head while you use it. Four ideas that come back in the session:',
+    terms: [
+      ['Automation bias', 'The tendency to accept a system’s answer, even when your own knowledge says otherwise. The more convincing AI sounds, the stronger this gets.', trustArticle, 'More on trust in AI'],
+      ['Algorithm aversion', 'The opposite: after one AI mistake you give up on it, while a colleague who makes the same mistake simply gets a second chance.', trustArticle, 'More on trust in AI'],
+      ['Cognitive offloading', 'Handing thinking over to a tool. Often smart, but offload too early and too much and you think less critically.', thinkArticle, 'More on keeping your own judgement'],
+      ['Motivational interviewing', 'A conversation method from psychology for helping people who are in two minds. In the session I use it to bring along colleagues who push back, without pushing them.', path('trainer', 'en'), 'About the trainer’s background'],
+    ],
+    literacyH2: 'Building AI literacy',
+    literacyP: [
+      'Since February 2025, the EU AI Act (Article 4) asks organisations that use AI to take steps on AI literacy among their staff. The law doesn’t prescribe a specific course. But you do need to be able to show what you’re doing about it.',
+      'This training helps with that. Your team learns how AI works, where the risks are and which agreements you make together. You also get:',
+    ],
+    literacyItems: [
+      'a certificate of attendance for every participant;',
+      'a one-page report with the learning goals, attendees and the agreements you made, for your AI records.',
+    ],
+    literacyNote: 'This isn’t legal advice. What else your organisation needs depends on which AI systems you use and what for.',
     afterH2: 'What your team does differently afterwards',
     after: [
       'They ask AI better questions and spend less time rewriting.',
@@ -116,17 +189,26 @@ const copy = {
       ['group', '8 to 16 people'],
       ['where', 'at your office'],
       ['language', 'English or Dutch'],
-      ['includes', 'intake and a four-week check-in'],
+      ['materials', 'slides and worksheets in your house style'],
+      ['includes', 'intake, four-week check-in, certificates and report'],
     ],
     priceLabel: 'from',
     price: '€1,250 excl. VAT per group',
+    crossLabel: 'also available',
+    crossH: 'Effective Meetings masterclass',
+    crossP: 'The psychology of meetings, an agenda exercise and AI for minutes and action points. Book it on its own or together with this training.',
+    crossCta: 'See the masterclass',
     faqH2: 'Frequently asked questions',
     faq: [
       ['Do people need to be using AI already?', 'No. The session works for complete beginners and for daily users alike. In a mixed group, people learn a lot from each other.'],
+      ['What do you mean by “grounded in psychology”?', 'That the training isn’t only about what AI can do, but about what people do with it. Why do some trust it too much and others too little? Why does working with AI feel faster than it sometimes is? And how do you bring along colleagues who hesitate? That’s where my background in applied psychology comes in.'],
+      ['Does the training help with AI literacy under the AI Act?', 'Yes. The AI Act asks organisations to take steps on AI literacy, but doesn’t prescribe a specific course. The training is a concrete step: every participant gets a certificate of attendance and you get a short report for your AI records. Whether that’s enough for your organisation depends on which AI you use and what for.'],
       ['Which AI tool do we use?', 'Whatever you already have: ChatGPT, Copilot, Gemini or something else. The approach works in any tool. If your organisation hasn’t picked one yet, we’ll talk about where to start during the intake.'],
+      ['Are the materials in our own house style?', 'Yes. The slides and any worksheets get your colours and your logo. That’s included in the price, so the materials fit right in with your own documents afterwards.'],
       ['Does the training cover workload and the environment?', 'Yes. AI can increase workload, for example through all the checking, and every prompt costs electricity and water. We look at what research says and build it into your team agreements: fewer tools, set times to review AI work, and choosing when not to use AI.'],
       ['Is this a Copilot or ChatGPT course?', 'No. It isn’t a walkthrough of buttons and menus. It’s about how your team uses AI well and responsibly. It works well as a follow-up to a tool course.'],
-      ['What does it cost?', 'From €1,250 excl. VAT per group, including the intake and the four-week check-in. You’ll get the exact price after the intake.'],
+      ['What does it cost?', 'From €1,250 excl. VAT per group, including the intake, the four-week check-in, certificates and the report. You’ll get the exact price after the intake.'],
+      ['Can we combine this with the meetings masterclass?', 'Yes. Both trainings can be booked together, on the same day or a few weeks apart. We’ll work out what fits best during the intake.'],
       ['Where does it take place?', 'At your office. A room with a screen is all you need. Participants bring their own laptops.'],
       ['Can the training be in English?', 'Yes. The whole session can be run in English, which works well for international teams.'],
       ['What about our company data?', 'We practise without confidential information. What can and can’t go into AI tools is one of the things your team agrees on during the session.'],
@@ -145,6 +227,9 @@ const schema = [
     provider: { '@id': `${site.url}/#organization` },
     areaServed: { '@type': 'Country', name: 'NL' },
     availableLanguage: ['nl', 'en'],
+    about: lang === 'nl'
+      ? ['AI-geletterdheid', 'Psychologie van AI-gebruik', 'Prompten', 'AI-afspraken in teams']
+      : ['AI literacy', 'Psychology of AI use', 'Prompting', 'Team agreements on AI'],
     offers: {
       '@type': 'Offer',
       url: new URL(path('training', lang), site.url).href,
@@ -168,9 +253,16 @@ const schema = [
 ];
 ---
 <Base lang={lang} title={copy.title} description={copy.description} schema={schema}>
-  <PageHead label={copy.label} title={copy.h1} lead={copy.lead} />
+  <div class="tp">
+    <PageHead label={copy.label} title={copy.h1} lead={copy.lead} />
 
-  {copy.video && (
+    <div class="wrap">
+      <p class="proof label">
+        {copy.proof.map((p) => <strong>{p}</strong>)}
+        <a href={path('experiences', lang)}>{copy.proofLink}</a>
+      </p>
+    </div>
+
     <section class="wrap promo-video">
       <figure class="stack" style="--gap: 12px">
         <video
@@ -190,77 +282,134 @@ const schema = [
         <p id="promo-video-desc" class="visually-hidden">{copy.video.description}</p>
       </figure>
     </section>
-  )}
 
-  <section class="wrap section split">
-    <h2 class="split__h">{copy.forH2}</h2>
-    <div class="stack split__body" style="--gap: 18px">
-      {copy.forP.map((p) => <p class="lead">{p}</p>)}
-    </div>
-  </section>
+    <section class="wrap section split">
+      <h2 class="split__h">{copy.forH2}</h2>
+      <div class="stack split__body" style="--gap: 18px">
+        {copy.forP.map((p) => <p class="lead">{p}</p>)}
+      </div>
+    </section>
 
-  <section class="wrap steps">
-    <h2 class="visually-hidden">{copy.howH2}</h2>
-    <ol class="steps__list">
-      {copy.steps.map(([n, title, text]) => (
-        <li>
-          <span class="label">{n}</span>
-          <h3>{title}</h3>
-          <p>{text}</p>
-        </li>
-      ))}
-    </ol>
-  </section>
-
-  <section class="dark">
-    <div class="wrap section stack" style="--gap: 40px">
-      <h2>{copy.dayH2}</h2>
-      <div class="timeline timeline--dark">
-        {copy.day.map(([time, title, items, weight]) => (
-          <div style={`flex: ${weight} 1 260px`}>
-            <span class="label">{time}</span>
+    <section class="wrap steps">
+      <h2 class="visually-hidden">{copy.howH2}</h2>
+      <ol class="steps__list">
+        {copy.steps.map(([n, title, text]) => (
+          <li>
+            <span class="label">{n}</span>
             <h3>{title}</h3>
-            <ul>{(items as string[]).map((i) => <li>{i}</li>)}</ul>
-          </div>
+            <p>{text}</p>
+          </li>
+        ))}
+      </ol>
+    </section>
+
+    <section class="dark">
+      <div class="wrap section stack" style="--gap: 40px">
+        <h2>{copy.dayH2}</h2>
+        <div class="timeline timeline--dark">
+          {copy.day.map(([time, title, items, weight]) => (
+            <div style={`flex: ${weight} 1 260px`}>
+              <span class="label">{time}</span>
+              <h3>{title}</h3>
+              <ul>{(items as string[]).map((i) => <li>{i}</li>)}</ul>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <SlideLaptop lang={lang} />
+
+    <section class="wrap section split">
+      <div class="split__h stack" style="--gap: 16px">
+        <h2>{copy.rolesH2}</h2>
+      </div>
+      <div class="split__body stack" style="--gap: 24px">
+        <p class="lead">{copy.rolesP}</p>
+        <ul class="cards">
+          {copy.roles.map(([role, task, pitfall]) => (
+            <li>
+              <span class="label">{role}</span>
+              <h3>{task}</h3>
+              <p>{pitfall}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+
+    <section class="wrap section split">
+      <h2 class="split__h">{copy.termsH2}</h2>
+      <div class="split__body stack" style="--gap: 24px">
+        <p class="lead">{copy.termsP}</p>
+        <dl class="terms">
+          {copy.terms.map(([term, text, href, link]) => (
+            <div>
+              <dt>{term}</dt>
+              <dd>{text} <a href={href}>{link}</a></dd>
+            </div>
+          ))}
+        </dl>
+      </div>
+    </section>
+
+    <TrustMeter lang={lang} />
+
+    <section class="wrap section split">
+      <h2 class="split__h">{copy.literacyH2}</h2>
+      <div class="split__body stack" style="--gap: 18px">
+        {copy.literacyP.map((p) => <p class="lead">{p}</p>)}
+        <ul class="lead">{copy.literacyItems.map((i) => <li>{i}</li>)}</ul>
+        <p class="label">{copy.literacyNote}</p>
+      </div>
+    </section>
+
+    <section class="wrap section split">
+      <h2 class="split__h">{copy.afterH2}</h2>
+      <ol class="after split__body">
+        {copy.after.map((a) => <li>{a}</li>)}
+      </ol>
+    </section>
+
+    <section class="wrap split band">
+      <h2 class="split__h">{copy.notToolH2}</h2>
+      <p class="lead split__body">{copy.notToolP}</p>
+    </section>
+
+    <section class="wrap section split">
+      <h2 class="split__h">{copy.practicalH2}</h2>
+      <div class="split__body practical">
+        <dl class="specs">
+          {copy.specs.map(([k, v]) => <div><dt>{k}</dt><dd>{v}</dd></div>)}
+          <div><dt>{copy.priceLabel}</dt><dd><strong>{copy.price}</strong></dd></div>
+        </dl>
+        <a class="btn btn--primary" href={`${path('home', lang)}#teamscan`}>{s.cta.scan}</a>
+      </div>
+    </section>
+
+    <section class="wrap" style="padding-bottom: var(--section)">
+      <div class="crosslink">
+        <div class="stack" style="--gap: 10px">
+          <span class="label">{copy.crossLabel}</span>
+          <h2 style="font-size: clamp(1.6rem, 2.6vw, 2.2rem)">{copy.crossH}</h2>
+          <p class="lead">{copy.crossP}</p>
+        </div>
+        <a class="btn btn--line" href={path('masterclass', lang)}>{copy.crossCta}</a>
+      </div>
+    </section>
+
+    <section class="wrap split faq-section">
+      <h2 class="split__h">{copy.faqH2}</h2>
+      <div class="faq split__body">
+        {copy.faq.map(([q, a]) => (
+          <details>
+            <summary>{q}</summary>
+            <p>{a}</p>
+          </details>
         ))}
       </div>
-    </div>
-  </section>
-
-  <section class="wrap section split">
-    <h2 class="split__h">{copy.afterH2}</h2>
-    <ol class="after split__body">
-      {copy.after.map((a) => <li>{a}</li>)}
-    </ol>
-  </section>
-
-  <section class="wrap split nottool">
-    <h2 class="split__h">{copy.notToolH2}</h2>
-    <p class="lead split__body">{copy.notToolP}</p>
-  </section>
-
-  <section class="wrap section split">
-    <h2 class="split__h">{copy.practicalH2}</h2>
-    <div class="split__body practical">
-      <dl class="specs">
-        {copy.specs.map(([k, v]) => <div><dt>{k}</dt><dd>{v}</dd></div>)}
-        <div><dt>{copy.priceLabel}</dt><dd><strong>{copy.price}</strong></dd></div>
-      </dl>
-      <a class="btn btn--primary" href={`${path('home', lang)}#teamscan`}>{s.cta.scan}</a>
-    </div>
-  </section>
-
-  <section class="wrap split faq-section">
-    <h2 class="split__h">{copy.faqH2}</h2>
-    <div class="faq split__body">
-      {copy.faq.map(([q, a]) => (
-        <details>
-          <summary>{q}</summary>
-          <p>{a}</p>
-        </details>
-      ))}
-    </div>
-  </section>
+    </section>
+  </div>
 
   <ScanStrip lang={lang} />
 </Base>
@@ -294,27 +443,3 @@ const schema = [
     ).observe(video);
   }
 </script>
-
-<style>
-  .split { display: flex; flex-wrap: wrap; gap: 24px 64px; align-items: flex-start; }
-  .split__h { flex: 1 1 280px; min-width: 0; font-size: clamp(1.8rem, 3vw, 2.6rem); }
-  .split__body { flex: 2 1 520px; min-width: 0; max-width: 46rem; }
-  .steps { padding-bottom: var(--section); }
-  .steps__list { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; border-top: 2px solid var(--ink); }
-  .steps__list li { flex: 1 1 260px; min-width: 0; padding: 20px 28px 0 0; display: flex; flex-direction: column; gap: 10px; }
-  .steps__list p { color: var(--ink-2); line-height: 1.55; }
-  .timeline--dark { border-top-color: var(--on-dark); }
-  .timeline--dark > div { border-left-color: var(--dark-rule); }
-  .timeline--dark ul { margin: 0; padding-left: 1.1em; color: var(--on-dark-2); display: flex; flex-direction: column; gap: 6px; line-height: 1.5; }
-  @media (max-width: 760px) { .timeline--dark > div { border-bottom-color: var(--dark-rule); } }
-  .after { margin: 0; padding: 0; list-style: none; counter-reset: a; border-top: 1px solid var(--ink); }
-  .after li { counter-increment: a; display: flex; gap: 20px; padding: 18px 0; border-bottom: 1px solid var(--rule); font-size: 1.15rem; line-height: 1.5; }
-  .after li::before { content: counter(a, decimal-leading-zero); font-family: var(--mono); font-size: 0.8125rem; color: var(--green); padding-top: 0.35em; }
-  .nottool { padding-block: clamp(48px, 6vw, 72px); border-block: 1px solid var(--rule); }
-  .practical { display: flex; flex-direction: column; gap: 24px; align-items: flex-start; }
-  .practical .specs { width: 100%; max-width: 34rem; }
-  .faq-section { padding-bottom: var(--section); }
-  .promo-video { padding-top: clamp(40px, 6vw, 64px); }
-  .promo-video figure { margin: 0; }
-  .promo-video__player { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; background: var(--paper-2); border: 1px solid var(--rule); }
-</style>

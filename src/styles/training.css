@@ -1,0 +1,48 @@
+/* Opmaak die de trainingspagina's delen (AI in je werk en de masterclass).
+   Alles hangt onder .tp, zodat het niet doorlekt naar andere pagina's. */
+
+.tp .split { display: flex; flex-wrap: wrap; gap: 24px 64px; align-items: flex-start; }
+.tp .split__h { flex: 1 1 280px; min-width: 0; font-size: clamp(1.8rem, 3vw, 2.6rem); }
+.tp .split__body { flex: 2 1 520px; min-width: 0; max-width: 46rem; }
+
+.tp .proof { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 18px; padding-block: 18px; border-bottom: 1px solid var(--rule); }
+.tp .proof strong { font-weight: 600; }
+
+.tp .steps { padding-bottom: var(--section); }
+.tp .steps__list { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; border-top: 2px solid var(--ink); }
+.tp .steps__list li { flex: 1 1 260px; min-width: 0; padding: 20px 28px 0 0; display: flex; flex-direction: column; gap: 10px; }
+.tp .steps__list p { color: var(--ink-2); line-height: 1.55; }
+
+.tp .timeline--dark { border-top-color: var(--on-dark); }
+.tp .timeline--dark > div { border-left-color: var(--dark-rule); }
+.tp .timeline--dark ul { margin: 0; padding-left: 1.1em; color: var(--on-dark-2); display: flex; flex-direction: column; gap: 6px; line-height: 1.5; }
+@media (max-width: 760px) { .tp .timeline--dark > div { border-bottom-color: var(--dark-rule); } }
+
+.tp .cards { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); border-top: 1px solid var(--ink); }
+.tp .cards li { min-width: 0; padding: 20px 24px 24px 0; display: flex; flex-direction: column; gap: 8px; border-bottom: 1px solid var(--rule); }
+.tp .cards p { color: var(--ink-2); line-height: 1.55; }
+.tp .cards .label { color: var(--green); }
+
+.tp .terms { margin: 0; border-top: 1px solid var(--ink); }
+.tp .terms > div { display: flex; flex-wrap: wrap; gap: 6px 32px; padding: 18px 0; border-bottom: 1px solid var(--rule); }
+.tp .terms dt { flex: 1 1 200px; font-weight: 600; font-size: 1.1rem; }
+.tp .terms dd { flex: 2 1 360px; margin: 0; color: var(--ink-2); line-height: 1.55; }
+.tp .terms dd a { color: var(--green); }
+
+.tp .after { margin: 0; padding: 0; list-style: none; counter-reset: a; border-top: 1px solid var(--ink); }
+.tp .after li { counter-increment: a; display: flex; gap: 20px; padding: 18px 0; border-bottom: 1px solid var(--rule); font-size: 1.15rem; line-height: 1.5; }
+.tp .after li::before { content: counter(a, decimal-leading-zero); font-family: var(--mono); font-size: 0.8125rem; color: var(--green); padding-top: 0.35em; }
+
+.tp .band { padding-block: clamp(48px, 6vw, 72px); border-block: 1px solid var(--rule); }
+.tp .practical { display: flex; flex-direction: column; gap: 24px; align-items: flex-start; }
+.tp .practical .specs { width: 100%; max-width: 34rem; }
+.tp .faq-section { padding-bottom: var(--section); }
+
+.tp .crosslink { display: flex; flex-wrap: wrap; gap: 24px 64px; align-items: center; justify-content: space-between; padding: clamp(28px, 4vw, 40px); border: 1px solid var(--ink); }
+.tp .crosslink > div { flex: 1 1 420px; min-width: 0; }
+
+.tp .prompt { margin: 0; padding: 20px 22px; background: var(--white); border: 1px solid var(--rule); border-left: 3px solid var(--green); font-family: var(--mono); font-size: 0.875rem; line-height: 1.6; white-space: pre-wrap; overflow-wrap: anywhere; }
+
+.tp .promo-video { padding-top: clamp(40px, 6vw, 64px); }
+.tp .promo-video figure { margin: 0; }
+.tp .promo-video__player { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; background: var(--paper-2); border: 1px solid var(--rule); }

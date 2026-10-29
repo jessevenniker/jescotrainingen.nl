@@ -1,0 +1,295 @@
+---
+// Masterclass Effectief vergaderen. Inhoud uit het deck en draaiboek van juni 2026.
+// Geen bedrag: de prijs is op aanvraag.
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import { path, type Lang } from '../i18n';
+import { site } from '../data/site';
+import { runs, totalRaters, average } from '../data/reviews';
+import '../styles/training.css';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const num = (n: number) => n.toLocaleString(lang === 'nl' ? 'nl-NL' : 'en-GB');
+
+const copy = {
+  nl: {
+    title: 'Masterclass Effectief vergaderen: psychologie, praktijk en AI | Jesco Trainingen',
+    description: 'Incompany masterclass effectief vergaderen: de psychologie van vergaderen, een agenda-oefening en AI voor notulen en actiepunten. 2 à 3 uur op locatie, in jullie huisstijl. Prijs op aanvraag.',
+    label: 'masterclass',
+    h1: 'Effectief vergaderen',
+    lead: 'Een masterclass over wat er onder de oppervlakte van een vergadering speelt, en hoe je dat gebruikt. Met een agenda-oefening en AI voor notulen en actiepunten. Psychologie, praktijk en AI in één sessie.',
+    proof: [`${runs.length} masterclasses in juni 2026`, `${totalRaters} deelnemers`, `gemiddeld een ${num(average)}`],
+    proofLink: 'Bekijk de ervaringen',
+    forH2: 'Voor wie',
+    forP: [
+      'Voor teams, afdelingen en managementteams die veel vergaderen en weten dat het beter kan: kortere vergaderingen, heldere besluiten en actiepunten die ook echt gebeuren.',
+      'Een groep van 8 tot 16 deelnemers werkt goed, maar groter of kleiner kan in overleg. Iedereen die vergadert of voorzit kan meedoen.',
+    ],
+    howH2: 'Hoe het werkt',
+    steps: [
+      ['01', 'Intake', 'Een gesprek van ongeveer drie kwartier. Waar schuurt het in jullie vergaderingen, hoe groot is de groep en hoeveel tijd is er? Daarop stemmen we de duur en de voorbeelden af.'],
+      ['02', 'De masterclass', 'Twee à drie uur bij jullie op locatie. Interactief, met een oefening en herkenbare situaties. De slides en werkbladen krijgen jullie kleuren en logo.'],
+      ['03', 'Na vier weken', 'Optioneel: een korte meting bij de deelnemers. Wat doen ze anders in hun vergaderingen, en wat levert dat op?'],
+    ],
+    dayH2: 'Zo zag het eruit in juni 2026',
+    dayP: 'Een masterclass van twee uur. Met meer tijd is er ruimte voor een rollenspel, waarin de groep een vergadering speelt met geheime rollen en observatoren.',
+    day: [
+      ['0:00', 'Opening en nulmeting', ['Rondje: wat is jouw slechtste vergaderervaring?', 'Nulmeting: scoor jezelf op voorbereiding, inbreng, anderen betrekken en heldere besluiten'], 25],
+      ['0:25', 'De psychologie van vergaderen', ['Zeven tips over wat er onder de oppervlakte speelt', 'Herkenning en discussie, geen college'], 25],
+      ['0:50', 'De agenda-oefening', ['Analyseer en verbeter een slechte agenda', 'Nabespreking: wat gebeurde er, en hoe past dat bij de theorie?'], 35],
+      ['1:25', 'AI en vergaderen', ['Tools voor transcriptie, samenvatting en actiepunten', 'Samen een goede prompt voor notulen bouwen', 'Privacy, betrouwbaarheid en milieu', 'Waarom AI je zo makkelijk gelijk geeft'], 25],
+      ['1:50', 'Afsluiting', ['Eén inzicht dat je morgen toepast', 'Feedbackformulier'], 10],
+    ],
+    tipsH2: 'De psychologie van vergaderen',
+    tipsP: 'Zeven tips uit de masterclass. Klein in uitvoering, groot in effect.',
+    tips: [
+      ['01', 'Maak van elk agendapunt een vraag', 'Niet “Budget”, maar “Welke keuzes maken we om binnen het budget te blijven?”. Een onderwerp nodigt uit tot presenteren, een vraag tot meedenken.'],
+      ['02', 'Zeven, plus of min twee', 'Ons werkgeheugen houdt zo’n zeven dingen tegelijk vast. Een overvolle agenda leidt tot slechtere besluiten, niet tot meer efficiëntie.'],
+      ['03', 'Het zware werk eerst', 'Grote beslissingen horen vooraan, als iedereen nog fris is. Kleine punten kunnen naar het eind, of beter nog: per mail.'],
+      ['04', 'Let op wie waar zit', 'Wie naast wie zit, beïnvloedt coalities en gesprekspatronen. Een U-vorm of ronde tafel nodigt uit tot gelijkwaardige inbreng.'],
+      ['05', 'Een doel per agendapunt', 'Informeren, beslissen of brainstormen? Met een doel, een tijd en iemand die het punt leidt, weet iedereen wat er van hen verwacht wordt.'],
+      ['06', 'Voorzitter of deelnemer, niet allebei', 'De voorzitter bewaakt tijd en ruimte en vat samen. De secretaris houdt besluiten en actiepunten bij, met een eigenaar en een datum.'],
+      ['07', 'Maak besluiten hardop', 'Sluit elk punt af met een samenvatting. Zeg “We besluiten dat…”, niet “Ik denk dat we…”.'],
+    ],
+    promptH2: 'De prompt voor notulen',
+    promptP: 'In de masterclass bouwen we samen een goede prompt. Dit is de versie die deelnemers meenemen. Werkt in Copilot, ChatGPT, Claude of Gemini.',
+    prompt: 'Jij bent een zakelijk assistent die vergadernotulen verwerkt.\n\nDit zijn de notulen van [naam vergadering] over [onderwerp]. De deelnemers waren [namen].\n\nGeef je samenvatting in vier blokken:\n1. Kernpunten besproken\n2. Genomen besluiten\n3. Actiepunten (met naam eigenaar en deadline)\n4. Openstaande vragen\n\nWees concreet. Geen vage taal. Noem namen en cijfers als die er zijn.',
+    promptNote: 'Controleer de uitkomst altijd: AI verzint soms een actiepunt dat nooit is uitgesproken. Jij bent verantwoordelijk voor wat je verstuurt.',
+    practicalH2: 'Praktisch',
+    specs: [
+      ['duur', '2 à 3 uur, afgestemd in de intake'],
+      ['groep', 'richtlijn 8 tot 16, groter of kleiner in overleg'],
+      ['waar', 'bij jullie op locatie'],
+      ['taal', 'Nederlands of Engels'],
+      ['materiaal', 'slides en werkbladen in jullie huisstijl'],
+      ['inclusief', 'intake; meting na vier weken optioneel'],
+    ],
+    priceLabel: 'prijs',
+    price: 'op aanvraag',
+    cta: 'Vraag de prijs aan',
+    crossLabel: 'samen te boeken',
+    crossH: 'AI in je werk',
+    crossP: 'Een dagdeel waarin je team leert waarom AI zo overtuigend klinkt, wanneer je het kunt vertrouwen en hoe het in je eigen werk past.',
+    crossCta: 'Bekijk de AI-training',
+    faqH2: 'Veelgestelde vragen',
+    faq: [
+      ['Is dit een AI-training?', 'Deels. Het grootste deel gaat over de psychologie en praktijk van vergaderen. Daarna laten we zien hoe AI helpt bij agenda’s, notulen en actiepunten, en waar je moet opletten. Wil je dieper op AI ingaan, dan past de training AI in je werk.'],
+      ['Hoe lang duurt de masterclass?', 'Twee à drie uur. In de intake stemmen we af wat bij jullie past. Met meer tijd is er ruimte voor een rollenspel met een vergadering uit jullie eigen praktijk.'],
+      ['Wat kost het?', 'De prijs hangt af van de duur en de groep. Je hoort hem na de intake. Materiaal in jullie huisstijl zit er altijd bij in.'],
+      ['Is het materiaal in onze eigen huisstijl?', 'Ja. De slides en eventuele werkbladen krijgen jullie kleuren en jullie logo, zonder extra kosten.'],
+      ['Welke AI-tools komen aan bod?', 'Onder meer Copilot in Teams, Word en Outlook, losse tools voor transcriptie en samenvattingen, en ChatGPT, Claude of Gemini voor het verwerken van notulen. We kijken vooral naar wat jullie al hebben.'],
+      ['Kunnen we dit combineren met AI in je werk?', 'Ja. Beide trainingen zijn samen te boeken, op één dag of met een paar weken ertussen.'],
+      ['Kan de masterclass in het Engels?', 'Ja. De masterclass is al in het Engels gegeven en kan volledig in het Engels, bijvoorbeeld voor internationale teams.'],
+    ],
+  },
+  en: {
+    title: 'Effective Meetings masterclass: psychology, practice and AI | Jesco Trainingen',
+    description: 'An in-house masterclass on effective meetings: the psychology of meetings, an agenda exercise and AI for minutes and action points. 2–3 hours at your office, in your house style. Price on request.',
+    label: 'masterclass',
+    h1: 'Effective meetings',
+    lead: 'A masterclass on what goes on beneath the surface of a meeting, and how to use it. With an agenda exercise and AI for minutes and action points. Psychology, practice and AI in one session.',
+    proof: [`${runs.length} masterclasses in June 2026`, `${totalRaters} participants`, `average score ${num(average)}`],
+    proofLink: 'See the reviews',
+    forH2: 'Who it’s for',
+    forP: [
+      'For teams, departments and management teams that meet a lot and know it could be better: shorter meetings, clear decisions and action points that actually happen.',
+      'A group of 8 to 16 works well, but larger or smaller is fine by arrangement. Anyone who attends or chairs meetings can join.',
+    ],
+    howH2: 'How it works',
+    steps: [
+      ['01', 'Intake', 'A conversation of about 45 minutes. Where do your meetings get stuck, how big is the group and how much time is there? We shape the length and examples around that.'],
+      ['02', 'The masterclass', 'Two to three hours at your office. Interactive, with an exercise and recognisable situations. Slides and worksheets come in your colours and with your logo.'],
+      ['03', 'Four weeks later', 'Optional: a short check-in with participants. What are they doing differently in meetings, and what has it changed?'],
+    ],
+    dayH2: 'What it looked like in June 2026',
+    dayP: 'A two-hour masterclass. With more time, there’s room for a role play in which the group runs a meeting with secret roles and observers.',
+    day: [
+      ['0:00', 'Opening and baseline', ['Round: what’s your worst meeting experience?', 'Baseline: rate yourself on preparation, speaking up, involving others and clear decisions'], 25],
+      ['0:25', 'The psychology of meetings', ['Seven tips on what goes on beneath the surface', 'Recognition and discussion, not a lecture'], 25],
+      ['0:50', 'The agenda exercise', ['Analyse and improve a bad agenda', 'Debrief: what happened, and how does it link to the theory?'], 35],
+      ['1:25', 'AI and meetings', ['Tools for transcription, summaries and action points', 'Building a good prompt for minutes together', 'Privacy, reliability and the environment', 'Why AI agrees with you so easily'], 25],
+      ['1:50', 'Closing', ['One insight you’ll apply tomorrow', 'Feedback form'], 10],
+    ],
+    tipsH2: 'The psychology of meetings',
+    tipsP: 'Seven tips from the masterclass. Small to do, big in effect.',
+    tips: [
+      ['01', 'Turn every agenda item into a question', 'Not “Budget”, but “What choices do we make to stay within budget?”. A topic invites people to present; a question invites them to think along.'],
+      ['02', 'Seven, plus or minus two', 'Working memory holds about seven things at once. An overloaded agenda leads to worse decisions, not more efficiency.'],
+      ['03', 'Heavy lifting first', 'Big decisions belong at the start, while everyone is still fresh. Small items can go at the end, or better still: by email.'],
+      ['04', 'Notice who sits where', 'Who sits next to whom shapes alliances and conversation patterns. A U-shape or round table invites more equal input.'],
+      ['05', 'One purpose per agenda item', 'Inform, decide or brainstorm? With a purpose, a time slot and someone leading the item, everyone knows what’s expected of them.'],
+      ['06', 'Chair or participant, not both', 'The chair guards time and space and summarises. The secretary keeps track of decisions and action points, each with an owner and a date.'],
+      ['07', 'Say decisions out loud', 'Close every item with a summary. Say “We’ve decided that…”, not “I think we…”.'],
+    ],
+    promptH2: 'The prompt for minutes',
+    promptP: 'In the masterclass we build a good prompt together. This is the version participants take home. Works in Copilot, ChatGPT, Claude or Gemini.',
+    prompt: 'You are a business assistant who processes meeting minutes.\n\nThese are the minutes of [meeting name] about [topic]. Attendees were [names].\n\nGive your summary in four blocks:\n1. Key points discussed\n2. Decisions made\n3. Action points (with owner and deadline)\n4. Open questions\n\nBe specific. No vague language. Mention names and numbers where available.',
+    promptNote: 'Always check the result: AI sometimes invents an action point nobody actually said. You’re responsible for what you send.',
+    practicalH2: 'The practical bits',
+    specs: [
+      ['length', '2–3 hours, agreed in the intake'],
+      ['group', 'guideline 8 to 16, larger or smaller by arrangement'],
+      ['where', 'at your office'],
+      ['language', 'English or Dutch'],
+      ['materials', 'slides and worksheets in your house style'],
+      ['includes', 'intake; four-week check-in optional'],
+    ],
+    priceLabel: 'price',
+    price: 'on request',
+    cta: 'Ask for a price',
+    crossLabel: 'book together',
+    crossH: 'AI at work',
+    crossP: 'A half-day in which your team learns why AI sounds so convincing, when it can be trusted and how it fits into their own work.',
+    crossCta: 'See the AI training',
+    faqH2: 'Frequently asked questions',
+    faq: [
+      ['Is this an AI training?', 'Partly. Most of it is about the psychology and practice of meetings. Then we look at how AI helps with agendas, minutes and action points, and what to watch out for. If you want to go deeper on AI, the AI at work training is the better fit.'],
+      ['How long is the masterclass?', 'Two to three hours. We agree on what suits you during the intake. With more time, there’s room for a role play based on a meeting from your own work.'],
+      ['What does it cost?', 'The price depends on length and group size. You’ll get it after the intake. Materials in your house style are always included.'],
+      ['Are the materials in our own house style?', 'Yes. The slides and any worksheets get your colours and your logo, at no extra cost.'],
+      ['Which AI tools are covered?', 'Among others Copilot in Teams, Word and Outlook, standalone tools for transcription and summaries, and ChatGPT, Claude or Gemini for processing minutes. We focus on what you already have.'],
+      ['Can we combine this with AI at work?', 'Yes. Both trainings can be booked together, on the same day or a few weeks apart.'],
+      ['Can the masterclass be in English?', 'Yes. It has already been run in English and works fully in English, for example for international teams.'],
+    ],
+  },
+}[lang];
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    name: lang === 'nl' ? 'Masterclass Effectief vergaderen' : 'Effective Meetings masterclass',
+    serviceType: lang === 'nl' ? 'Incompany training effectief vergaderen' : 'In-house training on effective meetings',
+    description: copy.description,
+    provider: { '@id': `${site.url}/#organization` },
+    areaServed: { '@type': 'Country', name: 'NL' },
+    availableLanguage: ['nl', 'en'],
+    url: new URL(path('masterclass', lang), site.url).href,
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    inLanguage: lang === 'nl' ? 'nl-NL' : 'en',
+    mainEntity: copy.faq.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })),
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: site.name, item: new URL(path('home', lang), site.url).href },
+      { '@type': 'ListItem', position: 2, name: lang === 'nl' ? 'Training' : 'Training', item: new URL(path('training', lang), site.url).href },
+      { '@type': 'ListItem', position: 3, name: copy.h1, item: new URL(path('masterclass', lang), site.url).href },
+    ],
+  },
+];
+---
+<Base lang={lang} title={copy.title} description={copy.description} schema={schema}>
+  <div class="tp">
+    <PageHead label={copy.label} title={copy.h1} lead={copy.lead} />
+
+    <div class="wrap">
+      <p class="proof label">
+        {copy.proof.map((p) => <strong>{p}</strong>)}
+        <a href={path('experiences', lang)}>{copy.proofLink}</a>
+      </p>
+    </div>
+
+    <section class="wrap section split">
+      <h2 class="split__h">{copy.forH2}</h2>
+      <div class="stack split__body" style="--gap: 18px">
+        {copy.forP.map((p) => <p class="lead">{p}</p>)}
+      </div>
+    </section>
+
+    <section class="wrap steps">
+      <h2 class="visually-hidden">{copy.howH2}</h2>
+      <ol class="steps__list">
+        {copy.steps.map(([n, title, text]) => (
+          <li>
+            <span class="label">{n}</span>
+            <h3>{title}</h3>
+            <p>{text}</p>
+          </li>
+        ))}
+      </ol>
+    </section>
+
+    <section class="dark">
+      <div class="wrap section stack" style="--gap: 32px">
+        <div class="stack" style="--gap: 14px; max-width: 46rem">
+          <h2>{copy.dayH2}</h2>
+          <p class="lead" style="color: var(--on-dark-2)">{copy.dayP}</p>
+        </div>
+        <div class="timeline timeline--dark">
+          {copy.day.map(([time, title, items, weight]) => (
+            <div style={`flex: ${weight} 1 200px`}>
+              <span class="label">{time}</span>
+              <h3>{title}</h3>
+              <ul>{(items as string[]).map((i) => <li>{i}</li>)}</ul>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="wrap section split">
+      <h2 class="split__h">{copy.tipsH2}</h2>
+      <div class="split__body stack" style="--gap: 24px">
+        <p class="lead">{copy.tipsP}</p>
+        <ul class="cards">
+          {copy.tips.map(([n, title, text]) => (
+            <li>
+              <span class="label">{n}</span>
+              <h3>{title}</h3>
+              <p>{text}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+
+    <section class="wrap section split band">
+      <h2 class="split__h">{copy.promptH2}</h2>
+      <div class="split__body stack" style="--gap: 18px">
+        <p class="lead">{copy.promptP}</p>
+        <pre class="prompt">{copy.prompt}</pre>
+        <p class="label">{copy.promptNote}</p>
+      </div>
+    </section>
+
+    <section class="wrap section split">
+      <h2 class="split__h">{copy.practicalH2}</h2>
+      <div class="split__body practical">
+        <dl class="specs">
+          {copy.specs.map(([k, v]) => <div><dt>{k}</dt><dd>{v}</dd></div>)}
+          <div><dt>{copy.priceLabel}</dt><dd><strong>{copy.price}</strong></dd></div>
+        </dl>
+        <a class="btn btn--primary" href={path('contact', lang)}>{copy.cta}</a>
+      </div>
+    </section>
+
+    <section class="wrap" style="padding-bottom: var(--section)">
+      <div class="crosslink">
+        <div class="stack" style="--gap: 10px">
+          <span class="label">{copy.crossLabel}</span>
+          <h2 style="font-size: clamp(1.6rem, 2.6vw, 2.2rem)">{copy.crossH}</h2>
+          <p class="lead">{copy.crossP}</p>
+        </div>
+        <a class="btn btn--line" href={path('training', lang)}>{copy.crossCta}</a>
+      </div>
+    </section>
+
+    <section class="wrap split faq-section">
+      <h2 class="split__h">{copy.faqH2}</h2>
+      <div class="faq split__body">
+        {copy.faq.map(([q, a]) => (
+          <details>
+            <summary>{q}</summary>
+            <p>{a}</p>
+          </details>
+        ))}
+      </div>
+    </section>
+  </div>
+</Base>

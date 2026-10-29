@@ -5,6 +5,7 @@ export const ui = {
     skip: 'Naar de inhoud',
     nav: {
       training: 'Training',
+      masterclass: 'Masterclass vergaderen',
       tools: 'Tools',
       experiences: 'Ervaringen',
       knowledge: 'Kennisbank',
@@ -66,6 +67,7 @@ export const ui = {
     skip: 'Skip to content',
     nav: {
       training: 'Training',
+      masterclass: 'Meetings masterclass',
       tools: 'Tools',
       experiences: 'Reviews',
       knowledge: 'Insights',

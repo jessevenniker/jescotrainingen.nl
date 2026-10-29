@@ -1,0 +1,258 @@
+---
+// Een slide uit de training op een laptop. Met de knoppen wissel je van huisstijl,
+// om te laten zien dat het materiaal in de stijl van de klant komt.
+// De drie klantstijlen zijn verzonnen voorbeelden, geen echte organisaties.
+import '@fontsource/kalam/400.css';
+import '@fontsource-variable/newsreader';
+import type { Lang } from '../i18n';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+
+const copy = {
+  nl: {
+    label: 'uit de training',
+    h2: 'Zo ziet het eruit',
+    lead: 'Een slide uit het eerste deel: waarom AI je zo makkelijk gelijk geeft. Het materiaal maak ik in de huisstijl van jullie organisatie, zodat het na de training gewoon in jullie eigen map past.',
+    styleLabel: 'huisstijl',
+    styles: [['jesco', 'Jesco'], ['zorg', 'zorg'], ['advies', 'advies'], ['onderwijs', 'onderwijs']],
+    note: 'in jullie eigen huisstijl',
+    hint: 'klik op de slide voor de volgende stap',
+    kicker: 'AI & psychologie',
+    title: 'Waarom geeft AI je zo makkelijk gelijk?',
+    sub: 'AI is getraind om je tevreden te houden, niet om je te corrigeren.',
+    items: [
+      ['Spiegelen', 'AI neemt jouw taal en toon over.'],
+      ['Bevestigen', 'AI geeft je gelijk en bouwt voort op wat je al dacht.'],
+      ['Doorgaan', 'AI stelt vervolgvragen, zodat het gesprek doorloopt.'],
+      ['Tevredenstellen', 'AI stuurt op jouw tevredenheid, niet op de waarheid.'],
+    ],
+    takeaway: 'Prima voor een samenvatting. Riskant zodra AI je enige sparringpartner wordt.',
+    logo: 'jullie logo',
+    aria: 'Laptop met een slide uit de training. Titel: Waarom geeft AI je zo makkelijk gelijk? Vier stappen: spiegelen, bevestigen, doorgaan en tevredenstellen.',
+  },
+  en: {
+    label: 'from the training',
+    h2: 'What it looks like',
+    lead: 'A slide from the first part: why AI agrees with you so easily. I make the materials in your organisation’s house style, so they fit straight into your own files afterwards.',
+    styleLabel: 'house style',
+    styles: [['jesco', 'Jesco'], ['zorg', 'healthcare'], ['advies', 'consultancy'], ['onderwijs', 'education']],
+    note: 'in your own house style',
+    hint: 'click the slide for the next step',
+    kicker: 'AI & psychology',
+    title: 'Why does AI agree with you so easily?',
+    sub: 'AI is trained to keep you satisfied, not to correct you.',
+    items: [
+      ['Mirroring', 'AI picks up your language and tone.'],
+      ['Confirming', 'AI agrees and builds on what you already thought.'],
+      ['Continuing', 'AI asks follow-up questions to keep the chat going.'],
+      ['Pleasing', 'AI optimises for your satisfaction, not for the truth.'],
+    ],
+    takeaway: 'Fine for a summary. Risky once AI becomes your only sparring partner.',
+    logo: 'your logo',
+    aria: 'Laptop showing a slide from the training. Title: Why does AI agree with you so easily? Four steps: mirroring, confirming, continuing and pleasing.',
+  },
+}[lang];
+---
+<section class="wrap section slide-laptop" data-slide-laptop>
+  <div class="sl__intro stack" style="--gap: 16px">
+    <span class="label">{copy.label}</span>
+    <h2>{copy.h2}</h2>
+    <p class="lead">{copy.lead}</p>
+    <div class="sl__switch" role="group" aria-label={copy.styleLabel}>
+      <span class="label">{copy.styleLabel}</span>
+      {copy.styles.map(([id, name], i) => (
+        <button type="button" data-style={id} aria-pressed={i === 0 ? 'true' : 'false'}>{name}</button>
+      ))}
+    </div>
+  </div>
+
+  <figure class="sl__figure" aria-label={copy.aria}>
+    <svg class="sl__note" viewBox="0 0 340 120" aria-hidden="true">
+      <text x="6" y="34" transform="rotate(-4 6 34)">{copy.note}</text>
+      <path d="M 120 52 Q 150 80 132 112" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+      <path d="M 124 100 L 132 112 L 141 101" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+    </svg>
+
+    <div class="sl__laptop">
+      <div class="sl__lid">
+        <span class="sl__cam" aria-hidden="true"></span>
+        <div class="sl__slide" data-huisstijl="jesco" data-step="0" tabindex="0" aria-hidden="true">
+          <div class="s__inner">
+            <span class="s__kicker">{copy.kicker}</span>
+            <p class="s__title">{copy.title}</p>
+            <p class="s__sub">{copy.sub}</p>
+            <ol class="s__items">
+              {copy.items.map(([t, d], i) => (
+                <li style={`--i:${i}`}>
+                  <span class="s__num">{i + 1}</span>
+                  <strong>{t}</strong>
+                  <span class="s__desc">{d}</span>
+                </li>
+              ))}
+            </ol>
+            <p class="s__take">{copy.takeaway}</p>
+            <div class="s__foot">
+              <span class="s__logo"><span class="s__mark"></span>{copy.logo}</span>
+              <span>28</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="sl__base" aria-hidden="true"><span></span></div>
+    </div>
+    <figcaption class="label">{copy.hint}</figcaption>
+  </figure>
+</section>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-slide-laptop]').forEach((root) => {
+    const slide = root.querySelector<HTMLElement>('.sl__slide')!;
+    const buttons = root.querySelectorAll<HTMLButtonElement>('[data-style]');
+    const total = 4;
+    const calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let step = 0;
+    let timer: number | undefined;
+
+    const show = (n: number) => { step = n; slide.dataset.step = String(n); };
+    const next = () => show(step >= total ? 0 : step + 1);
+
+    buttons.forEach((b) => b.addEventListener('click', () => {
+      buttons.forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+      slide.dataset.huisstijl = b.dataset.style!;
+    }));
+
+    // Klikken of pijltjes werken als een presentatieclicker.
+    slide.addEventListener('click', () => { window.clearInterval(timer); next(); });
+    slide.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); window.clearInterval(timer); next(); }
+      if (e.key === 'ArrowLeft') { e.preventDefault(); window.clearInterval(timer); show(Math.max(0, step - 1)); }
+    });
+
+    // Eenmalig vanzelf doorklikken zodra de laptop in beeld komt. Met "minder beweging" staat alles er meteen.
+    if (calm || !('IntersectionObserver' in window)) { show(total); return; }
+    const io = new IntersectionObserver(([entry]) => {
+      if (!entry.isIntersecting) return;
+      io.disconnect();
+      timer = window.setInterval(() => {
+        if (step >= total) { window.clearInterval(timer); return; }
+        show(step + 1);
+      }, 900);
+    }, { threshold: 0.6 });
+    io.observe(slide);
+  });
+</script>
+
+<style>
+  .slide-laptop { display: flex; flex-wrap: wrap; gap: 40px 64px; align-items: center; }
+  .sl__intro { flex: 1 1 300px; min-width: 0; max-width: 30rem; }
+  .sl__intro h2 { font-size: clamp(1.8rem, 3vw, 2.6rem); }
+
+  .sl__switch { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 8px; }
+  .sl__switch .label { margin-right: 4px; }
+  .sl__switch button {
+    font: inherit; font-size: 0.9375rem; cursor: pointer;
+    padding: 6px 14px; border-radius: 999px;
+    border: 1px solid var(--ink); background: transparent; color: var(--ink);
+  }
+  .sl__switch button:hover { background: var(--paper-2); }
+  .sl__switch button[aria-pressed='true'] { background: var(--ink); color: var(--paper); }
+
+  .sl__figure { flex: 2 1 520px; min-width: 0; margin: 0; position: relative; display: flex; flex-direction: column; gap: 14px; }
+  .sl__figure figcaption { text-align: center; }
+
+  /* Handgeschreven aantekening, zelfde rode stift als op de homepage */
+  .sl__note { position: absolute; top: -78px; left: 4%; width: 280px; color: #C8402B; pointer-events: none; z-index: 1; }
+  .sl__note text { font-family: 'Kalam', cursive; font-size: 28px; fill: currentColor; }
+  @media (max-width: 760px) { .sl__note { display: none; } }
+
+  /* Laptop in lijnstijl */
+  .sl__laptop { width: 100%; }
+  .sl__lid {
+    position: relative; margin-inline: 6%;
+    padding: 2.4% 2.4% 3%;
+    background: var(--ink); border-radius: 18px 18px 6px 6px;
+    box-shadow: 0 1px 0 var(--ink);
+  }
+  .sl__cam { position: absolute; top: 1%; left: 50%; width: 6px; height: 6px; margin-left: -3px; border-radius: 50%; background: #2c3a32; }
+  .sl__base { height: 18px; background: var(--paper-2); border: 1.5px solid var(--ink); border-top-width: 2px; border-radius: 0 0 22px 22px / 0 0 14px 14px; display: flex; justify-content: center; }
+  .sl__base span { width: 16%; height: 6px; border: 1.5px solid var(--ink); border-top: 0; border-radius: 0 0 8px 8px; }
+
+  /* De slide zelf: alles schaalt mee met de breedte van het scherm */
+  .sl__slide {
+    container-type: inline-size; aspect-ratio: 16 / 9; overflow: hidden; cursor: pointer;
+    --s-bg: #f5f4ef; --s-ink: #14231b; --s-ink-2: #4f5e55; --s-accent: #2f6b4a; --s-chip: #c6f36b; --s-chip-ink: #0f2219;
+    --s-line: #c9d3c8; --s-head: var(--sans); --s-body: var(--sans); --s-r: 0px; --s-kicker: var(--mono);
+    background: var(--s-bg); color: var(--s-ink);
+    transition: background-color .35s ease, color .35s ease;
+  }
+  .sl__slide:focus-visible { outline: 2px solid var(--lime); outline-offset: 2px; }
+  .sl__slide[data-huisstijl='zorg'] {
+    --s-bg: #ffffff; --s-ink: #1d2b4f; --s-ink-2: #55617d; --s-accent: #0e8a9a; --s-chip: #0e8a9a; --s-chip-ink: #ffffff;
+    --s-line: #d5e7ea; --s-head: 'Avenir Next', 'Segoe UI', system-ui, sans-serif; --s-body: var(--s-head); --s-r: 1.4cqw; --s-kicker: var(--s-head);
+  }
+  .sl__slide[data-huisstijl='advies'] {
+    --s-bg: #12171c; --s-ink: #f2efe8; --s-ink-2: #a9b0b6; --s-accent: #d9b25c; --s-chip: transparent; --s-chip-ink: #d9b25c;
+    --s-line: #2c353d; --s-head: 'Newsreader Variable', Georgia, serif; --s-body: 'Helvetica Neue', Arial, sans-serif; --s-r: 0px; --s-kicker: var(--s-body);
+  }
+  .sl__slide[data-huisstijl='onderwijs'] {
+    --s-bg: #fff8ef; --s-ink: #2a2118; --s-ink-2: #6b5a49; --s-accent: #d35400; --s-chip: #d35400; --s-chip-ink: #ffffff;
+    --s-line: #f0dcc4; --s-head: Verdana, Geneva, sans-serif; --s-body: Verdana, Geneva, sans-serif; --s-r: 50%; --s-kicker: var(--s-body);
+  }
+
+  .s__inner { height: 100%; padding: 5cqw 5.5cqw 3cqw; display: flex; flex-direction: column; }
+  .s__kicker { font-family: var(--s-kicker); font-size: 1.5cqw; letter-spacing: .08em; text-transform: uppercase; color: var(--s-accent); }
+  .s__title { font-family: var(--s-head); font-weight: 600; font-size: 4.4cqw; line-height: 1.05; letter-spacing: -0.03em; margin-top: 1.2cqw; max-width: 80%; }
+  .sl__slide[data-huisstijl='advies'] .s__title { font-weight: 500; letter-spacing: -0.01em; }
+  .sl__slide[data-huisstijl='onderwijs'] .s__title { letter-spacing: -0.04em; font-size: 4cqw; }
+  .s__sub { font-family: var(--s-body); font-size: 1.85cqw; color: var(--s-ink-2); margin-top: 1.2cqw; }
+
+  .s__items { list-style: none; margin: 3.4cqw 0 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.8cqw; }
+  .s__items li {
+    font-family: var(--s-body); display: flex; flex-direction: column; gap: .8cqw;
+    padding-top: 1.4cqw; border-top: .25cqw solid var(--s-ink);
+    opacity: .12; transform: translateY(1cqw); transition: opacity .45s ease, transform .45s ease, border-color .35s ease;
+  }
+  .sl__slide[data-huisstijl='zorg'] .s__items li { border: 0; background: #f0f8f9; padding: 1.6cqw; border-radius: var(--s-r); }
+  .sl__slide[data-step='1'] li:nth-child(-n+1),
+  .sl__slide[data-step='2'] li:nth-child(-n+2),
+  .sl__slide[data-step='3'] li:nth-child(-n+3),
+  .sl__slide[data-step='4'] li { opacity: 1; transform: none; }
+  .s__num {
+    display: inline-grid; place-items: center; width: 3.2cqw; height: 3.2cqw;
+    font-family: var(--s-kicker); font-size: 1.5cqw; font-weight: 600;
+    background: var(--s-chip); color: var(--s-chip-ink); border-radius: var(--s-r);
+  }
+  .sl__slide[data-huisstijl='advies'] .s__num { border: .15cqw solid var(--s-accent); }
+  .s__items strong { font-family: var(--s-head); font-size: 2cqw; line-height: 1.15; font-weight: 600; }
+  .s__desc { font-size: 1.5cqw; line-height: 1.35; color: var(--s-ink-2); }
+
+  .s__take {
+    font-family: var(--s-head); font-size: 1.9cqw; margin-top: auto; padding-top: 2cqw;
+    opacity: 0; transition: opacity .5s ease .2s;
+  }
+  .sl__slide[data-step='4'] .s__take { opacity: 1; }
+  .s__take::before { content: ''; display: inline-block; width: 1.2cqw; height: 1.2cqw; margin-right: 1cqw; background: var(--s-accent); border-radius: var(--s-r); vertical-align: .1em; }
+
+  .s__foot {
+    display: flex; justify-content: space-between; align-items: center; margin-top: 2cqw; padding-top: 1.2cqw;
+    border-top: 1px solid var(--s-line); font-family: var(--s-kicker); font-size: 1.25cqw; color: var(--s-ink-2);
+  }
+  .s__logo { display: inline-flex; align-items: center; gap: .9cqw; }
+  .s__mark { width: 2cqw; height: 2cqw; border: .2cqw solid var(--s-accent); border-radius: var(--s-r); }
+
+  /* Op een smal scherm: minder tekst, grotere letters */
+  @container (max-width: 520px) {
+    .s__sub, .s__desc, .s__foot, .s__take { display: none; }
+    .s__title { font-size: 5.6cqw; max-width: 100%; }
+    .s__kicker { font-size: 2.6cqw; }
+    .s__items { grid-template-columns: repeat(2, 1fr); gap: 2.4cqw 3cqw; margin-top: 4cqw; }
+    .s__items strong { font-size: 3.6cqw; }
+    .s__num { width: 5cqw; height: 5cqw; font-size: 2.6cqw; }
+    .s__take { font-size: 3.2cqw; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .sl__slide, .s__items li, .s__take { transition: none; }
+  }
+</style>

@@ -1,0 +1,253 @@
+---
+// De vertrouwensmeter: een oefening uit de training die bezoekers zelf kunnen doen.
+// Drie AI-antwoorden; per antwoord kies je gebruiken, eerst checken of niet gebruiken.
+// Aan het eind zie je waar je staat tussen te weinig en te veel vertrouwen.
+// De bron in vraag 2 is met opzet verzonnen; dat staat ook in de uitleg.
+import '@fontsource/kalam/400.css';
+import type { Lang } from '../i18n';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+
+// level: 2 = gebruiken, 1 = eerst checken, 0 = niet gebruiken
+const copy = {
+  nl: {
+    label: 'probeer het zelf',
+    h2: 'De vertrouwensmeter',
+    lead: 'Een oefening uit het eerste deel van de training. Drie antwoorden van AI op vragen uit kantoorwerk. Wat doe jij ermee?',
+    you: 'vraag',
+    ai: 'AI',
+    choices: ['Gebruiken', 'Eerst checken', 'Niet gebruiken'],
+    right: 'Goed gekozen.',
+    wrongMore: 'Je vertrouwt dit antwoord meer dan het verdient.',
+    wrongLess: 'Je vertrouwt dit antwoord minder dan nodig is.',
+    items: [
+      {
+        role: 'communicatie',
+        q: 'Geef vijf koppen voor een LinkedIn-post over ons nieuwe kantoor in Arnhem.',
+        a: '1. Nieuw adres, zelfde team · 2. Welkom in ons nieuwe kantoor · 3. Arnhem, hier zijn we · 4. Meer ruimte voor goede ideeën · 5. Kom gerust langs',
+        level: 2,
+        why: 'Hier kan weinig misgaan: het zijn ideeën, en jij kiest er zelf een. Wie dit weggooit, mist een makkelijke winst. Dat heet algoritme-aversie: na een slechte ervaring vertrouwen we AI ook waar het prima werkt.',
+      },
+      {
+        role: 'beleid',
+        q: 'Hoeveel medewerkers zijn productiever met AI?',
+        a: 'Uit onderzoek blijkt dat 73% van de medewerkers productiever is met AI (Meijer & De Vries, 2024, Journal of Workplace Studies).',
+        level: 1,
+        why: 'Deze bron bestaat niet. We hebben hem voor deze oefening verzonnen, precies zoals AI dat soms ook doet. Een precies getal met een nette bron klinkt betrouwbaar. Juist dan neem je het snel over: automation bias. Zoek de bron altijd zelf op.',
+      },
+      {
+        role: 'HR',
+        q: 'Een medewerker kwam deze maand drie keer te laat. Mag ik hem op staande voet ontslaan?',
+        a: 'Ja. Drie keer te laat komen binnen een maand is voldoende grond voor ontslag op staande voet. Zorg dat je het schriftelijk vastlegt.',
+        level: 0,
+        why: 'Dit klopt niet, en de gevolgen zijn groot. Voor ontslag op staande voet is een dringende reden nodig, en te laat komen is dat bijna nooit. AI klinkt hier even zeker als bij de koppen. Bij een beslissing als deze vraag je een HR-adviseur of jurist.',
+      },
+    ],
+    scale: ['te weinig vertrouwen', 'juist', 'te veel vertrouwen'],
+    you_are: 'jij zit hier',
+    result: {
+      all: 'Alle drie goed. Je vertrouwt AI waar het kan en checkt waar het moet. Dat is precies waar de training naartoe werkt.',
+      more: 'Je vertrouwt AI sneller dan goed is. Dat overkomt de meeste mensen, juist omdat AI zo zeker klinkt.',
+      less: 'Je bent voorzichtig, soms te voorzichtig. Dat is veilig, maar zo laat je ook tijdwinst liggen.',
+      mixed: 'Gemiddeld zit je in het midden, maar per antwoord wisselt het. Precies dat bespreken we in de training: wanneer vertrouw je, en waarom?',
+    },
+    score: (n: number) => `${n} van 3 goed`,
+    reset: 'Opnieuw',
+  },
+  en: {
+    label: 'try it yourself',
+    h2: 'The trust meter',
+    lead: 'An exercise from the first part of the session. Three AI answers to everyday office questions. What would you do with them?',
+    you: 'prompt',
+    ai: 'AI',
+    choices: ['Use it', 'Check first', 'Don’t use it'],
+    right: 'Good call.',
+    wrongMore: 'You trust this answer more than it deserves.',
+    wrongLess: 'You trust this answer less than you need to.',
+    items: [
+      {
+        role: 'communications',
+        q: 'Give me five headlines for a LinkedIn post about our new office in Arnhem.',
+        a: '1. New address, same team · 2. Welcome to our new office · 3. Arnhem, here we are · 4. More room for good ideas · 5. Come and say hello',
+        level: 2,
+        why: 'Not much can go wrong here: these are ideas, and you pick one yourself. Throwing them out means missing an easy win. That’s algorithm aversion: after a bad experience, we distrust AI even where it works fine.',
+      },
+      {
+        role: 'policy',
+        q: 'How many employees are more productive with AI?',
+        a: 'Research shows that 73% of employees are more productive with AI (Meijer & De Vries, 2024, Journal of Workplace Studies).',
+        level: 1,
+        why: 'This source doesn’t exist. We made it up for this exercise, just like AI sometimes does. A precise number with a tidy reference sounds reliable, which is exactly when we accept it too quickly: automation bias. Always look up the source yourself.',
+      },
+      {
+        role: 'HR',
+        q: 'An employee was late three times this month. Can I dismiss him on the spot?',
+        a: 'Yes. Being late three times within a month is sufficient grounds for summary dismissal. Make sure you document it in writing.',
+        level: 0,
+        why: 'This is wrong, and the stakes are high. Summary dismissal needs an urgent reason, and lateness almost never qualifies. AI sounds just as sure here as it did with the headlines. For a decision like this, ask an HR adviser or employment lawyer.',
+      },
+    ],
+    scale: ['too little trust', 'just right', 'too much trust'],
+    you_are: 'you are here',
+    result: {
+      all: 'All three right. You trust AI where you can and check where you must. That’s exactly what the training works towards.',
+      more: 'You trust AI faster than is wise. That happens to most people, precisely because AI sounds so sure of itself.',
+      less: 'You’re careful, sometimes too careful. That’s safe, but it also means leaving time savings on the table.',
+      mixed: 'On average you’re in the middle, but it varies per answer. That’s exactly what we discuss in the session: when do you trust it, and why?',
+    },
+    score: (n: number) => `${n} out of 3 right`,
+    reset: 'Start again',
+  },
+}[lang];
+
+const data = {
+  right: copy.right, wrongMore: copy.wrongMore, wrongLess: copy.wrongLess,
+  result: copy.result, scores: [0, 1, 2, 3].map((n) => copy.score(n)),
+};
+---
+<section class="wrap section trust-meter" data-trust-meter data-copy={JSON.stringify(data)}>
+  <div class="tm__head stack" style="--gap: 14px">
+    <span class="label">{copy.label}</span>
+    <h2>{copy.h2}</h2>
+    <p class="lead">{copy.lead}</p>
+  </div>
+
+  <ol class="tm__items">
+    {copy.items.map((it, i) => (
+      <li class="tm__item" data-level={it.level}>
+        <span class="label tm__role">{String(i + 1).padStart(2, '0')} · {it.role}</span>
+        <p class="tm__q"><span class="label">{copy.you}</span>{it.q}</p>
+        <p class="tm__a"><span class="label">{copy.ai}</span>{it.a}</p>
+        <div class="tm__choices" role="group" aria-label={it.q}>
+          {copy.choices.map((c, lvl) => (
+            <button type="button" data-choice={2 - lvl} aria-pressed="false">{c}</button>
+          ))}
+        </div>
+        <div class="tm__feedback" aria-live="polite" hidden>
+          <strong class="tm__verdict"></strong>
+          <p>{it.why}</p>
+        </div>
+      </li>
+    ))}
+  </ol>
+
+  <div class="tm__result" aria-live="polite" hidden>
+    <div class="tm__scale" aria-hidden="true">
+      <span class="tm__line"></span>
+      <span class="tm__mid"></span>
+      <span class="tm__dot"></span>
+      <span class="tm__you">{copy.you_are}</span>
+      <div class="tm__labels">{copy.scale.map((l) => <span class="label">{l}</span>)}</div>
+    </div>
+    <p class="tm__score label"></p>
+    <p class="lead tm__text"></p>
+    <button type="button" class="btn btn--line tm__reset">{copy.reset}</button>
+  </div>
+</section>
+
+<script>
+  type Copy = { right: string; wrongMore: string; wrongLess: string; scores: string[]; result: Record<'all' | 'more' | 'less' | 'mixed', string> };
+
+  document.querySelectorAll<HTMLElement>('[data-trust-meter]').forEach((root) => {
+    const c: Copy = JSON.parse(root.dataset.copy!);
+    const items = [...root.querySelectorAll<HTMLElement>('.tm__item')];
+    const result = root.querySelector<HTMLElement>('.tm__result')!;
+    const answers = new Map<number, number>();
+
+    const finish = () => {
+      let total = 0;
+      let correct = 0;
+      items.forEach((item, i) => {
+        const diff = answers.get(i)! - Number(item.dataset.level);
+        total += diff;
+        if (diff === 0) correct++;
+      });
+      const pos = Math.max(6, Math.min(94, 50 + total * 15));
+      result.style.setProperty('--pos', `${pos}%`);
+      // Het handgeschreven label blijft binnen beeld, ook als de stip aan de rand staat.
+      result.style.setProperty('--pos-label', `${Math.max(16, Math.min(84, pos))}%`);
+      result.querySelector('.tm__score')!.textContent = c.scores[correct];
+      const key = correct === items.length ? 'all' : total > 0 ? 'more' : total < 0 ? 'less' : 'mixed';
+      result.querySelector('.tm__text')!.textContent = c.result[key];
+      result.hidden = false;
+      requestAnimationFrame(() => result.classList.add('is-shown'));
+    };
+
+    items.forEach((item, i) => {
+      const level = Number(item.dataset.level);
+      const buttons = item.querySelectorAll<HTMLButtonElement>('[data-choice]');
+      const feedback = item.querySelector<HTMLElement>('.tm__feedback')!;
+      const verdict = item.querySelector<HTMLElement>('.tm__verdict')!;
+
+      buttons.forEach((b) => b.addEventListener('click', () => {
+        const choice = Number(b.dataset.choice);
+        answers.set(i, choice);
+        buttons.forEach((x) => {
+          x.setAttribute('aria-pressed', String(x === b));
+          x.classList.toggle('is-right', Number(x.dataset.choice) === level);
+        });
+        item.classList.add('is-answered');
+        item.classList.toggle('is-wrong', choice !== level);
+        verdict.textContent = choice === level ? c.right : choice > level ? c.wrongMore : c.wrongLess;
+        feedback.hidden = false;
+        if (answers.size === items.length) finish();
+      }));
+    });
+
+    root.querySelector('.tm__reset')!.addEventListener('click', () => {
+      answers.clear();
+      result.hidden = true;
+      result.classList.remove('is-shown');
+      items.forEach((item) => {
+        item.classList.remove('is-answered', 'is-wrong');
+        item.querySelector<HTMLElement>('.tm__feedback')!.hidden = true;
+        item.querySelectorAll('[data-choice]').forEach((x) => { x.setAttribute('aria-pressed', 'false'); x.classList.remove('is-right'); });
+      });
+      items[0].querySelector<HTMLButtonElement>('[data-choice]')?.focus();
+    });
+  });
+</script>
+
+<style>
+  .trust-meter { display: flex; flex-direction: column; gap: 40px; border-top: 1px solid var(--rule); }
+  .tm__head { max-width: 40rem; }
+  .tm__head h2 { font-size: clamp(1.8rem, 3vw, 2.6rem); }
+
+  .tm__items { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
+  .tm__item { min-width: 0; display: flex; flex-direction: column; gap: 14px; padding: 22px; background: var(--white); border: 1px solid var(--rule); }
+  .tm__role { color: var(--green); }
+  .tm__q, .tm__a { display: flex; flex-direction: column; gap: 4px; line-height: 1.5; }
+  .tm__q { font-weight: 600; }
+  .tm__a { padding: 14px 16px; background: var(--paper); border-left: 3px solid var(--ink); color: var(--ink-2); }
+
+  .tm__choices { display: flex; flex-wrap: wrap; gap: 8px; margin-top: auto; padding-top: 4px; }
+  .tm__choices button {
+    font: inherit; font-size: 0.9375rem; cursor: pointer; padding: 7px 14px; border-radius: 999px;
+    border: 1px solid var(--ink); background: transparent; color: var(--ink);
+  }
+  .tm__choices button:hover { background: var(--paper-2); }
+  .tm__choices button[aria-pressed='true'] { background: var(--ink); color: var(--paper); }
+  .is-wrong .tm__choices button.is-right { border-color: var(--green); box-shadow: inset 0 0 0 1px var(--green); color: var(--green); }
+
+  .tm__feedback { display: flex; flex-direction: column; gap: 6px; padding-top: 12px; border-top: 1px solid var(--rule); font-size: 0.975rem; line-height: 1.55; }
+  .tm__feedback p { color: var(--ink-2); }
+  .tm__verdict { color: var(--green); }
+  .is-wrong .tm__verdict { color: #C8402B; }
+
+  .tm__result { display: flex; flex-direction: column; gap: 14px; align-items: flex-start; max-width: 46rem; opacity: 0; transform: translateY(8px); transition: opacity .4s ease, transform .4s ease; }
+  .tm__result.is-shown { opacity: 1; transform: none; }
+  .tm__scale { position: relative; width: 100%; height: 86px; }
+  .tm__line { position: absolute; left: 0; right: 0; top: 46px; height: 2px; background: var(--ink); }
+  .tm__mid { position: absolute; left: 50%; top: 38px; width: 2px; height: 18px; margin-left: -1px; background: var(--green); }
+  .tm__dot { position: absolute; top: 37px; left: 50%; width: 20px; height: 20px; margin-left: -10px; border-radius: 50%; background: #C8402B; transition: left .9s cubic-bezier(.3, 1.3, .5, 1) .15s; }
+  .is-shown .tm__dot { left: var(--pos, 50%); }
+  .tm__you { position: absolute; top: 0; left: 50%; transform: translateX(-50%) rotate(-3deg); font-family: 'Kalam', cursive; font-size: 1.35rem; color: #C8402B; white-space: nowrap; transition: left .9s cubic-bezier(.3, 1.3, .5, 1) .15s; }
+  .is-shown .tm__you { left: var(--pos-label, 50%); }
+  .tm__labels { position: absolute; left: 0; right: 0; top: 64px; display: flex; justify-content: space-between; }
+  .tm__score { color: var(--ink); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tm__result, .tm__dot, .tm__you { transition: none; }
+  }
+</style>

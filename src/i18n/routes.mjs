@@ -3,6 +3,7 @@
 export const routes = {
   home: { nl: '/', en: '/en/' },
   training: { nl: '/training/', en: '/en/training/' },
+  masterclass: { nl: '/training/effectief-vergaderen/', en: '/en/training/effective-meetings/' },
   experiences: { nl: '/ervaringen/', en: '/en/experiences/' },
   tools: { nl: '/tools/', en: '/en/tools/' },
   toolCompass: { nl: '/tools/adoptiekompas/', en: '/en/tools/adoption-compass/' },
