@@ -2,7 +2,6 @@
 import '@fontsource-variable/instrument-sans';
 import '@fontsource-variable/jetbrains-mono';
 import '../styles/global.css';
-import { getImage } from 'astro:assets';
 import Analytics from '@vercel/analytics/astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
@@ -10,7 +9,7 @@ import { alternatesFor } from '../i18n/routes.mjs';
 import { htmlLang, ogLocale, path, type Lang } from '../i18n';
 import { t } from '../i18n/ui';
 import { site } from '../data/site';
-import ogSource from '../assets/images/jesse-masterclass.jpg';
+import { ogKeyFor } from '../lib/og';
 
 interface Props {
   lang: Lang;
@@ -25,8 +24,8 @@ const s = t(lang);
 const pathname = Astro.url.pathname;
 const canonical = new URL(pathname, site.url).href;
 const alternates = alternatesFor(pathname);
-const og = await getImage({ src: ogSource, width: 1200, height: 630, format: 'jpg', fit: 'cover', position: 'top' });
-const ogUrl = new URL(og.src, site.url).href;
+// Deelafbeelding per pagina, gemaakt door src/pages/og/[key].png.ts.
+const ogUrl = new URL(`/og/${ogKeyFor(pathname, lang)}.png`, site.url).href;
 
 const organization = {
   '@context': 'https://schema.org',
