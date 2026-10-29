@@ -9,6 +9,8 @@ import { t } from '../i18n/ui';
 import { site } from '../data/site';
 import { runs, totalRaters, average } from '../data/reviews';
 import '../styles/training.css';
+import { Image } from 'astro:assets';
+import whiteboardFoto from '../assets/images/training-whiteboard.jpg';
 
 interface Props { lang: Lang }
 const { lang } = Astro.props;
@@ -47,6 +49,8 @@ const copy = {
       ['Klantenservice', 'Een antwoord op een lastige klacht: vriendelijk, duidelijk en binnen jullie afspraken.', 'Waar het misgaat: AI belooft makkelijk iets wat jullie niet waarmaken. Je leert grenzen meegeven in je vraag.'],
     ],
     howH2: 'Hoe het werkt',
+    photoAlt: 'Een deelnemer schrijft op het whiteboard terwijl Jesse meekijkt. Op het scherm: een behandelingsplan per agendapunt.',
+    photoCaption: 'Uit de masterclass vergaderen: deelnemers werken zelf, met hun eigen agenda als oefenmateriaal.',
     steps: [
       ['01', 'Intake', 'Een gesprek met jou van ongeveer drie kwartier. Wat speelt er in je team, waar wil je naartoe, welke tools gebruiken jullie? De kern van de training staat vast, de rest stemmen we hierop af.'],
       ['02', 'Het dagdeel', 'Twee à drie uur bij jullie op locatie, in drie delen: hoe AI denkt en hoe wij denken, prompten met eigen werk, en afspraken en het gesprek. Met slides en werkbladen in jullie huisstijl.'],
@@ -145,6 +149,8 @@ const copy = {
       ['Customer service', 'A reply to a tricky complaint: friendly, clear and within your own policies.', 'Where it goes wrong: AI easily promises things you can’t deliver. You learn to build limits into your prompt.'],
     ],
     howH2: 'How it works',
+    photoAlt: 'A participant writes on the whiteboard while Jesse looks on. On the screen: a plan for each agenda item.',
+    photoCaption: 'From the meetings masterclass: participants do the work themselves, using their own agenda as practice material.',
     steps: [
       ['01', 'Intake', 'A conversation with you of about 45 minutes. What’s going on in your team, where do you want to get to, which tools do you use? The core of the training is fixed; the rest is shaped around this.'],
       ['02', 'The session', 'Two to three hours at your office, in three parts: how AI thinks and how we think, prompting with your own work, and agreements and the conversation. With slides and worksheets in your house style.'],
@@ -302,6 +308,11 @@ const schema = [
         ))}
       </ol>
     </section>
+
+    <figure class="wrap tp-photo">
+      <Image src={whiteboardFoto} alt={copy.photoAlt} widths={[600, 1000, 1400, 1750]} sizes="(max-width: 1180px) calc(100vw - 48px), 1100px" />
+      <figcaption>{copy.photoCaption}</figcaption>
+    </figure>
 
     <section class="dark">
       <div class="wrap section stack" style="--gap: 40px">

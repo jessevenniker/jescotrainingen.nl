@@ -46,3 +46,7 @@
 .tp .promo-video { padding-top: clamp(40px, 6vw, 64px); }
 .tp .promo-video figure { margin: 0; }
 .tp .promo-video__player { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; background: var(--paper-2); border: 1px solid var(--rule); }
+
+.tp .tp-photo { margin: 0 auto; padding-bottom: var(--section); display: flex; flex-direction: column; gap: 12px; }
+.tp .tp-photo img { display: block; width: 100%; height: auto; border-radius: 8px; }
+.tp .tp-photo figcaption { font-size: 0.9rem; font-style: italic; line-height: 1.55; color: var(--muted); }
